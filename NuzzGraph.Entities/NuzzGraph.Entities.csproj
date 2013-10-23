@@ -58,18 +58,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\INode.cs" />
-    <Compile Include="MyEntityContext.cs">
+    <Compile Include="Entities\Function.cs" />
+    <Compile Include="Entities\FunctionParameter.cs" />
+    <Compile Include="Entities\Node.cs" />
+    <Compile Include="Entities\NodePropertyDefinition.cs" />
+    <Compile Include="Entities\Type.cs" />
+    <Compile Include="Entities\PropertyDefinition.cs" />
+    <Compile Include="Entities\NodeType.cs" />
+    <Compile Include="Entities\RelationshipType.cs" />
+    <Compile Include="Entities\ScalarType.cs" />
+    <Compile Include="Entities\SystemNode.cs" />
+    <Compile Include="GraphContext.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MyEntityContext.tt</DependentUpon>
+      <DependentUpon>GraphContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="MyEntityContext.tt">
+    <None Include="GraphContext.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MyEntityContext.cs</LastGenOutput>
+      <LastGenOutput>GraphContext.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

@@ -14,6 +14,20 @@ namespace NuzzGraph.Entities
         /// </summary>
         string Id { get; }
 
-        // TODO: Add other property references here
+        Node Get();
+    }
+
+    public partial class Node : BrightstarEntityObject, INode 
+    {
+        public int a()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Node Get()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
