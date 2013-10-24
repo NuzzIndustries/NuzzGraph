@@ -45,6 +45,15 @@ using BrightstarDB.EntityFramework;
 <#+
 }
 
+Dictionary<string, string> inheritedClassMap = new Dictionary<string, string>();
+
+protected string GetInheritedClass(string iface)
+{
+	if (inheritedClassMap.ContainsKey(iface))
+		return inheritedClassMap[iface];
+	return "BrightstarEntityObject";
+}
+
 public void BeginNamespace(CodeGenerationTools code, string namespaceName) 
 {
 	CodeRegion region = new CodeRegion(this);
@@ -183,7 +192,7 @@ private void WriteEntityClass(CodeGenerationTools code, Helper helper, ResourceI
     WriteClassAttributes(code, helper, iface);
 #>
 
-<#= code.SpaceAfter(iface.EntitySetAccessLevel)#>partial class <#= iface.ClassName #> : BrightstarEntityObject, <#= iface.InterfaceName #> 
+<#= code.SpaceAfter(iface.EntitySetAccessLevel)#>partial class <#= iface.ClassName #> : <#=GetInheritedClass(iface.ClassName)#>, <#= iface.InterfaceName #> 
 {
 	public <#= iface.ClassName#>(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
 	public <#= iface.ClassName#>() : base() { }
@@ -339,8 +348,25 @@ private void WriteClassAttributes(CodeGenerationTools code, Helper helper, Resou
 	foreach(var x in iface.Interface.Attributes) 
 	{
 		if (x is CodeAttribute) {
-			WriteCustomAttribute(helper, x as CodeAttribute);
+			//Hack to specify name of inherited class
+			var a = x as CodeAttribute;
+			if (a.FullName == "NuzzGraph.Entities.Attributes.InheritsAttribute")
+            {
+				var e = a.Children.GetEnumerator();
+				if (e.MoveNext())
+				{
+					var arg = e.Current as EnvDTE80.CodeAttributeArgument;
+					if (arg != null) 
+					{
+						inheritedClassMap[iface.ClassName] = arg.Value.Trim('"');
+                    }
+                }
+						
+            }
+			else
+				WriteCustomAttribute(helper, x as CodeAttribute);
 		}
+		
 	}
 }
 
