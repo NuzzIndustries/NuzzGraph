@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuzzGraph.Entities", "NuzzG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuzzGraph.Api.Test", "NuzzGraph.Api.Test\NuzzGraph.Api.Test.csproj", "{0C009CA4-F772-4E41-B712-E1C39F646EF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuzzGraph.Seed", "NuzzGraph.Seed\NuzzGraph.Seed.csproj", "{6F8D7317-DD8D-4F4A-99D5-230D9B88B01C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,16 @@ Global
 		{0C009CA4-F772-4E41-B712-E1C39F646EF2}.Release|Mixed Platforms.Build.0 = Release|x86
 		{0C009CA4-F772-4E41-B712-E1C39F646EF2}.Release|x86.ActiveCfg = Release|x86
 		{0C009CA4-F772-4E41-B712-E1C39F646EF2}.Release|x86.Build.0 = Release|x86
+		{6F8D7317-DD8D-4F4A-99D5-230D9B88B01C}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{6F8D7317-DD8D-4F4A-99D5-230D9B88B01C}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{6F8D7317-DD8D-4F4A-99D5-230D9B88B01C}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{6F8D7317-DD8D-4F4A-99D5-230D9B88B01C}.Debug|x86.ActiveCfg = Debug|x86
+		{6F8D7317-DD8D-4F4A-99D5-230D9B88B01C}.Debug|x86.Build.0 = Debug|x86
+		{6F8D7317-DD8D-4F4A-99D5-230D9B88B01C}.Release|Any CPU.ActiveCfg = Release|x86
+		{6F8D7317-DD8D-4F4A-99D5-230D9B88B01C}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{6F8D7317-DD8D-4F4A-99D5-230D9B88B01C}.Release|Mixed Platforms.Build.0 = Release|x86
+		{6F8D7317-DD8D-4F4A-99D5-230D9B88B01C}.Release|x86.ActiveCfg = Release|x86
+		{6F8D7317-DD8D-4F4A-99D5-230D9B88B01C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
