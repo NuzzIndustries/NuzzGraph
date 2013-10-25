@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BrightstarDB.EntityFramework;
+using NuzzGraph.Entities.Attributes;
 
 namespace NuzzGraph.Entities
 {
     [Entity]
-    public interface IType : ISystemNode
+    [Inherits("SystemNode")]
+    public interface IType
     {
     }
 }

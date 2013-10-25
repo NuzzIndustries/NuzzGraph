@@ -15,6 +15,7 @@ using BrightstarDB.Client;
 using BrightstarDB.EntityFramework;
 
 using System.Text;
+using NuzzGraph.Entities.Attributes;
 
 namespace NuzzGraph.Entities 
 {
@@ -178,34 +179,22 @@ namespace NuzzGraph.Entities
 namespace NuzzGraph.Entities 
 {
     
-    public partial class Function : BrightstarEntityObject, IFunction 
+    public partial class Function : SystemNode, IFunction 
     {
     	public Function(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public Function() : base() { }
-    	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.IFunction
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.ISystemNode
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.INode
     	#endregion
     }
 }
 namespace NuzzGraph.Entities 
 {
     
-    public partial class FunctionParameter : BrightstarEntityObject, IFunctionParameter 
+    public partial class FunctionParameter : PropertyDefinition, IFunctionParameter 
     {
     	public FunctionParameter(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public FunctionParameter() : base() { }
-    	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.IFunctionParameter
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.ISystemNode
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.INode
     	#endregion
     }
 }
@@ -224,116 +213,77 @@ namespace NuzzGraph.Entities
 namespace NuzzGraph.Entities 
 {
     
-    public partial class NodePropertyDefinition : BrightstarEntityObject, INodePropertyDefinition 
+    public partial class NodePropertyDefinition : PropertyDefinition, INodePropertyDefinition 
     {
     	public NodePropertyDefinition(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public NodePropertyDefinition() : base() { }
-    	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.INodePropertyDefinition
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.ISystemNode
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.INode
     	#endregion
     }
 }
 namespace NuzzGraph.Entities 
 {
     
-    public partial class NodeType : BrightstarEntityObject, INodeType 
+    public partial class NodeType : Type, INodeType 
     {
     	public NodeType(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public NodeType() : base() { }
-    	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.INodeType
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.IType
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.ISystemNode
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.INode
     	#endregion
     }
 }
 namespace NuzzGraph.Entities 
 {
     
-    public partial class PropertyDefinition : BrightstarEntityObject, IPropertyDefinition 
+    public partial class PropertyDefinition : SystemNode, IPropertyDefinition 
     {
     	public PropertyDefinition(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public PropertyDefinition() : base() { }
-    	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.ISystemNode
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.INode
     	#endregion
     }
 }
 namespace NuzzGraph.Entities 
 {
     
-    public partial class RelationshipType : BrightstarEntityObject, IRelationshipType 
+    public partial class RelationshipType : SystemNode, IRelationshipType 
     {
     	public RelationshipType(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public RelationshipType() : base() { }
-    	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.IRelationshipType
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.ISystemNode
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.INode
     	#endregion
     }
 }
 namespace NuzzGraph.Entities 
 {
     
-    public partial class ScalarType : BrightstarEntityObject, IScalarType 
+    public partial class ScalarType : Type, IScalarType 
     {
     	public ScalarType(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public ScalarType() : base() { }
-    	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.IScalarType
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.IType
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.ISystemNode
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.INode
     	#endregion
     }
 }
 namespace NuzzGraph.Entities 
 {
     
-    public partial class SystemNode : BrightstarEntityObject, ISystemNode 
+    public partial class SystemNode : Node, ISystemNode 
     {
     	public SystemNode(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public SystemNode() : base() { }
-    	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.ISystemNode
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.INode
     	#endregion
     }
 }
 namespace NuzzGraph.Entities 
 {
     
-    public partial class Type : BrightstarEntityObject, IType 
+    public partial class Type : SystemNode, IType 
     {
     	public Type(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public Type() : base() { }
-    	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.IType
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.ISystemNode
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.INode
     	#endregion
     }
 }
