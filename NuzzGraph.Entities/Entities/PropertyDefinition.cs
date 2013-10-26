@@ -12,4 +12,8 @@ namespace NuzzGraph.Entities
     public interface IPropertyDefinition
     {
     }
+
+    public partial class PropertyDefinition : IPropertyDefinition
+    {
+    }
 }

@@ -12,4 +12,8 @@ namespace NuzzGraph.Entities
     public interface IType
     {
     }
+
+    public partial class Type : IType
+    {
+    }
 }

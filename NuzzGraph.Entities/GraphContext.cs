@@ -184,6 +184,22 @@ namespace NuzzGraph.Entities
     	public Function(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public Function() : base() { }
     	#region Implementation of NuzzGraph.Entities.IFunction
+    
+    	public System.String FunctionBody
+    	{
+            		get { return GetRelatedProperty<System.String>("FunctionBody"); }
+            		set { SetRelatedProperty("FunctionBody", value); }
+    	}
+    
+    	public NuzzGraph.Entities.INodeType DeclaringType
+    	{
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType"); }
+    	}
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IFunctionParameter> Parameters
+    	{
+    		get { return GetRelatedObjects<NuzzGraph.Entities.IFunctionParameter>("Parameters"); }
+    		set { SetRelatedObjects("Parameters", value); }
+    								}
     	#endregion
     }
 }
@@ -195,6 +211,21 @@ namespace NuzzGraph.Entities
     	public FunctionParameter(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public FunctionParameter() : base() { }
     	#region Implementation of NuzzGraph.Entities.IFunctionParameter
+    
+    	public NuzzGraph.Entities.IFunction DeclaringFunction
+    	{
+            get { return GetRelatedObject<NuzzGraph.Entities.IFunction>("DeclaringFunction"); }
+    	}
+    
+    	public NuzzGraph.Entities.INode DefaultValue
+    	{
+            get { return GetRelatedObject<NuzzGraph.Entities.INode>("DefaultValue"); }
+    	}
+    
+    	public NuzzGraph.Entities.IType ParameterType
+    	{
+            get { return GetRelatedObject<NuzzGraph.Entities.IType>("ParameterType"); }
+    	}
     	#endregion
     }
 }
@@ -207,6 +238,12 @@ namespace NuzzGraph.Entities
     	public Node() : base() { }
     	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.INode
+    
+    	public NuzzGraph.Entities.INodeType Type
+    	{
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("Type"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("Type", value); }
+    	}
     	#endregion
     }
 }
@@ -218,6 +255,16 @@ namespace NuzzGraph.Entities
     	public NodePropertyDefinition(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public NodePropertyDefinition() : base() { }
     	#region Implementation of NuzzGraph.Entities.INodePropertyDefinition
+    
+    	public NuzzGraph.Entities.INodeType DeclaringType
+    	{
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType"); }
+    	}
+    
+    	public NuzzGraph.Entities.IScalarType Type
+    	{
+            get { return GetRelatedObject<NuzzGraph.Entities.IScalarType>("Type"); }
+    	}
     	#endregion
     }
 }
@@ -229,6 +276,47 @@ namespace NuzzGraph.Entities
     	public NodeType(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public NodeType() : base() { }
     	#region Implementation of NuzzGraph.Entities.INodeType
+    
+    	public System.Boolean IsAbstract
+    	{
+            		get { return GetRelatedProperty<System.Boolean>("IsAbstract"); }
+            		set { SetRelatedProperty("IsAbstract", value); }
+    	}
+    
+    	public NuzzGraph.Entities.INodeType SuperTypes
+    	{
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("SuperTypes"); }
+    	}
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IRelationshipType> AllowedOutgoingRelationships
+    	{
+    		get { return GetRelatedObjects<NuzzGraph.Entities.IRelationshipType>("AllowedOutgoingRelationships"); }
+    		set { SetRelatedObjects("AllowedOutgoingRelationships", value); }
+    								}
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IRelationshipType> AllowedIncomingRelationships
+    	{
+    		get { return GetRelatedObjects<NuzzGraph.Entities.IRelationshipType>("AllowedIncomingRelationships"); }
+    		set { SetRelatedObjects("AllowedIncomingRelationships", value); }
+    								}
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INodePropertyDefinition> Properties
+    	{
+    		get { return GetRelatedObjects<NuzzGraph.Entities.INodePropertyDefinition>("Properties"); }
+    		set { SetRelatedObjects("Properties", value); }
+    								}
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IFunction> Functions
+    	{
+    		get { return GetRelatedObjects<NuzzGraph.Entities.IFunction>("Functions"); }
+    		set { SetRelatedObjects("Functions", value); }
+    								}
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INodeType> SubTypes
+    	{
+    		get { return GetRelatedObjects<NuzzGraph.Entities.INodeType>("SubTypes"); }
+    		set { SetRelatedObjects("SubTypes", value); }
+    								}
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INode> AllNodes
+    	{
+    		get { return GetRelatedObjects<NuzzGraph.Entities.INode>("AllNodes"); }
+    		set { SetRelatedObjects("AllNodes", value); }
+    								}
     	#endregion
     }
 }
@@ -251,6 +339,28 @@ namespace NuzzGraph.Entities
     	public RelationshipType(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public RelationshipType() : base() { }
     	#region Implementation of NuzzGraph.Entities.IRelationshipType
+    
+    	public System.Int64 MinConnections
+    	{
+            		get { return GetRelatedProperty<System.Int64>("MinConnections"); }
+            		set { SetRelatedProperty("MinConnections", value); }
+    	}
+    
+    	public System.Int64 MaxConnections
+    	{
+            		get { return GetRelatedProperty<System.Int64>("MaxConnections"); }
+            		set { SetRelatedProperty("MaxConnections", value); }
+    	}
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INodeType> OutgoingFrom
+    	{
+    		get { return GetRelatedObjects<NuzzGraph.Entities.INodeType>("OutgoingFrom"); }
+    		set { SetRelatedObjects("OutgoingFrom", value); }
+    								}
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INodeType> IncomingTo
+    	{
+    		get { return GetRelatedObjects<NuzzGraph.Entities.INodeType>("IncomingTo"); }
+    		set { SetRelatedObjects("IncomingTo", value); }
+    								}
     	#endregion
     }
 }
@@ -262,6 +372,11 @@ namespace NuzzGraph.Entities
     	public ScalarType(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public ScalarType() : base() { }
     	#region Implementation of NuzzGraph.Entities.IScalarType
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INodePropertyDefinition> PropertiesContainingType
+    	{
+    		get { return GetRelatedObjects<NuzzGraph.Entities.INodePropertyDefinition>("PropertiesContainingType"); }
+    		set { SetRelatedObjects("PropertiesContainingType", value); }
+    								}
     	#endregion
     }
 }

@@ -12,5 +12,13 @@ namespace NuzzGraph.Entities
     public interface IFunction
     {
         string FunctionBody { get; set; }
+
+        INodeType DeclaringType { get; }
+
+        ICollection<IFunctionParameter> Parameters { get; }
+    }
+
+    public partial class Function : IFunction
+    {
     }
 }

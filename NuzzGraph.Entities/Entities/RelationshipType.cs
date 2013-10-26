@@ -13,5 +13,15 @@ namespace NuzzGraph.Entities
     {
         long MinConnections { get; set; }
         long MaxConnections { get; set; }
+
+        [InverseProperty("AllowedOutgoingRelationships")]
+        ICollection<INodeType> OutgoingFrom { get; }
+
+        [InverseProperty("AllowedIncomingRelationships")]
+        ICollection<INodeType> IncomingTo { get; }
+    }
+
+    public partial class RelationshipType : IRelationshipType
+    {
     }
 }
