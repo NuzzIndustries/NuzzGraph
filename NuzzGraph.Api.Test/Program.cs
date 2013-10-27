@@ -19,7 +19,11 @@ namespace NuzzGraph.Api.Test
             var ctx = new GraphContext(connectionString);
 
             var nodes1 = ctx.Nodes.Create();
-
+            var function1 = (Function)ctx.Functions.Create();
+            var f2 = (INode)function1;
+            var f3 = f2.Get();
+            var id = function1.Id;
+            
             // save the data
             ctx.SaveChanges();
 

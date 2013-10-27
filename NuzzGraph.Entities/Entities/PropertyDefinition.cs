@@ -9,8 +9,9 @@ namespace NuzzGraph.Entities
 {
     [Entity]
     [Inherits("SystemNode")]
-    public interface IPropertyDefinition
+    public interface IPropertyDefinition : ISystemNode
     {
+        IScalarType PropertyType { get; }
     }
 
     public partial class PropertyDefinition : IPropertyDefinition

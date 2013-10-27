@@ -9,7 +9,7 @@ namespace NuzzGraph.Entities
 {
     [Entity]
     [Inherits("SystemNode")]
-    public interface IRelationshipType
+    public interface IRelationshipType : ISystemNode
     {
         long MinConnections { get; set; }
         long MaxConnections { get; set; }

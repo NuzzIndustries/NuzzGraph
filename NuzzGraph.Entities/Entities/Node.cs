@@ -15,6 +15,8 @@ namespace NuzzGraph.Entities
         string Id { get; }
         INodeType Type { get; set; }
 
+        string Label { get; set; }
+
         Node Get();
     }
 

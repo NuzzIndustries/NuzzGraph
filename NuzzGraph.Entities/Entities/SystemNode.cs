@@ -9,7 +9,7 @@ namespace NuzzGraph.Entities
 {
     [Entity]
     [Inherits("Node")]
-    public interface ISystemNode
+    public interface ISystemNode : INode
     {
     }
 

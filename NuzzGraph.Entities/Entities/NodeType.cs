@@ -9,7 +9,7 @@ namespace NuzzGraph.Entities
 {
     [Entity]
     [Inherits("Type")]
-    public interface INodeType
+    public interface INodeType : IType
     {
         bool IsAbstract { get; }
 

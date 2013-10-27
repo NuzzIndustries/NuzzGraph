@@ -9,7 +9,7 @@ namespace NuzzGraph.Entities
 {
     [Entity]
     [Inherits("PropertyDefinition")]
-    public interface IFunctionParameter
+    public interface IFunctionParameter : IPropertyDefinition
     {
         [InverseProperty("Parameters")]
         IFunction DeclaringFunction { get; }

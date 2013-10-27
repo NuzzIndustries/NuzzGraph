@@ -9,7 +9,7 @@ namespace NuzzGraph.Entities
 {
     [Entity]
     [Inherits("Type")]
-    public interface IScalarType
+    public interface IScalarType : IType
     {
         [InverseProperty("Type")]
         ICollection<INodePropertyDefinition> PropertiesContainingType { get; }

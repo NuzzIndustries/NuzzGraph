@@ -9,10 +9,10 @@ namespace NuzzGraph.Entities
 {
     [Entity]
     [Inherits("PropertyDefinition")]
-    public interface INodePropertyDefinition
+    public interface INodePropertyDefinition : IPropertyDefinition
     {
         INodeType DeclaringType { get; }
-        IScalarType Type { get; }
+        
     }
 
     public partial class NodePropertyDefinition : INodePropertyDefinition

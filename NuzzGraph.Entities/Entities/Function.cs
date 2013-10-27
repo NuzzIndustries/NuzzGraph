@@ -9,13 +9,18 @@ namespace NuzzGraph.Entities
 {
     [Entity]
     [Inherits("SystemNode")]
-    public interface IFunction
+    public interface IFunction : ISystemNode
     {
         string FunctionBody { get; set; }
 
         INodeType DeclaringType { get; }
 
         ICollection<IFunctionParameter> Parameters { get; }
+
+        IFunction Overrides { get; }
+
+        [InverseProperty("Overrides")]
+        ICollection<IFunction> OverridenBy { get; }
     }
 
     public partial class Function : IFunction
