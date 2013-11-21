@@ -20,6 +20,13 @@ namespace NuzzGraph.Seed
 
         static Dictionary<System.Type, INodeType> CLRTypeMap { get; set; }
         static List<System.Type> AllCLRTypes { get; set; }
+        
+        static Dictionary<System.Type, IScalarType> ScalarTypeMap { get; set; }
+
+        static Program()
+        {
+           
+        }
 
         static void Main(string[] args)
         {
@@ -46,36 +53,40 @@ namespace NuzzGraph.Seed
         {
             var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
 
-            //Manually create core type nodes
-            var nodeTypeNode = (NodeType)Context.NodeTypes.Create();
-
+            //Create and load node type nodes
             LoadCLRTypeMap();
 
-            
+            LoadScalarTypes();
+
+            //Mark the node a a type node
+            //tType. = nodeTypeNode;
+            //t.AllowedIncomingRelationships
+            //t.AllowedOutgoingRelationships
+            //t.Functions
+            //t.IsAbstract
+            //t.SubTypes
+            //t.SuperTypes
+
             foreach (var clrType in AllCLRTypes)
             {
-                if (clrType == typeof(NodeType))
-                    continue;
-
-                //Create type node
-                var t = Context.NodeTypes.Create();
-
-                //Mark the node a a type node
-                //tType. = nodeTypeNode;
-                //t.AllowedIncomingRelationships
-                //t.AllowedOutgoingRelationships
-                //t.Functions
-                //t.IsAbstract
-                //t.SubTypes
-                //t.SuperTypes
-
+                var nodeTypeNode = Context.NodeTypes.Where(x => x.Label == clrType.Name.Substring(1)).Single();
+                
                 //Get properties of type
                 foreach (var prop in clrType.GetProperties(flags))
                 {
-                    
-                    //code goes here
+                    //Determine if it is a relationship or a property
+                    if (EntityUtility.AllSimpleTypes.Contains(prop.PropertyType))
+                    {
+                        var propnode = Context.NodePropertyDefinitions.Create();
+                        var typeNode = CLRTypeMap[typeof(INodeType)];
+                        propnode.DeclaringType = nodeTypeNode;
+                        propnode.Label = prop.Name;
+                        propnode.PropertyType = ScalarTypeMap[prop.PropertyType];
+                    }
+                    else
+                    {
+                    }
                 }
-                
             }
 
             
@@ -87,6 +98,61 @@ namespace NuzzGraph.Seed
 
 
 
+        }
+
+        private static void LoadScalarTypes()
+        {
+            ScalarTypeMap = new Dictionary<System.Type, IScalarType>();
+            var nt = CLRTypeMap[typeof(IScalarType)];
+
+            //Types:
+            //Text
+            //Integer
+            //Decimal
+            //Bool
+            IScalarType txt, integer, dec, boolean;
+
+            var n = Context.ScalarTypes.Create();
+            n.Label = "Text";
+            n.TypeHandle = nt;
+            txt = n;
+
+            n = Context.ScalarTypes.Create();
+            n.TypeHandle = nt;
+            n.Label = "Integer";
+            integer = n;
+
+            n = Context.ScalarTypes.Create();
+            n.TypeHandle = nt;
+            n.Label = "Decimal";
+            dec = n;
+
+            n = Context.ScalarTypes.Create();
+            n.TypeHandle = nt;
+            n.Label = "Boolean";
+            boolean = n;
+
+            ScalarTypeMap[typeof(string)] = txt;
+            ScalarTypeMap[typeof(char)] = txt;
+            ScalarTypeMap[typeof(float)] = dec;
+            ScalarTypeMap[typeof(decimal)] = dec;
+            ScalarTypeMap[typeof(double)] = dec;
+            ScalarTypeMap[typeof(int)] = integer;
+            ScalarTypeMap[typeof(long)] = integer;
+            ScalarTypeMap[typeof(short)] = integer;
+            ScalarTypeMap[typeof(byte)] = integer;
+            ScalarTypeMap[typeof(bool)] = boolean;
+            ScalarTypeMap[typeof(char?)] = txt;
+            ScalarTypeMap[typeof(float?)] = dec;
+            ScalarTypeMap[typeof(decimal?)] = dec;
+            ScalarTypeMap[typeof(double?)] = dec;
+            ScalarTypeMap[typeof(int?)] = integer;
+            ScalarTypeMap[typeof(long?)] = integer;
+            ScalarTypeMap[typeof(short?)] = integer;
+            ScalarTypeMap[typeof(byte?)] = integer;
+            ScalarTypeMap[typeof(bool?)] = boolean;
+
+            Context.SaveChanges();
         }
 
         private static void LoadCLRTypeMap()
@@ -105,9 +171,12 @@ namespace NuzzGraph.Seed
             {
                 //Create type node
                 var t = Context.NodeTypes.Create();
-                INodeType y = t;
-                
+                t.Label = clrType.Name.Substring(1);
+                CLRTypeMap[clrType] = t;
+                //Context.NodeTypes.Add(t);
             }
+
+            Context.SaveChanges();
         }
     }
 }

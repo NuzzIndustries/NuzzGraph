@@ -245,11 +245,6 @@ namespace NuzzGraph.Entities
             get { return GetRelatedObject<NuzzGraph.Entities.IFunction>("DeclaringFunction"); }
     	}
     
-    	public NuzzGraph.Entities.INode DefaultValue
-    	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INode>("DefaultValue"); }
-    	}
-    
     	public NuzzGraph.Entities.IType ParameterType
     	{
             get { return GetRelatedObject<NuzzGraph.Entities.IType>("ParameterType"); }
@@ -260,6 +255,23 @@ namespace NuzzGraph.Entities
     	public NuzzGraph.Entities.IScalarType PropertyType
     	{
             get { return GetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType"); }
+            set { SetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType", value); }
+    	}
+    
+    	public System.Boolean IsNullable
+    	{
+            		get { return GetRelatedProperty<System.Boolean>("IsNullable"); }
+            		set { SetRelatedProperty("IsNullable", value); }
+    	}
+    
+    	public System.Object DefaultValue
+    	{
+            		get { return (object)GetRelatedProperty<System.Object>("DefaultValue"); }
+            		set 
+            		{ 
+            			EntityUtility.ValidateScalar(value);
+            			SetRelatedProperty("DefaultValue", value); 
+            		} //Convert to DB	
     	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.ISystemNode
@@ -317,6 +329,7 @@ namespace NuzzGraph.Entities
     	public NuzzGraph.Entities.INodeType DeclaringType
     	{
             get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType", value); }
     	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
@@ -324,6 +337,23 @@ namespace NuzzGraph.Entities
     	public NuzzGraph.Entities.IScalarType PropertyType
     	{
             get { return GetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType"); }
+            set { SetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType", value); }
+    	}
+    
+    	public System.Boolean IsNullable
+    	{
+            		get { return GetRelatedProperty<System.Boolean>("IsNullable"); }
+            		set { SetRelatedProperty("IsNullable", value); }
+    	}
+    
+    	public System.Object DefaultValue
+    	{
+            		get { return (object)GetRelatedProperty<System.Object>("DefaultValue"); }
+            		set 
+            		{ 
+            			EntityUtility.ValidateScalar(value);
+            			SetRelatedProperty("DefaultValue", value); 
+            		} //Convert to DB	
     	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.ISystemNode
@@ -428,6 +458,23 @@ namespace NuzzGraph.Entities
     	public NuzzGraph.Entities.IScalarType PropertyType
     	{
             get { return GetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType"); }
+            set { SetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType", value); }
+    	}
+    
+    	public System.Boolean IsNullable
+    	{
+            		get { return GetRelatedProperty<System.Boolean>("IsNullable"); }
+            		set { SetRelatedProperty("IsNullable", value); }
+    	}
+    
+    	public System.Object DefaultValue
+    	{
+            		get { return (object)GetRelatedProperty<System.Object>("DefaultValue"); }
+            		set 
+            		{ 
+            			EntityUtility.ValidateScalar(value);
+            			SetRelatedProperty("DefaultValue", value); 
+            		} //Convert to DB	
     	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.ISystemNode

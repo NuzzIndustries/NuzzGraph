@@ -16,5 +16,13 @@ namespace NuzzGraph.Entities
 
     public partial class ScalarType : IScalarType
     {
+        internal System.Type CLRType
+        {
+            get
+            {
+#warning fix this
+                return typeof(string);
+            }
+        }
     }
 }

@@ -271,7 +271,18 @@ private void WriteInterfaceImplementation(CodeGenerationTools code, Helper helpe
 	{
 <#+
 					PushIndent(CodeRegion.GetIndent(2));
-					if (IsValidLiteralType(helper, p.Type)) 
+					if (p.Type.AsFullName == "System.Object")
+                    {
+#>
+		get { return (object)GetRelatedProperty<<#= itemType #>>(<#=code.CreateLiteral(p.Name)#>); }
+		set 
+		{ 
+			EntityUtility.ValidateScalar(value);
+			SetRelatedProperty(<#=code.CreateLiteral(p.Name)#>, value); 
+		} //Convert to DB	
+<#+                    
+                    }
+					else if (IsValidLiteralType(helper, p.Type)) 
 					{
 #>
 		get { return GetRelatedProperty<<#= itemType #>>(<#=code.CreateLiteral(p.Name)#>); }
@@ -385,6 +396,9 @@ private void WritePropertyAttributes(CodeGenerationTools code, Helper helper, Co
 
 private bool IsValidLiteralType(Helper helper, CodeTypeRef t) 
 {
+	if (t.AsFullName == "System.Object")
+		return true;
+
 	if (Constants.BasicTypes.Contains(t.AsFullName) ||
 			IsByteArray(t) ||
 			t.CodeType.IsDerivedFrom["System.Enum"]) {

@@ -74,7 +74,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GraphContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="GraphContextCustom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\EntityUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GraphContext.tt">

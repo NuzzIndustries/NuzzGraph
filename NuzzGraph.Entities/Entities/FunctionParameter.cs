@@ -14,8 +14,6 @@ namespace NuzzGraph.Entities
         [InverseProperty("Parameters")]
         IFunction DeclaringFunction { get; }
 
-        INode DefaultValue { get; }
-
         IType ParameterType { get; }
     }
 
