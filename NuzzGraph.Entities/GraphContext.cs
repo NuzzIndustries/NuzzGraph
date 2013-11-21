@@ -216,10 +216,10 @@ namespace NuzzGraph.Entities
     	#endregion
     	#region Implementation of NuzzGraph.Entities.INode
     
-    	public NuzzGraph.Entities.INodeType Type
+    	public NuzzGraph.Entities.INodeType TypeHandle
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("Type"); }
-            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("Type", value); }
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle", value); }
     	}
     
     	public System.String Label
@@ -256,15 +256,20 @@ namespace NuzzGraph.Entities
     	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
+    
+    	public NuzzGraph.Entities.IScalarType PropertyType
+    	{
+            get { return GetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType"); }
+    	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.ISystemNode
     	#endregion
     	#region Implementation of NuzzGraph.Entities.INode
     
-    	public NuzzGraph.Entities.INodeType Type
+    	public NuzzGraph.Entities.INodeType TypeHandle
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("Type"); }
-            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("Type", value); }
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle", value); }
     	}
     
     	public System.String Label
@@ -285,10 +290,10 @@ namespace NuzzGraph.Entities
     	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.INode
     
-    	public NuzzGraph.Entities.INodeType Type
+    	public NuzzGraph.Entities.INodeType TypeHandle
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("Type"); }
-            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("Type", value); }
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle", value); }
     	}
     
     	public System.String Label
@@ -313,22 +318,22 @@ namespace NuzzGraph.Entities
     	{
             get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType"); }
     	}
+    	#endregion
+    	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
     
     	public NuzzGraph.Entities.IScalarType PropertyType
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.IScalarType>("Type"); }
+            get { return GetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType"); }
     	}
-    	#endregion
-    	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
     	#endregion
     	#region Implementation of NuzzGraph.Entities.ISystemNode
     	#endregion
     	#region Implementation of NuzzGraph.Entities.INode
     
-    	public NuzzGraph.Entities.INodeType Type
+    	public NuzzGraph.Entities.INodeType TypeHandle
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("Type"); }
-            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("Type", value); }
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle", value); }
     	}
     
     	public System.String Label
@@ -396,10 +401,10 @@ namespace NuzzGraph.Entities
     	#endregion
     	#region Implementation of NuzzGraph.Entities.INode
     
-    	public NuzzGraph.Entities.INodeType Type
+    	public NuzzGraph.Entities.INodeType TypeHandle
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("Type"); }
-            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("Type", value); }
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle", value); }
     	}
     
     	public System.String Label
@@ -419,15 +424,20 @@ namespace NuzzGraph.Entities
     	public PropertyDefinition() : base() { }
     	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
+    
+    	public NuzzGraph.Entities.IScalarType PropertyType
+    	{
+            get { return GetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType"); }
+    	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.ISystemNode
     	#endregion
     	#region Implementation of NuzzGraph.Entities.INode
     
-    	public NuzzGraph.Entities.INodeType Type
+    	public NuzzGraph.Entities.INodeType TypeHandle
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("Type"); }
-            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("Type", value); }
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle", value); }
     	}
     
     	public System.String Label
@@ -474,10 +484,10 @@ namespace NuzzGraph.Entities
     	#endregion
     	#region Implementation of NuzzGraph.Entities.INode
     
-    	public NuzzGraph.Entities.INodeType Type
+    	public NuzzGraph.Entities.INodeType TypeHandle
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("Type"); }
-            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("Type", value); }
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle", value); }
     	}
     
     	public System.String Label
@@ -497,9 +507,9 @@ namespace NuzzGraph.Entities
     	public ScalarType() : base() { }
     	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.IScalarType
-    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INodePropertyDefinition> PropertiesContainingType
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IPropertyDefinition> PropertiesContainingType
     	{
-    		get { return GetRelatedObjects<NuzzGraph.Entities.INodePropertyDefinition>("PropertiesContainingType"); }
+    		get { return GetRelatedObjects<NuzzGraph.Entities.IPropertyDefinition>("PropertiesContainingType"); }
     		set { SetRelatedObjects("PropertiesContainingType", value); }
     								}
     	#endregion
@@ -509,10 +519,10 @@ namespace NuzzGraph.Entities
     	#endregion
     	#region Implementation of NuzzGraph.Entities.INode
     
-    	public NuzzGraph.Entities.INodeType Type
+    	public NuzzGraph.Entities.INodeType TypeHandle
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("Type"); }
-            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("Type", value); }
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle", value); }
     	}
     
     	public System.String Label
@@ -535,10 +545,10 @@ namespace NuzzGraph.Entities
     	#endregion
     	#region Implementation of NuzzGraph.Entities.INode
     
-    	public NuzzGraph.Entities.INodeType Type
+    	public NuzzGraph.Entities.INodeType TypeHandle
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("Type"); }
-            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("Type", value); }
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle", value); }
     	}
     
     	public System.String Label
@@ -563,10 +573,10 @@ namespace NuzzGraph.Entities
     	#endregion
     	#region Implementation of NuzzGraph.Entities.INode
     
-    	public NuzzGraph.Entities.INodeType Type
+    	public NuzzGraph.Entities.INodeType TypeHandle
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("Type"); }
-            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("Type", value); }
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("TypeHandle", value); }
     	}
     
     	public System.String Label

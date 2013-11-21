@@ -24,7 +24,7 @@ namespace NuzzGraph.Entities
         [InverseProperty("SuperTypes")]
         ICollection<INodeType> SubTypes { get; }
 
-        [InverseProperty("Type")]
+        [InverseProperty("TypeHandle")]
         ICollection<INode> AllNodes { get; }
         
 
