@@ -297,7 +297,6 @@ namespace NuzzGraph.Entities
     
     public partial class Node : BrightstarEntityObject, INode 
     {
-    	public Node(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public Node() : base() { }
     	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.INode
@@ -505,27 +504,23 @@ namespace NuzzGraph.Entities
     	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.IRelationshipType
     
-    	public System.Int64 MinConnections
+    	public System.Boolean SupportsMany
     	{
-            		get { return GetRelatedProperty<System.Int64>("MinConnections"); }
-            		set { SetRelatedProperty("MinConnections", value); }
+            		get { return GetRelatedProperty<System.Boolean>("SupportsMany"); }
+            		set { SetRelatedProperty("SupportsMany", value); }
     	}
     
-    	public System.Int64 MaxConnections
+    	public NuzzGraph.Entities.INodeType OutgoingFrom
     	{
-            		get { return GetRelatedProperty<System.Int64>("MaxConnections"); }
-            		set { SetRelatedProperty("MaxConnections", value); }
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("OutgoingFrom"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("OutgoingFrom", value); }
     	}
-    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INodeType> OutgoingFrom
+    
+    	public NuzzGraph.Entities.INodeType IncomingTo
     	{
-    		get { return GetRelatedObjects<NuzzGraph.Entities.INodeType>("OutgoingFrom"); }
-    		set { SetRelatedObjects("OutgoingFrom", value); }
-    								}
-    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INodeType> IncomingTo
-    	{
-    		get { return GetRelatedObjects<NuzzGraph.Entities.INodeType>("IncomingTo"); }
-    		set { SetRelatedObjects("IncomingTo", value); }
-    								}
+            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("IncomingTo"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("IncomingTo", value); }
+    	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.ISystemNode
     	#endregion

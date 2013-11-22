@@ -37,6 +37,9 @@
     <Reference Include="dotNetRDF">
       <HintPath>..\packages\BrightstarDB.1.4.41011\lib\net40\dotNetRDF.dll</HintPath>
     </Reference>
+    <Reference Include="FastMember">
+      <HintPath>..\packages\FastMember.1.0.0.11\lib\net40\FastMember.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\BrightstarDB.1.4.41011\lib\net40\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -47,6 +50,7 @@
       <HintPath>..\packages\BrightstarDB.1.4.41011\lib\net40\Remotion.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -58,7 +62,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\CustomConstructorAttribute.cs" />
     <Compile Include="Attributes\InheritsAttribute.cs" />
+    <Compile Include="ContextFactory.cs" />
     <Compile Include="Entities\Function.cs" />
     <Compile Include="Entities\FunctionParameter.cs" />
     <Compile Include="Entities\Node.cs" />

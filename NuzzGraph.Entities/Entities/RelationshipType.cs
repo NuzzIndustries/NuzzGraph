@@ -11,17 +11,21 @@ namespace NuzzGraph.Entities
     [Inherits("SystemNode")]
     public interface IRelationshipType : ISystemNode
     {
-        long MinConnections { get; set; }
-        long MaxConnections { get; set; }
-
+        bool SupportsMany { get; set; }
+        
         [InverseProperty("AllowedOutgoingRelationships")]
-        ICollection<INodeType> OutgoingFrom { get; }
+        INodeType OutgoingFrom { get; set; }
 
         [InverseProperty("AllowedIncomingRelationships")]
-        ICollection<INodeType> IncomingTo { get; }
+        INodeType IncomingTo { get; set; }
     }
 
     public partial class RelationshipType : IRelationshipType
     {
+  
+        protected override void OnPropertyChanged(string propertyName)
+        {
+            base.OnPropertyChanged(propertyName);
+        }
     }
 }

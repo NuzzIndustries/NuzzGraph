@@ -5,6 +5,7 @@ using System.Text;
 using NuzzGraph.Entities;
 using BrightstarDB.Client;
 using System.Reflection;
+using BrightstarDB.EntityFramework;
 
 namespace NuzzGraph.Seed
 {
@@ -12,7 +13,6 @@ namespace NuzzGraph.Seed
     {
         //Config
         static string StoreName { get { return "nuzzgraph"; } }
-        static string ConnectionString { get { return "type=http;endpoint=http://localhost:8090/brightstar;storeName=nuzzgraph"; } }
         static string EntityTypeNamespace { get { return "NuzzGraph.Entities"; } } 
 
         static IBrightstarService Client { get; set; }
@@ -30,14 +30,21 @@ namespace NuzzGraph.Seed
 
         static void Main(string[] args)
         {
-            ResetDB();
+            try
+            {
+                ResetDB();
+            }
+            finally
+            {
+                Context.Dispose();
+            }
         }
 
         private static void ResetDB()
         {
             //Load client and context
-            Client = BrightstarService.GetClient(ConnectionString);
-            Context = new GraphContext(ConnectionString);
+            Client = ContextFactory.GetClient();
+            Context = ContextFactory.New();
 
             //Delete store if it exists
             if (Client.DoesStoreExist(StoreName))
@@ -74,9 +81,44 @@ namespace NuzzGraph.Seed
                 //Get properties of type
                 foreach (var prop in clrType.GetProperties(flags))
                 {
+                    //Skip if inverse property
+                    if (prop.GetCustomAttributes(typeof(InversePropertyAttribute), false).Count() == 1)
+                        continue;
+
+                    //Determine if collection
+                    if (prop.GetType() == typeof(ICollection<>))
+                    {
+                        //Load inner type
+                        var innerType = prop.GetType().GetGenericArguments().First();
+
+                        //Determine if it is a scalar
+                        if (EntityUtility.AllSimpleTypes.Contains(innerType))
+                        {
+                            throw new InvalidOperationException("Scalar collections not supported yet.");
+                        }
+                        else
+                        {
+                            //Collection of nodes
+                            if (!CLRTypeMap.ContainsKey(innerType))
+                                throw new InvalidOperationException("Node Type not found: " + innerType.Name);
+
+                            //Create relationship definition
+                            var relnode = Context.RelationshipTypes.Create();
+                            relnode.SupportsMany = true;
+                            relnode.Label = prop.Name;
+                            relnode.OutgoingFrom = CLRTypeMap[clrType];
+                            relnode.IncomingTo = CLRTypeMap[innerType];
+
+                        }
+
+
+                    }
+
+
                     //Determine if it is a relationship or a property
                     if (EntityUtility.AllSimpleTypes.Contains(prop.PropertyType))
                     {
+                        //Property
                         var propnode = Context.NodePropertyDefinitions.Create();
                         var typeNode = CLRTypeMap[typeof(INodeType)];
                         propnode.DeclaringType = nodeTypeNode;
@@ -85,6 +127,14 @@ namespace NuzzGraph.Seed
                     }
                     else
                     {
+                        //Relationship
+                        var relnode = Context.RelationshipTypes.Create();
+                        
+                        if (prop.GetType() == typeof(ICollection<>))
+                            relnode.SupportsMany = true;
+
+
+                       // relnode.
                     }
                 }
             }
@@ -98,61 +148,6 @@ namespace NuzzGraph.Seed
 
 
 
-        }
-
-        private static void LoadScalarTypes()
-        {
-            ScalarTypeMap = new Dictionary<System.Type, IScalarType>();
-            var nt = CLRTypeMap[typeof(IScalarType)];
-
-            //Types:
-            //Text
-            //Integer
-            //Decimal
-            //Bool
-            IScalarType txt, integer, dec, boolean;
-
-            var n = Context.ScalarTypes.Create();
-            n.Label = "Text";
-            n.TypeHandle = nt;
-            txt = n;
-
-            n = Context.ScalarTypes.Create();
-            n.TypeHandle = nt;
-            n.Label = "Integer";
-            integer = n;
-
-            n = Context.ScalarTypes.Create();
-            n.TypeHandle = nt;
-            n.Label = "Decimal";
-            dec = n;
-
-            n = Context.ScalarTypes.Create();
-            n.TypeHandle = nt;
-            n.Label = "Boolean";
-            boolean = n;
-
-            ScalarTypeMap[typeof(string)] = txt;
-            ScalarTypeMap[typeof(char)] = txt;
-            ScalarTypeMap[typeof(float)] = dec;
-            ScalarTypeMap[typeof(decimal)] = dec;
-            ScalarTypeMap[typeof(double)] = dec;
-            ScalarTypeMap[typeof(int)] = integer;
-            ScalarTypeMap[typeof(long)] = integer;
-            ScalarTypeMap[typeof(short)] = integer;
-            ScalarTypeMap[typeof(byte)] = integer;
-            ScalarTypeMap[typeof(bool)] = boolean;
-            ScalarTypeMap[typeof(char?)] = txt;
-            ScalarTypeMap[typeof(float?)] = dec;
-            ScalarTypeMap[typeof(decimal?)] = dec;
-            ScalarTypeMap[typeof(double?)] = dec;
-            ScalarTypeMap[typeof(int?)] = integer;
-            ScalarTypeMap[typeof(long?)] = integer;
-            ScalarTypeMap[typeof(short?)] = integer;
-            ScalarTypeMap[typeof(byte?)] = integer;
-            ScalarTypeMap[typeof(bool?)] = boolean;
-
-            Context.SaveChanges();
         }
 
         private static void LoadCLRTypeMap()
@@ -175,6 +170,58 @@ namespace NuzzGraph.Seed
                 CLRTypeMap[clrType] = t;
                 //Context.NodeTypes.Add(t);
             }
+
+            Context.SaveChanges();
+
+            EntityUtility.NodeTypesInitialized = true;
+        }
+
+        private static void LoadScalarTypes()
+        {
+            ScalarTypeMap = new Dictionary<System.Type, IScalarType>();
+
+            //Types:
+            //Text
+            //Integer
+            //Decimal
+            //Bool
+            IScalarType txt, integer, dec, boolean;
+
+            var n = Context.ScalarTypes.Create();
+            n.Label = "Text";
+            txt = n;
+
+            n = Context.ScalarTypes.Create();
+            n.Label = "Integer";
+            integer = n;
+
+            n = Context.ScalarTypes.Create();
+            n.Label = "Decimal";
+            dec = n;
+
+            n = Context.ScalarTypes.Create();
+            n.Label = "Boolean";
+            boolean = n;
+
+            ScalarTypeMap[typeof(string)] = txt;
+            ScalarTypeMap[typeof(char)] = txt;
+            ScalarTypeMap[typeof(float)] = dec;
+            ScalarTypeMap[typeof(decimal)] = dec;
+            ScalarTypeMap[typeof(double)] = dec;
+            ScalarTypeMap[typeof(int)] = integer;
+            ScalarTypeMap[typeof(long)] = integer;
+            ScalarTypeMap[typeof(short)] = integer;
+            ScalarTypeMap[typeof(byte)] = integer;
+            ScalarTypeMap[typeof(bool)] = boolean;
+            ScalarTypeMap[typeof(char?)] = txt;
+            ScalarTypeMap[typeof(float?)] = dec;
+            ScalarTypeMap[typeof(decimal?)] = dec;
+            ScalarTypeMap[typeof(double?)] = dec;
+            ScalarTypeMap[typeof(int?)] = integer;
+            ScalarTypeMap[typeof(long?)] = integer;
+            ScalarTypeMap[typeof(short?)] = integer;
+            ScalarTypeMap[typeof(byte?)] = integer;
+            ScalarTypeMap[typeof(bool?)] = boolean;
 
             Context.SaveChanges();
         }

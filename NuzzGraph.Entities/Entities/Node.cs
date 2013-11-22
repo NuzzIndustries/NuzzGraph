@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BrightstarDB.EntityFramework;
+using BrightstarDB.Client;
+using NuzzGraph.Entities.Attributes;
 
 namespace NuzzGraph.Entities
 {
     [Entity]
+    [CustomConstructor]
     public interface INode
     {
         /// <summary>
@@ -22,6 +25,15 @@ namespace NuzzGraph.Entities
 
     public partial class Node : BrightstarEntityObject, INode 
     {
+        public Node(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) 
+        {
+            if (EntityUtility.NodeTypesInitialized)
+                TypeHandle = ((GraphContext)context).NodeTypes.Where(x => x.Label == this.GetType().Name).Single();
+            if (EntityUtility.IsSeedMode)
+                EntityUtility.AddNodeToContext((GraphContext)context, (INode)this);
+            
+        }
+
         public Node Get()
         {
             return this;
