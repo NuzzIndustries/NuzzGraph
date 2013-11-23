@@ -6,6 +6,11 @@ using NuzzGraph.Entities;
 using BrightstarDB.Client;
 using System.Reflection;
 using BrightstarDB.EntityFramework;
+using System.Configuration;
+using System.ServiceProcess;
+using System.Management;
+using System.IO;
+using System.ServiceModel;
 
 namespace NuzzGraph.Seed
 {
@@ -44,7 +49,68 @@ namespace NuzzGraph.Seed
         {
             //Load client and context
             Client = ContextFactory.GetClient();
-            Context = ContextFactory.New();
+            try
+            {
+
+                Context = ContextFactory.New();
+            }
+            catch (FaultException e)
+            {
+                if (e.Message != string.Format("Error creating store {0}. Store already exists", StoreName))
+                    throw;
+
+                 //Load service name
+                string svcname = ConfigurationManager.AppSettings["SVCName"];
+
+                //Load DB service
+                var svc = new ServiceController(svcname, ".");
+                
+                //Get path to service exe in order to delete / cleanup folder for store
+                string svcPath = null;
+                ManagementClass mc = new ManagementClass("Win32_Service");
+                foreach (ManagementObject mo in mc.GetInstances())
+                {
+                    if (mo.GetPropertyValue("Name").ToString() == svcname)
+                        svcPath = mo.GetPropertyValue("PathName").ToString().Trim('"');
+                }
+                
+                //Load path to folder
+                var root = Directory.GetParent(svcPath).Parent;
+                var ngfolder = root.GetDirectories()
+                    .Where(x => x.Name.ToLower() == "data")
+                    .Single()
+                    .GetDirectories()
+                    .Where(x => x.Name.ToLower() == "nuzzgraph")
+                    .FirstOrDefault();
+                var file = ngfolder.GetFiles().Where(x => x.Name == "data.bs").FirstOrDefault();
+                if (file == null)
+                    throw new InvalidOperationException("Unable to delete the folder " + ngfolder.FullName);
+                   
+
+                //Stop DB Service
+                svc.Stop();
+                svc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(20));
+                System.Threading.Thread.Sleep(200);
+
+                //Delete store folder
+                try
+                {
+                    ngfolder.Delete();
+                }
+                catch (Exception)
+                {
+                    throw new InvalidOperationException("Unable to remove store " + StoreName + ".");
+                }
+
+                //Restart service
+                svc.Start();
+                svc.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(20));
+                System.Threading.Thread.Sleep(200);
+                
+                //Reload context
+                Client = ContextFactory.GetClient();
+                Context = ContextFactory.New();
+            }
 
             //Delete store if it exists
             if (Client.DoesStoreExist(StoreName))
@@ -58,96 +124,13 @@ namespace NuzzGraph.Seed
 
         private static void SeedData()
         {
-            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
-
             //Create and load node type nodes
             LoadCLRTypeMap();
 
+            //Load other data
             LoadScalarTypes();
-
-            //Mark the node a a type node
-            //tType. = nodeTypeNode;
-            //t.AllowedIncomingRelationships
-            //t.AllowedOutgoingRelationships
-            //t.Functions
-            //t.IsAbstract
-            //t.SubTypes
-            //t.SuperTypes
-
-            foreach (var clrType in AllCLRTypes)
-            {
-                var nodeTypeNode = Context.NodeTypes.Where(x => x.Label == clrType.Name.Substring(1)).Single();
-                
-                //Get properties of type
-                foreach (var prop in clrType.GetProperties(flags))
-                {
-                    //Skip if inverse property
-                    if (prop.GetCustomAttributes(typeof(InversePropertyAttribute), false).Count() == 1)
-                        continue;
-
-                    //Determine if collection
-                    if (prop.GetType() == typeof(ICollection<>))
-                    {
-                        //Load inner type
-                        var innerType = prop.GetType().GetGenericArguments().First();
-
-                        //Determine if it is a scalar
-                        if (EntityUtility.AllSimpleTypes.Contains(innerType))
-                        {
-                            throw new InvalidOperationException("Scalar collections not supported yet.");
-                        }
-                        else
-                        {
-                            //Collection of nodes
-                            if (!CLRTypeMap.ContainsKey(innerType))
-                                throw new InvalidOperationException("Node Type not found: " + innerType.Name);
-
-                            //Create relationship definition
-                            var relnode = Context.RelationshipTypes.Create();
-                            relnode.SupportsMany = true;
-                            relnode.Label = prop.Name;
-                            relnode.OutgoingFrom = CLRTypeMap[clrType];
-                            relnode.IncomingTo = CLRTypeMap[innerType];
-
-                        }
-
-
-                    }
-
-
-                    //Determine if it is a relationship or a property
-                    if (EntityUtility.AllSimpleTypes.Contains(prop.PropertyType))
-                    {
-                        //Property
-                        var propnode = Context.NodePropertyDefinitions.Create();
-                        var typeNode = CLRTypeMap[typeof(INodeType)];
-                        propnode.DeclaringType = nodeTypeNode;
-                        propnode.Label = prop.Name;
-                        propnode.PropertyType = ScalarTypeMap[prop.PropertyType];
-                    }
-                    else
-                    {
-                        //Relationship
-                        var relnode = Context.RelationshipTypes.Create();
-                        
-                        if (prop.GetType() == typeof(ICollection<>))
-                            relnode.SupportsMany = true;
-
-
-                       // relnode.
-                    }
-                }
-            }
-
-            
-            var nodes1 = Context.Nodes.Create();
-            var function1 = (Function)Context.Functions.Create();
-            var f2 = (INode)function1;
-            var f3 = f2.Get();
-            var id = function1.Id;
-
-
-
+            ProcessProperties();
+            LoadMethods();
         }
 
         private static void LoadCLRTypeMap()
@@ -224,6 +207,88 @@ namespace NuzzGraph.Seed
             ScalarTypeMap[typeof(bool?)] = boolean;
 
             Context.SaveChanges();
+        }
+
+        private static void ProcessProperties()
+        {
+            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
+            foreach (var clrType in AllCLRTypes)
+            {
+                var nodeTypeNode = Context.NodeTypes.Where(x => x.Label == clrType.Name.Substring(1)).Single();
+
+                //Get properties of type
+                foreach (var prop in clrType.GetProperties(flags))
+                {
+                    //Skip if inverse property
+                    if (prop.GetCustomAttributes(typeof(InversePropertyAttribute), false).Count() == 1)
+                        continue;
+
+                    //Determine if collection
+                    if (prop.GetType() == typeof(ICollection<>))
+                    {
+                        //Load inner type
+                        var innerType = prop.GetType().GetGenericArguments().First();
+
+                        //Determine if it is a scalar
+                        if (EntityUtility.AllSimpleTypes.Contains(innerType))
+                        {
+                            throw new InvalidOperationException("Scalar collections not supported yet.");
+                        }
+                        else
+                        {
+                            //Collection of nodes
+                            if (!CLRTypeMap.ContainsKey(innerType))
+                                throw new InvalidOperationException("Node Type not found: " + innerType.Name);
+
+                            //Create relationship definition
+                            var relnode = Context.RelationshipTypes.Create();
+                            relnode.SupportsMany = true;
+                            relnode.Label = prop.Name;
+                            relnode.OutgoingFrom = CLRTypeMap[clrType];
+                            relnode.IncomingTo = CLRTypeMap[innerType];
+
+                        }
+                    }
+                    else //Not a collection
+                    {
+                        //Determine if it is a relationship or a property
+                        if (EntityUtility.AllSimpleTypes.Contains(prop.PropertyType))
+                        {
+                            //Property
+                            var propnode = Context.NodePropertyDefinitions.Create();
+                            var typeNode = CLRTypeMap[typeof(INodeType)];
+                            propnode.DeclaringType = nodeTypeNode;
+                            propnode.Label = prop.Name;
+                            propnode.PropertyType = ScalarTypeMap[prop.PropertyType];
+                        }
+                        else
+                        {
+                            //Relationship
+                            if (!CLRTypeMap.ContainsKey(prop.PropertyType))
+                                throw new InvalidOperationException("Node Type not found: " + prop.PropertyType.Name);
+
+                            var relnode = Context.RelationshipTypes.Create();
+                            relnode.SupportsMany = false;
+                            relnode.Label = prop.Name;
+                            relnode.OutgoingFrom = CLRTypeMap[clrType];
+                            relnode.IncomingTo = CLRTypeMap[prop.PropertyType];
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void LoadMethods()
+        {
+            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
+            foreach (var clrType in AllCLRTypes)
+            {
+                var methods = clrType.GetMethods(flags).ToList();
+                foreach (var method in methods)
+                {
+                    
+                }
+            }
         }
     }
 }
