@@ -9,7 +9,6 @@ using NuzzGraph.Entities.Attributes;
 namespace NuzzGraph.Entities
 {
     [Entity]
-    [CustomConstructor]
     public interface INode
     {
         /// <summary>
@@ -25,18 +24,17 @@ namespace NuzzGraph.Entities
 
     public partial class Node : BrightstarEntityObject, INode 
     {
-        public Node(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) 
+        public Node Get()
+        {
+            return this;
+        }
+
+        protected override void OnCreated(BrightstarEntityContext context)
         {
             if (EntityUtility.NodeTypesInitialized)
                 TypeHandle = ((GraphContext)context).NodeTypes.Where(x => x.Label == this.GetType().Name).Single();
             if (EntityUtility.IsSeedMode)
                 EntityUtility.AddNodeToContext((GraphContext)context, (INode)this);
-            
-        }
-
-        public Node Get()
-        {
-            return this;
         }
     }
 }

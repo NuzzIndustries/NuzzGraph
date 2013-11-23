@@ -194,14 +194,7 @@ private void WriteEntityClass(CodeGenerationTools code, Helper helper, ResourceI
 
 <#= code.SpaceAfter(iface.EntitySetAccessLevel)#>partial class <#= iface.ClassName #> : <#=GetInheritedClass(iface.ClassName)#>, <#= iface.InterfaceName #> 
 {
-<#+
-	if (!helper.TypesWithCustomConstructor.Contains(iface.ClassName))
-    {
-#>
 	public <#= iface.ClassName#>(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
-<#+
-    }
-#>
 	public <#= iface.ClassName#>() : base() { }
 <#+
 	if (identityProperty != null) 
@@ -381,8 +374,6 @@ private void WriteClassAttributes(CodeGenerationTools code, Helper helper, Resou
 					}
 				}
 			}
-			else if (a.FullName == "NuzzGraph.Entities.Attributes.CustomConstructorAttribute")
-				helper.TypesWithCustomConstructor.Add(iface.ClassName);
 			else
 				WriteCustomAttribute(helper, x as CodeAttribute);
 		}
@@ -614,13 +605,10 @@ class Helper {
 	private ProjectItem _templateProjectItem;
 	private Project _project;
 
-	public System.Collections.Generic.List<string> TypesWithCustomConstructor;
-	
 	public Helper(TextTransformation transformation) {
 		_transformation = transformation;
 		_templateProjectItem = DTE.Solution.FindProjectItem(Host.TemplateFile);
 		_project = _templateProjectItem.ContainingProject;
-		TypesWithCustomConstructor = new System.Collections.Generic.List<string>();
 	}
 	
 	public ITextTemplatingEngineHost Host {

@@ -38,6 +38,8 @@ namespace NuzzGraph.Seed
             try
             {
                 ResetDB();
+                Client.StartExport(StoreName, "test.rdf", null);
+                System.Threading.Thread.Sleep(5000);
             }
             finally
             {
@@ -131,6 +133,8 @@ namespace NuzzGraph.Seed
             LoadScalarTypes();
             ProcessProperties();
             LoadMethods();
+
+            Context.SaveChanges();
         }
 
         private static void LoadCLRTypeMap()
@@ -168,7 +172,7 @@ namespace NuzzGraph.Seed
             //Integer
             //Decimal
             //Bool
-            IScalarType txt, integer, dec, boolean;
+            IScalarType txt, integer, dec, boolean, anyScalar;
 
             var n = Context.ScalarTypes.Create();
             n.Label = "Text";
@@ -185,6 +189,10 @@ namespace NuzzGraph.Seed
             n = Context.ScalarTypes.Create();
             n.Label = "Boolean";
             boolean = n;
+
+            n = Context.ScalarTypes.Create();
+            n.Label = "AnyScalar";
+            anyScalar = n;
 
             ScalarTypeMap[typeof(string)] = txt;
             ScalarTypeMap[typeof(char)] = txt;
@@ -205,6 +213,7 @@ namespace NuzzGraph.Seed
             ScalarTypeMap[typeof(short?)] = integer;
             ScalarTypeMap[typeof(byte?)] = integer;
             ScalarTypeMap[typeof(bool?)] = boolean;
+            ScalarTypeMap[typeof(object)] = anyScalar;
 
             Context.SaveChanges();
         }
@@ -224,10 +233,10 @@ namespace NuzzGraph.Seed
                         continue;
 
                     //Determine if collection
-                    if (prop.GetType() == typeof(ICollection<>))
+                    if (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>))
                     {
                         //Load inner type
-                        var innerType = prop.GetType().GetGenericArguments().First();
+                        var innerType = prop.PropertyType.GetGenericArguments().First();
 
                         //Determine if it is a scalar
                         if (EntityUtility.AllSimpleTypes.Contains(innerType))
@@ -252,11 +261,10 @@ namespace NuzzGraph.Seed
                     else //Not a collection
                     {
                         //Determine if it is a relationship or a property
-                        if (EntityUtility.AllSimpleTypes.Contains(prop.PropertyType))
+                        if (EntityUtility.AllSimpleTypes.Contains(prop.PropertyType) || prop.PropertyType == typeof(object))
                         {
                             //Property
                             var propnode = Context.NodePropertyDefinitions.Create();
-                            var typeNode = CLRTypeMap[typeof(INodeType)];
                             propnode.DeclaringType = nodeTypeNode;
                             propnode.Label = prop.Name;
                             propnode.PropertyType = ScalarTypeMap[prop.PropertyType];
@@ -286,7 +294,10 @@ namespace NuzzGraph.Seed
                 var methods = clrType.GetMethods(flags).ToList();
                 foreach (var method in methods)
                 {
-                    
+                    var funcNode = Context.Functions.Create();
+                    funcNode.DeclaringType = CLRTypeMap[clrType];
+                    funcNode.Label = method.Name;
+                    funcNode.FunctionBody = ""; 
                 }
             }
         }

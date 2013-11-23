@@ -195,6 +195,7 @@ namespace NuzzGraph.Entities
     	public NuzzGraph.Entities.INodeType DeclaringType
     	{
             get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType"); }
+            set { SetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType", value); }
     	}
     	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IFunctionParameter> Parameters
     	{
@@ -205,6 +206,7 @@ namespace NuzzGraph.Entities
     	public NuzzGraph.Entities.IFunction Overrides
     	{
             get { return GetRelatedObject<NuzzGraph.Entities.IFunction>("Overrides"); }
+            set { SetRelatedObject<NuzzGraph.Entities.IFunction>("Overrides", value); }
     	}
     	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IFunction> OverridenBy
     	{
@@ -297,6 +299,7 @@ namespace NuzzGraph.Entities
     
     public partial class Node : BrightstarEntityObject, INode 
     {
+    	public Node(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public Node() : base() { }
     	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.INode
