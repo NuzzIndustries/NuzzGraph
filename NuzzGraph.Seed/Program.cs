@@ -11,6 +11,8 @@ using System.ServiceProcess;
 using System.Management;
 using System.IO;
 using System.ServiceModel;
+using VDS.RDF;
+using VDS.RDF.Writing;
 
 namespace NuzzGraph.Seed
 {
@@ -38,8 +40,15 @@ namespace NuzzGraph.Seed
             try
             {
                 ResetDB();
-                Client.StartExport(StoreName, "test.rdf", null);
-                System.Threading.Thread.Sleep(5000);
+                var job = Client.StartExport(StoreName, "test.n3", null);
+                System.Threading.Thread.Sleep(1000);
+               
+                var rdftext = File.ReadAllText("test/import/test.n3");
+                IGraph g = new Graph();
+                VDS.RDF.Parsing.FileLoader.Load(g, "test/import/test.n3");
+                var writer = new RdfXmlWriter();
+                writer.Save(g, Path.GetFullPath("./test/import/test.rdf"));
+               
             }
             finally
             {
