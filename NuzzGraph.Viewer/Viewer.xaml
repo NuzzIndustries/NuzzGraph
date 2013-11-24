@@ -1,0 +1,25 @@
+﻿<Window x:Class="NuzzGraph.Viewer.Viewer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:NuzzGraph.Viewer"
+        Title="MainWindow" Height="448" Width="598" Loaded="Window_Loaded">
+    <DockPanel ClipToBounds="True">
+        <Menu DockPanel.Dock="Top" Height="29" HorizontalAlignment="Left" Name="menu1" VerticalAlignment="Top">
+            <MenuItem Header="File"></MenuItem>
+            <MenuItem Header="Test 2"></MenuItem>
+        </Menu>
+        <Grid ClipToBounds="True" Name="grid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <GridSplitter Width="5" Background="Red" Grid.Column="0" />
+            <Canvas Grid.Column="1" x:Name="drawingArea" Background="Gray" ClipToBounds="True">
+                <local:MyVisualHost x:Name="host" />
+            </Canvas>
+
+
+        </Grid>
+    </DockPanel>
+    
+</Window>
