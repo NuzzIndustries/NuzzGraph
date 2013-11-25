@@ -333,6 +333,12 @@ namespace NuzzGraph.Entities
             get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType"); }
             set { SetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType", value); }
     	}
+    
+    	public System.String Debug_ObjectType
+    	{
+            		get { return GetRelatedProperty<System.String>("Debug_ObjectType"); }
+            		set { SetRelatedProperty("Debug_ObjectType", value); }
+    	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
     
@@ -391,11 +397,11 @@ namespace NuzzGraph.Entities
             		get { return GetRelatedProperty<System.Boolean>("IsAbstract"); }
             		set { SetRelatedProperty("IsAbstract", value); }
     	}
-    
-    	public NuzzGraph.Entities.INodeType SuperTypes
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INodeType> SuperTypes
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("SuperTypes"); }
-    	}
+    		get { return GetRelatedObjects<NuzzGraph.Entities.INodeType>("SuperTypes"); }
+    		set { SetRelatedObjects("SuperTypes", value); }
+    								}
     	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IRelationshipType> AllowedOutgoingRelationships
     	{
     		get { return GetRelatedObjects<NuzzGraph.Entities.IRelationshipType>("AllowedOutgoingRelationships"); }

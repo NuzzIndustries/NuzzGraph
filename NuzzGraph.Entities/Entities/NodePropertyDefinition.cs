@@ -12,6 +12,8 @@ namespace NuzzGraph.Entities
     public interface INodePropertyDefinition : IPropertyDefinition
     {
         INodeType DeclaringType { get; set;  }
+
+        string Debug_ObjectType { get; set; }
     }
 
     public partial class NodePropertyDefinition : INodePropertyDefinition

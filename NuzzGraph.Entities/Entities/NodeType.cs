@@ -13,9 +13,11 @@ namespace NuzzGraph.Entities
     {
         bool IsAbstract { get; }
 
-        INodeType SuperTypes { get; } //Change to multiple inheritance
+        ICollection<INodeType> SuperTypes { get; set; } //Change to multiple inheritance
         ICollection<IRelationshipType> AllowedOutgoingRelationships { get; }
         ICollection<IRelationshipType> AllowedIncomingRelationships { get; }
+
+        [InverseProperty("DeclaringType")]
         ICollection<INodePropertyDefinition> Properties { get; }
 
         [InverseProperty("DeclaringType")]

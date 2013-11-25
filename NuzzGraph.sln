@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrightstarDB", "..\Brightst
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuzzGraph.Viewer", "NuzzGraph.Viewer\NuzzGraph.Viewer.csproj", "{01A8988C-84CA-47D4-B483-4F13AFF15526}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuzzGraph.Core", "NuzzGraph.Core\NuzzGraph.Core.csproj", "{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CloudDebug|Any CPU = CloudDebug|Any CPU
@@ -149,6 +151,26 @@ Global
 		{01A8988C-84CA-47D4-B483-4F13AFF15526}.Staging|Mixed Platforms.Build.0 = Release|x86
 		{01A8988C-84CA-47D4-B483-4F13AFF15526}.Staging|x86.ActiveCfg = Release|x86
 		{01A8988C-84CA-47D4-B483-4F13AFF15526}.Staging|x86.Build.0 = Release|x86
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.CloudDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.CloudDebug|Any CPU.Build.0 = Debug|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.CloudDebug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.CloudDebug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.CloudDebug|x86.ActiveCfg = Debug|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Release|x86.ActiveCfg = Release|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Staging|Any CPU.ActiveCfg = Release|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Staging|Any CPU.Build.0 = Release|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Staging|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Staging|Mixed Platforms.Build.0 = Release|Any CPU
+		{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}.Staging|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

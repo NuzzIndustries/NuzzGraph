@@ -48,9 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\CustomConstructorAttribute.cs" />
     <Compile Include="Attributes\InheritsAttribute.cs" />
-    <Compile Include="ContextFactory.cs" />
     <Compile Include="Entities\Function.cs" />
     <Compile Include="Entities\FunctionParameter.cs" />
     <Compile Include="Entities\Node.cs" />

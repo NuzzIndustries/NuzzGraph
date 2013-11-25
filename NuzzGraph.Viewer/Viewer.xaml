@@ -2,24 +2,32 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:NuzzGraph.Viewer"
-        Title="MainWindow" Height="448" Width="598" Loaded="Window_Loaded">
-    <DockPanel ClipToBounds="True">
-        <Menu DockPanel.Dock="Top" Height="29" HorizontalAlignment="Left" Name="menu1" VerticalAlignment="Top">
-            <MenuItem Header="File"></MenuItem>
+        Title="NuzzGraph Viewer" Height="594" Width="961" Loaded="Window_Loaded">
+    <DockPanel ClipToBounds="True" Name="dock">
+        <Menu DockPanel.Dock="Top" Height="29" Width="{Binding ElementName=dock,Path=ActualWidth}"  Name="menu1" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
+            <MenuItem Header="File">
+                <MenuItem Header="Exit"></MenuItem>
+            </MenuItem>
             <MenuItem Header="Test 2"></MenuItem>
         </Menu>
-        <Grid ClipToBounds="True" Name="grid">
+        <StatusBar DockPanel.Dock="Bottom" Height="20"></StatusBar>
+        <Grid ClipToBounds="True" Name="grid" Height="Auto">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="60"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="170" MinWidth="170"/>
+                <ColumnDefinition Width="421*"/>
             </Grid.ColumnDefinitions>
-            <GridSplitter Width="5" Background="Red" Grid.Column="0" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TreeView Grid.Column="0" Name="treeView" VerticalAlignment="Top" />
+            <ScrollBar Grid.Column="0" VerticalAlignment="Bottom" Orientation="Horizontal" />
+            <GridSplitter Width="5" Background="Black" Grid.Column="0" />
             <Canvas Grid.Column="1" x:Name="drawingArea" Background="Gray" ClipToBounds="True">
                 <local:MyVisualHost x:Name="host" />
             </Canvas>
-
-
+            
         </Grid>
+        
     </DockPanel>
     
 </Window>

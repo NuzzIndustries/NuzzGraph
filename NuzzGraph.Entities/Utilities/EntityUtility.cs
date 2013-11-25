@@ -34,12 +34,7 @@ namespace NuzzGraph.Entities
             AllSimpleTypes.Add(typeof(byte?));
             AllSimpleTypes.Add(typeof(bool?));
 
-            EntitySets = new Dictionary<Type, IEntitySet>();
-            var props = typeof(GraphContext).GetProperties().Where(x => x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == typeof(IEntitySet<>));
-            foreach (var prop in props)
-            {
-            }
-            
+            //var props = typeof(GraphContext).GetProperties().Where(x => x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == typeof(IEntitySet<>));
         }
 
         internal static void ValidateScalar(object value)
@@ -67,8 +62,6 @@ namespace NuzzGraph.Entities
         {
             get { return AssemblyName == "NuzzGraph.Seed"; }
         }
-
-        static Dictionary<Type, IEntitySet> EntitySets = new Dictionary<Type, IEntitySet>();
 
         internal static void AddNodeToContext(GraphContext context, INode node)
         {

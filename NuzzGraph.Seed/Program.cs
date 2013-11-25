@@ -13,6 +13,8 @@ using System.IO;
 using System.ServiceModel;
 using VDS.RDF;
 using VDS.RDF.Writing;
+using NuzzGraph.Core;
+using NuzzGraph.Entities.Attributes;
 
 namespace NuzzGraph.Seed
 {
@@ -62,7 +64,6 @@ namespace NuzzGraph.Seed
             Client = ContextFactory.GetClient();
             try
             {
-
                 Context = ContextFactory.New();
             }
             catch (FaultException e)
@@ -134,7 +135,24 @@ namespace NuzzGraph.Seed
         }
 
         private static void SeedData()
-        {
+        {/*
+            INodeType type = Context.NodeTypes.Create();
+            type.Label = "MyType";
+
+            IFunction func = Context.Functions.Create();
+            func.DeclaringType = type;
+            func.Label = "MyFunction";
+
+            INodePropertyDefinition prop = Context.NodePropertyDefinitions.Create();
+            prop.Label = "MyProperty";
+            prop.DeclaringType = type;
+
+            Context.SaveChanges();
+
+            type = Context.NodeTypes.Where(t => t.Label == "MyType").Single();
+            var funcs = type.Properties.ToList();
+            var props = type.Functions.ToList();
+            */
             //Create and load node type nodes
             LoadCLRTypeMap();
 
@@ -165,6 +183,20 @@ namespace NuzzGraph.Seed
                 t.Label = clrType.Name.Substring(1);
                 CLRTypeMap[clrType] = t;
                 //Context.NodeTypes.Add(t);
+            }
+
+            Context.SaveChanges();
+
+            //Build inheritence structure
+            foreach (var clrType in AllCLRTypes)
+            {
+                var tNode = CLRTypeMap[clrType];
+                var inheritsAttribute = clrType.GetCustomAttributes(typeof(InheritsAttribute), false).FirstOrDefault() as InheritsAttribute;
+                if (inheritsAttribute == null)
+                    continue;
+                var superType = AllCLRTypes.First(x => x.Name == "I" + inheritsAttribute.InheritedClass);
+                var superTypeNode = CLRTypeMap[superType];
+                tNode.SuperTypes.Add(superTypeNode);
             }
 
             Context.SaveChanges();
@@ -260,11 +292,10 @@ namespace NuzzGraph.Seed
 
                             //Create relationship definition
                             var relnode = Context.RelationshipTypes.Create();
-                            relnode.SupportsMany = true;
                             relnode.Label = prop.Name;
+                            relnode.SupportsMany = true;
                             relnode.OutgoingFrom = CLRTypeMap[clrType];
                             relnode.IncomingTo = CLRTypeMap[innerType];
-
                         }
                     }
                     else //Not a collection
@@ -274,8 +305,8 @@ namespace NuzzGraph.Seed
                         {
                             //Property
                             var propnode = Context.NodePropertyDefinitions.Create();
-                            propnode.DeclaringType = nodeTypeNode;
                             propnode.Label = prop.Name;
+                            propnode.DeclaringType = nodeTypeNode;
                             propnode.PropertyType = ScalarTypeMap[prop.PropertyType];
                         }
                         else
@@ -285,8 +316,8 @@ namespace NuzzGraph.Seed
                                 throw new InvalidOperationException("Node Type not found: " + prop.PropertyType.Name);
 
                             var relnode = Context.RelationshipTypes.Create();
-                            relnode.SupportsMany = false;
                             relnode.Label = prop.Name;
+                            relnode.SupportsMany = false;
                             relnode.OutgoingFrom = CLRTypeMap[clrType];
                             relnode.IncomingTo = CLRTypeMap[prop.PropertyType];
                         }
@@ -303,6 +334,8 @@ namespace NuzzGraph.Seed
                 var methods = clrType.GetMethods(flags).ToList();
                 foreach (var method in methods)
                 {
+                    if (method.IsSpecialName)
+                        continue;
                     var funcNode = Context.Functions.Create();
                     funcNode.DeclaringType = CLRTypeMap[clrType];
                     funcNode.Label = method.Name;
