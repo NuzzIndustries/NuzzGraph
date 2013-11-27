@@ -46,7 +46,7 @@ namespace NuzzGraph.Entities
     		TypeMappings.AddImplMapping<NuzzGraph.Entities.ISystemNode, NuzzGraph.Entities.SystemNode>();
     		provider.AddMappingsForType(TypeMappings, typeof(NuzzGraph.Entities.IType));
     		TypeMappings.AddImplMapping<NuzzGraph.Entities.IType, NuzzGraph.Entities.Type>();
-    
+    		EntityUtility.SpecifyURIMappings(TypeMappings);
     	}
     	
     	/// <summary>

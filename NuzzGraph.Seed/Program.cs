@@ -22,13 +22,13 @@ namespace NuzzGraph.Seed
     {
         //Config
         static string StoreName { get { return "nuzzgraph"; } }
-        static string EntityTypeNamespace { get { return "NuzzGraph.Entities"; } } 
+        
 
         static IBrightstarService Client { get; set; }
         static GraphContext Context { get; set; }
 
         static Dictionary<System.Type, INodeType> CLRTypeMap { get; set; }
-        static List<System.Type> AllCLRTypes { get; set; }
+        
         
         static Dictionary<System.Type, IScalarType> ScalarTypeMap { get; set; }
 
@@ -135,25 +135,7 @@ namespace NuzzGraph.Seed
         }
 
         private static void SeedData()
-        {/*
-            INodeType type = Context.NodeTypes.Create();
-            type.Label = "MyType";
-
-            IFunction func = Context.Functions.Create();
-            func.DeclaringType = type;
-            func.Label = "MyFunction";
-
-            INodePropertyDefinition prop = Context.NodePropertyDefinitions.Create();
-            prop.Label = "MyProperty";
-            prop.DeclaringType = type;
-
-            Context.SaveChanges();
-
-            type = Context.NodeTypes.Where(t => t.Label == "MyType").Single();
-            var funcs = type.Properties.ToList();
-            var props = type.Functions.ToList();
-            */
-            //Create and load node type nodes
+        {
             LoadCLRTypeMap();
 
             //Load other data
@@ -164,19 +146,16 @@ namespace NuzzGraph.Seed
             Context.SaveChanges();
         }
 
+
+
         private static void LoadCLRTypeMap()
         {
             CLRTypeMap = new Dictionary<System.Type, INodeType>();
 
             //Load Types
-            AllCLRTypes = typeof(NuzzGraph.Entities.IType).Assembly
-                .GetTypes()
-                .Where(x => x.IsInterface)
-                .Where(x => x.Namespace == EntityTypeNamespace)
-                .Where(x => x.GetCustomAttributes(typeof(BrightstarDB.EntityFramework.EntityAttribute), false).Count() == 1)
-                .ToList();
+            
 
-            foreach (var clrType in AllCLRTypes)
+            foreach (var clrType in EntityUtility.AllCLRTypes)
             {
                 //Create type node
                 var t = Context.NodeTypes.Create();
@@ -188,13 +167,13 @@ namespace NuzzGraph.Seed
             Context.SaveChanges();
 
             //Build inheritence structure
-            foreach (var clrType in AllCLRTypes)
+            foreach (var clrType in EntityUtility.AllCLRTypes)
             {
                 var tNode = CLRTypeMap[clrType];
                 var inheritsAttribute = clrType.GetCustomAttributes(typeof(InheritsAttribute), false).FirstOrDefault() as InheritsAttribute;
                 if (inheritsAttribute == null)
                     continue;
-                var superType = AllCLRTypes.First(x => x.Name == "I" + inheritsAttribute.InheritedClass);
+                var superType = EntityUtility.AllCLRTypes.First(x => x.Name == "I" + inheritsAttribute.InheritedClass);
                 var superTypeNode = CLRTypeMap[superType];
                 tNode.SuperTypes.Add(superTypeNode);
             }
@@ -262,7 +241,7 @@ namespace NuzzGraph.Seed
         private static void ProcessProperties()
         {
             var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
-            foreach (var clrType in AllCLRTypes)
+            foreach (var clrType in EntityUtility.AllCLRTypes)
             {
                 var nodeTypeNode = Context.NodeTypes.Where(x => x.Label == clrType.Name.Substring(1)).Single();
 
@@ -329,7 +308,7 @@ namespace NuzzGraph.Seed
         private static void LoadMethods()
         {
             var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
-            foreach (var clrType in AllCLRTypes)
+            foreach (var clrType in EntityUtility.AllCLRTypes)
             {
                 var methods = clrType.GetMethods(flags).ToList();
                 foreach (var method in methods)

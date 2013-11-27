@@ -92,9 +92,10 @@ public partial class <#=code.Escape(contextClassName) #> : BrightstarEntityConte
 		provider.AddMappingsForType(TypeMappings, typeof(<#=i.InterfaceFullName#>));
 		TypeMappings.AddImplMapping<<#=i.InterfaceFullName#>, <#=code.CreateFullName(i.InterfaceNamespaceName, i.ClassName)#>>();
 <#+
+		
 	}
 #>
-
+		EntityUtility.SpecifyURIMappings(TypeMappings);
 	}
 	
 	/// <summary>
