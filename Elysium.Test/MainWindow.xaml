@@ -1,4 +1,4 @@
-﻿<metro:Window x:Class="NuzzGraph.Viewer.Viewer"
+﻿<metro:Window x:Class="Elysium.Test.MainWindow"
               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
               xmlns:metro="http://schemas.codeplex.com/elysium"

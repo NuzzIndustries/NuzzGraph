@@ -1,45 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using NuzzGraph.Viewer.UIElements;
-using System.Windows.Controls.Primitives;
-using NuzzGraph.Entities;
-using NuzzGraph.Core;
-using System.IO;
-using Elysium;
-using System.Diagnostics;
+
 using Elysium.Notifications;
 
-namespace NuzzGraph.Viewer
+namespace Elysium.Test
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class Viewer : Elysium.Controls.Window
+    public sealed partial class MainWindow
     {
-       
-        public Viewer()
+        public MainWindow()
         {
             InitializeComponent();
-
-            this.Loaded += new RoutedEventHandler(Viewer_Loaded);
-        }
-
-        
-
-        void Viewer_Loaded(object sender, RoutedEventArgs e)
-        {
-            
         }
 
         private static readonly string Windows = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
@@ -91,9 +66,17 @@ namespace NuzzGraph.Viewer
             Application.Current.Apply(null, Brushes.Black);
         }
 
+#if NETFX4
         private void NotificationClick(object sender, RoutedEventArgs e)
+#elif NETFX45
+        private async void NotificationClick(object sender, RoutedEventArgs e)
+#endif
         {
+#if NETFX4
             NotificationManager.BeginTryPush("Message", "The quick brown fox jumps over the lazy dog");
+#elif NETFX45
+            await NotificationManager.TryPushAsync("Message", "The quick brown fox jumps over the lazy dog");
+#endif
         }
 
         private void DonateClick(object sender, RoutedEventArgs e)
@@ -115,8 +98,5 @@ namespace NuzzGraph.Viewer
         {
             Process.Start("http://elysium.asvishnyakov.com/Documentation.cshtml");
         }
-        
     }
-
-   
 }
