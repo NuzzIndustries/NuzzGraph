@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuzzGraph.Api", "NuzzGraph.Api\NuzzGraph.Api.csproj", "{7C9C70CA-A2E7-42AB-95D8-1F03E68042DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuzzGraph.Entities", "NuzzGraph.Entities\NuzzGraph.Entities.csproj", "{4A87DFA5-C8CA-4A73-8808-E079E286E824}"
@@ -16,6 +18,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuzzGraph.Core", "NuzzGraph.Core\NuzzGraph.Core.csproj", "{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}"
 EndProject
 Global
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = 62039c13-8caa-4dd6-b546-aecfd53c438a
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CloudDebug|Any CPU = CloudDebug|Any CPU
 		CloudDebug|Mixed Platforms = CloudDebug|Mixed Platforms

@@ -3,6 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="Viewer.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <!-- WPF 4.0 workaround -->
+            <Style TargetType="{x:Type Rectangle}" />
+            <!-- end of workaround -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Assets/Themes/ModernUI.xaml" />
+                <ResourceDictionary Source="Assets/Themes/ModernUI.Dark.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
