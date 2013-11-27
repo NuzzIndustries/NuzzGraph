@@ -1,8 +1,7 @@
-﻿<Application x:Class="NuzzGraph.Viewer.App"
+﻿<Application x:Class="Elysium.Test.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:metro="http://schemas.codeplex.com/elysium/theme"
-             StartupUri="Viewer.xaml" Startup="StartupHandler">
+             StartupUri="MainWindow.xaml" Startup="StartupHandler">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
