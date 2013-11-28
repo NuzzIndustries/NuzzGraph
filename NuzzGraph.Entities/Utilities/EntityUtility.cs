@@ -61,9 +61,44 @@ namespace NuzzGraph.Entities
 
                     if (!type.Name.StartsWith("I"))
                         throw new InvalidOperationException("Expected interface name starting with I");
+                    
+                    var hint = pHints[property];
+                    if (hint.MappingType == PropertyMappingType.InverseArc)
+                        continue; //do inverse properties in second pass
+
+                    var uri = string.Format("http://www.nuzzgraph.com/Entities/{0}/Properties/{1}", type.Name.Substring(1), property.Name);
+                    pHints[property] = new PropertyHint(hint.MappingType, uri);
+                }
+            }
+
+            //Second pass for inverse properties
+            foreach (var type in AllCLRTypes)
+            {
+                foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    if (!pHints.ContainsKey(property))
+                        continue;
+
+                    if (!type.Name.StartsWith("I"))
+                        throw new InvalidOperationException("Expected interface name starting with I");
 
                     var hint = pHints[property];
-                    var uri = string.Format("http://www.nuzzgraph.com/Entities/{0}/Properties/{1}", type.Name.Substring(1), property.Name);
+                    if (hint.MappingType != PropertyMappingType.InverseArc)
+                        continue; //not an inverse property
+
+                    var att = property.GetCustomAttributes(typeof(InversePropertyAttribute), false).Single() as InversePropertyAttribute;
+                    string pName = att.InversePropertyName;
+
+                    //Load the inverse property info, and set the URI accordingly
+                    System.Type inverseType = null;
+                    if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>))
+                        inverseType = property.PropertyType.GetGenericArguments()[0];
+                    else
+                        inverseType = property.PropertyType;
+
+                    var inverseProperty = inverseType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.Name == pName).Single();
+
+                    var uri = string.Format("http://www.nuzzgraph.com/Entities/{0}/Properties/{1}", inverseType.Name.Substring(1), inverseProperty.Name);
                     pHints[property] = new PropertyHint(hint.MappingType, uri);
                 }
             }
