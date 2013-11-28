@@ -35,6 +35,11 @@ namespace NuzzGraph.Viewer
             InitializeComponent();
 
             this.Loaded += new RoutedEventHandler(Viewer_Loaded);
+            zoom.MouseWheel += zoom_MouseWheel;
+            //zoom.ZoomBox = Rect.Empty;
+            //zoom.ZoomBoxBackground = Brushes.Red;
+            //zoom.ModifierMode = WPFExtensions.Controls.ZoomViewModifierMode.None;
+            
         }
 
         void Viewer_Loaded(object sender, RoutedEventArgs e)
@@ -69,7 +74,12 @@ namespace NuzzGraph.Viewer
                 var interfaceType = EntityUtility.AllCLRTypes.Where(x => x.Name == interfaceName).Single();
                 int interfaceIndex = EntityUtility.AllCLRTypes.IndexOf(interfaceType);
                 var brush = brushes[interfaceIndex];
-                AddVisualNode(r.Next(1000), r.Next(1000), brush);
+
+                int rx = r.Next(1000);
+                rx = rx % 2 == 0 ? rx : rx * -1;
+                int ry = r.Next(1000);
+                ry = ry % 2 == 0 ? ry : ry * -1;
+                AddVisualNode(rx, ry, brush);
             }
         }
 
@@ -84,10 +94,20 @@ namespace NuzzGraph.Viewer
             };
             Canvas.SetLeft(thumb, x);
             Canvas.SetTop(thumb, y);
-            drawingArea.Children.Add(thumb);
+            canvas.Children.Add(thumb);
             thumb.DragStarted += new DragStartedEventHandler(thumb_DragStarted);
             thumb.DragCompleted += new DragCompletedEventHandler(thumb_DragCompleted);
             thumb.DragDelta += new DragDeltaEventHandler(thumb_DragDelta);
+        }
+
+        void zoom_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            decimal delta = (decimal)e.Delta / 120m / 20m;
+            zoom.Zoom += ((double)delta * zoom.Zoom);
+            if (zoom.Zoom > 2.0)
+                zoom.Zoom = 2.0;
+            if (zoom.Zoom < 0.1)
+                zoom.Zoom = 0.1;
         }
 
         private void LoadNodeTree()
@@ -154,10 +174,12 @@ namespace NuzzGraph.Viewer
         {
             e.Handled = true;
             var th = (Thumb)sender;
-            Canvas.SetLeft(th, Math.Max(0, Canvas.GetLeft(th) + e.HorizontalChange));
+            Canvas.SetLeft(th, Canvas.GetLeft(th) + e.HorizontalChange);
+            Canvas.SetTop(th, Canvas.GetTop(th) + e.VerticalChange);
+            /*Canvas.SetLeft(th, Math.Max(0, Canvas.GetLeft(th) + e.HorizontalChange));
             Canvas.SetTop(th, Math.Max(0, Canvas.GetTop(th) + e.VerticalChange));
-            Canvas.SetLeft(th, Math.Min(drawingArea.ActualWidth - th.Width, Canvas.GetLeft(th)));
-            Canvas.SetTop(th, Math.Min(drawingArea.ActualHeight - th.Width, Canvas.GetTop(th)));
+            Canvas.SetLeft(th, Math.Min(canvas.ActualWidth - th.Width, Canvas.GetLeft(th)));
+            Canvas.SetTop(th, Math.Min(canvas.ActualHeight - th.Width, Canvas.GetTop(th)));*/
         }
 
         void thumb_DragCompleted(object sender, DragCompletedEventArgs e)

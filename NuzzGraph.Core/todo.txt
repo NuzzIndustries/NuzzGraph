@@ -1,3 +1,7 @@
 ﻿Display Graph
+ Add zoom in/out
  Draw Edges / Connections
  Label Nodes
+ Add color legend
+ Add filters
+ 
