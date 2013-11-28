@@ -152,8 +152,7 @@ namespace NuzzGraph.Seed
         {
             CLRTypeMap = new Dictionary<System.Type, INodeType>();
 
-            //Load Types
-            
+            INodeType nodeTypeNode = null;
 
             //Load Types
             foreach (var clrType in EntityUtility.AllCLRTypes)
@@ -162,7 +161,8 @@ namespace NuzzGraph.Seed
                 var t = Context.NodeTypes.Create();
                 t.Label = clrType.Name.Substring(1);
                 CLRTypeMap[clrType] = t;
-                //Context.NodeTypes.Add(t);
+                if (clrType.Name == "INodeType")
+                    nodeTypeNode = t;
             }
 
             Context.SaveChanges();
@@ -171,6 +171,7 @@ namespace NuzzGraph.Seed
             foreach (var clrType in EntityUtility.AllCLRTypes)
             {
                 var tNode = CLRTypeMap[clrType];
+                tNode.TypeHandle = nodeTypeNode;
                 var inheritsAttribute = clrType.GetCustomAttributes(typeof(InheritsAttribute), false).FirstOrDefault() as InheritsAttribute;
                 if (inheritsAttribute == null)
                     continue;

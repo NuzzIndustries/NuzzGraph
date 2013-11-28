@@ -39,3 +39,7 @@ using BrightstarDB.EntityFramework;
 
 
 [assembly: InternalsVisibleTo("NuzzGraph.Seed")]
+[assembly: InternalsVisibleTo("NuzzGraph.Viewer")]
+[assembly: InternalsVisibleTo("NuzzGraph.Core")]
+[assembly: InternalsVisibleTo("NuzzGraph.Api")]
+[assembly: InternalsVisibleTo("NuzzGraph.Api.Test")]

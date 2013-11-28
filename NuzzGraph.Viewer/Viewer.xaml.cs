@@ -19,6 +19,7 @@ using System.IO;
 using Elysium;
 using System.Diagnostics;
 using Elysium.Notifications;
+using System.Reflection;
 
 namespace NuzzGraph.Viewer
 {
@@ -28,7 +29,6 @@ namespace NuzzGraph.Viewer
     public partial class Viewer : Elysium.Controls.Window
     {
         DataTemplate nodeHeaderTemplate;
-        Thumb thumb;
        
         public Viewer()
         {
@@ -41,7 +41,7 @@ namespace NuzzGraph.Viewer
         {
             host.Go();
 
-            //Set node header templar
+            //Set node header template
             nodeHeaderTemplate = new DataTemplate();
             var label = new FrameworkElementFactory(typeof(TextBlock));
             label.SetBinding(TextBlock.TextProperty, new Binding());
@@ -50,21 +50,44 @@ namespace NuzzGraph.Viewer
             label.SetValue(TextBlock.FontWeightProperty, FontWeights.Bold);
             nodeHeaderTemplate.VisualTree = label;
 
-            //Add thumb
-            thumb = new Thumb()
+            LoadNodeTree();
+            RefreshVisualGraph();
+        }
+
+        private void RefreshVisualGraph()
+        {
+            Random r = new Random();
+
+            var brushes = typeof(Brushes).GetProperties(BindingFlags.Public | BindingFlags.Static)
+                .Select(x => (Brush)x.GetValue(null, null))
+                .ToList();
+
+            var nodes = ContextFactory.New().Nodes.ToList();
+            foreach (var node in nodes)
             {
-                Background = Brushes.Black,
+                var interfaceName = "I" + node.TypeHandle.Label;
+                var interfaceType = EntityUtility.AllCLRTypes.Where(x => x.Name == interfaceName).Single();
+                int interfaceIndex = EntityUtility.AllCLRTypes.IndexOf(interfaceType);
+                var brush = brushes[interfaceIndex];
+                AddVisualNode(r.Next(1000), r.Next(1000), brush);
+            }
+        }
+
+        private void AddVisualNode(int x, int y, Brush color)
+        {
+            //Add thumb
+            var thumb = new Thumb()
+            {
+                Background = color,
                 Width = 50,
                 Height = 50
             };
-            Canvas.SetLeft(thumb, 150);
-            Canvas.SetTop(thumb, 150);
+            Canvas.SetLeft(thumb, x);
+            Canvas.SetTop(thumb, y);
             drawingArea.Children.Add(thumb);
             thumb.DragStarted += new DragStartedEventHandler(thumb_DragStarted);
             thumb.DragCompleted += new DragCompletedEventHandler(thumb_DragCompleted);
             thumb.DragDelta += new DragDeltaEventHandler(thumb_DragDelta);
-
-            LoadNodeTree();
         }
 
         private void LoadNodeTree()
@@ -130,10 +153,11 @@ namespace NuzzGraph.Viewer
         void thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             e.Handled = true;
-            Canvas.SetLeft(thumb, Math.Max(0, Canvas.GetLeft(thumb) + e.HorizontalChange));
-            Canvas.SetTop(thumb, Math.Max(0, Canvas.GetTop(thumb) + e.VerticalChange));
-            Canvas.SetLeft(thumb, Math.Min(drawingArea.ActualWidth - thumb.Width, Canvas.GetLeft(thumb)));
-            Canvas.SetTop(thumb, Math.Min(drawingArea.ActualHeight - thumb.Width, Canvas.GetTop(thumb)));
+            var th = (Thumb)sender;
+            Canvas.SetLeft(th, Math.Max(0, Canvas.GetLeft(th) + e.HorizontalChange));
+            Canvas.SetTop(th, Math.Max(0, Canvas.GetTop(th) + e.VerticalChange));
+            Canvas.SetLeft(th, Math.Min(drawingArea.ActualWidth - th.Width, Canvas.GetLeft(th)));
+            Canvas.SetTop(th, Math.Min(drawingArea.ActualHeight - th.Width, Canvas.GetTop(th)));
         }
 
         void thumb_DragCompleted(object sender, DragCompletedEventArgs e)
