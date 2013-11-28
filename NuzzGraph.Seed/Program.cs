@@ -155,6 +155,7 @@ namespace NuzzGraph.Seed
             //Load Types
             
 
+            //Load Types
             foreach (var clrType in EntityUtility.AllCLRTypes)
             {
                 //Create type node
