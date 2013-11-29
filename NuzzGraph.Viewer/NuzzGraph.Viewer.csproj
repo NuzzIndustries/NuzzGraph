@@ -69,7 +69,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Themes\Sandbox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\ZoomControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\GraphNode.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -81,8 +89,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Themes\Sandbox.xaml.cs">
+      <DependentUpon>Sandbox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\BindingProxy.cs" />
+    <Compile Include="UserControls\GraphNode.xaml.cs">
+      <DependentUpon>GraphNode.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UIElements\MyVisualHost.cs" />
     <Compile Include="UIElements\TestUIElement.cs" />
+    <Compile Include="Utilities\ResourceUtility.cs" />
     <Compile Include="Viewer.xaml.cs">
       <DependentUpon>Viewer.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -130,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Themes\" />
+    <Folder Include="Templates\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

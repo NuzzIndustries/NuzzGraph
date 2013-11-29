@@ -305,6 +305,27 @@ namespace NuzzGraph.Seed
                     }
                 }
             }
+            Context.SaveChanges();
+
+            //For each NodePropertyDefinition, attach the RDF URI to NG data
+            foreach (var pDef in Context.NodePropertyDefinitions)
+            {
+                if (pDef.TypeHandle.Label != "NodePropertyDefinition")
+                    continue;
+
+                var map = ((NodePropertyDefinition)pDef).Context.Mappings;
+                
+                var tInfo = EntityUtility.AllCLRTypes.Where(x => x.Name == "I" + pDef.DeclaringType.Label).Single();
+                var pInfo = tInfo.GetProperty(pDef.Label);
+                var hint = map.GetPropertyHint(pInfo);
+                if (hint.MappingType == PropertyMappingType.Property)
+                    pDef.InternalUri = hint.SchemaTypeUri;
+            }
+
+            foreach (var rDef in Context.RelationshipTypes)
+            {
+                //rDef.
+            }
         }
 
         private static void LoadMethods()

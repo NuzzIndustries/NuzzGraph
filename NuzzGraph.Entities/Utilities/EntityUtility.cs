@@ -12,7 +12,6 @@ namespace NuzzGraph.Entities
         internal static List<System.Type> AllSimpleTypes { get; set; }
         public static readonly string AssemblyName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
         internal static List<System.Type> AllCLRTypes { get; private set; }
-        
 
         static EntityUtility()
         {

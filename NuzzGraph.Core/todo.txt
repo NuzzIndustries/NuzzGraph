@@ -1,5 +1,13 @@
-﻿Display Graph
- Add zoom in/out
+﻿*Determine whether to merge Properties and Relationships into one (no, but improve the API)
+
+Graph -> Show node property data
+
+Add RDF URI metadata to NodeTypes
+
+Display Graph
+ *Add zoom in/out
+
+
  Draw Edges / Connections
  Label Nodes
  Add color legend

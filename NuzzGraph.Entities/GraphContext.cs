@@ -334,10 +334,10 @@ namespace NuzzGraph.Entities
             set { SetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType", value); }
     	}
     
-    	public System.String Debug_ObjectType
+    	public System.String InternalUri
     	{
-            		get { return GetRelatedProperty<System.String>("Debug_ObjectType"); }
-            		set { SetRelatedProperty("Debug_ObjectType", value); }
+            		get { return GetRelatedProperty<System.String>("InternalUri"); }
+            		set { SetRelatedProperty("InternalUri", value); }
     	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
@@ -529,6 +529,12 @@ namespace NuzzGraph.Entities
     	{
             get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("IncomingTo"); }
             set { SetRelatedObject<NuzzGraph.Entities.INodeType>("IncomingTo", value); }
+    	}
+    
+    	public System.String InternalUri
+    	{
+            		get { return GetRelatedProperty<System.String>("InternalUri"); }
+            		set { SetRelatedProperty("InternalUri", value); }
     	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.ISystemNode

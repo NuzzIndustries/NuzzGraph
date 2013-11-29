@@ -1,0 +1,14 @@
+﻿<Thumb x:Class="NuzzGraph.Viewer.UserControls.GraphNode"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NuzzGraph.Viewer.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Thumb.Template>
+        <ControlTemplate TargetType="Thumb">
+            <Ellipse Fill="{Binding RelativeSource = {RelativeSource TemplatedParent }, Path=Background}"  StrokeThickness="2"  Stroke="Red"/>
+        </ControlTemplate>
+    </Thumb.Template>
+</Thumb>

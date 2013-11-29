@@ -20,6 +20,8 @@ using Elysium;
 using System.Diagnostics;
 using Elysium.Notifications;
 using System.Reflection;
+using NuzzGraph.Viewer.Utilities;
+using NuzzGraph.Viewer.UserControls;
 
 namespace NuzzGraph.Viewer
 {
@@ -67,6 +69,8 @@ namespace NuzzGraph.Viewer
                 .Select(x => (Brush)x.GetValue(null, null))
                 .ToList();
 
+            Dictionary<INode, Thumb> NodeThumbs = new Dictionary<INode, Thumb>();
+
             var nodes = ContextFactory.New().Nodes.ToList();
             foreach (var node in nodes)
             {
@@ -79,25 +83,46 @@ namespace NuzzGraph.Viewer
                 rx = rx % 2 == 0 ? rx : rx * -1;
                 int ry = r.Next(1000);
                 ry = ry % 2 == 0 ? ry : ry * -1;
-                AddVisualNode(rx, ry, brush);
+                NodeThumbs[node] = CreateAndAddVisualNode(rx, ry, brush, node);
+            }
+
+            foreach (var node in nodes)
+            {
+                var thumb = NodeThumbs[node];
             }
         }
 
-        private void AddVisualNode(int x, int y, Brush color)
+        private Thumb CreateAndAddVisualNode(int x, int y, Brush color, INode node)
         {
             //Add thumb
-            var thumb = new Thumb()
+            var thumb = new GraphNode()
             {
                 Background = color,
                 Width = 50,
                 Height = 50
             };
+            
             Canvas.SetLeft(thumb, x);
             Canvas.SetTop(thumb, y);
             canvas.Children.Add(thumb);
             thumb.DragStarted += new DragStartedEventHandler(thumb_DragStarted);
             thumb.DragCompleted += new DragCompletedEventHandler(thumb_DragCompleted);
             thumb.DragDelta += new DragDeltaEventHandler(thumb_DragDelta);
+            //thumb.Style = Resources["GraphNode_Thumb"] as Style;
+            var res = ResourceUtility.GetResourcesUnder("Themes");
+
+            //Add text
+            Dictionary<string, string> props = new Dictionary<string, string>();
+            props["TestKey1"] = "TestValue1";
+            props["TestKey2"] = "TestValue2";
+            props["TestKey3"] = "TestValue3";
+            props["TestKey4"] = "TestValue4";
+
+            foreach (var pair in props)
+            {
+            }
+
+            return thumb;
         }
 
         void zoom_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -199,6 +224,4 @@ namespace NuzzGraph.Viewer
             //Process.Start("http://www.nuzzgraph.com");
         }
     }
-
-   
 }
