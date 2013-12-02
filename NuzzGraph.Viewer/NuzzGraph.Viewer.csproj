@@ -81,6 +81,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\GraphPane.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\GraphViewport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\NodeDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Viewer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -98,6 +110,15 @@
     </Compile>
     <Compile Include="UIElements\MyVisualHost.cs" />
     <Compile Include="UIElements\TestUIElement.cs" />
+    <Compile Include="UserControls\GraphPane.xaml.cs">
+      <DependentUpon>GraphPane.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\GraphViewport.xaml.cs">
+      <DependentUpon>GraphViewport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\NodeDisplay.xaml.cs">
+      <DependentUpon>NodeDisplay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\ResourceUtility.cs" />
     <Compile Include="Viewer.xaml.cs">
       <DependentUpon>Viewer.xaml</DependentUpon>

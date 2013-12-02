@@ -16,6 +16,7 @@ using BrightstarDB.EntityFramework;
 
 using System.Text;
 using NuzzGraph.Entities.Attributes;
+using NuzzGraph.Core;
 
 namespace NuzzGraph.Entities 
 {

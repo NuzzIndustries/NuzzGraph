@@ -29,7 +29,6 @@ namespace NuzzGraph.Entities
         [InverseProperty("TypeHandle")]
         ICollection<INode> AllNodes { get; }
         
-
         void AddProperty(ScalarType type, string name);
         void RemoveProperty(string name);
         void Inherit(NodeType type);
@@ -42,6 +41,37 @@ namespace NuzzGraph.Entities
 
     public partial class NodeType : INodeType
     {
+        //Pretty slow (inaccurate?) in current implementation
+        //Switch to use lower level RDF functions
+        public List<INodeType> InheritanceChain
+        {
+            get
+            {
+                List<INodeType> list = null;
+                foreach (var type in SuperTypes)
+                {
+                    var _type = (NodeType)type;
+                    list.AddRange(_type.InheritanceChain);
+                }
+                list = list.Distinct().ToList();
+                return list;
+            }
+        }
+
+        public List<INodePropertyDefinition> AllProperties
+        {
+            get
+            {
+                var list = new List<INodePropertyDefinition>();
+                foreach (var type in InheritanceChain)
+                {
+                    var _type = (NodeType)type;
+                    list.AddRange(_type.Properties.ToList());
+                }
+                return list;
+            }
+        }
+
         public void AddProperty(ScalarType type, string name)
         {
             throw new NotImplementedException();

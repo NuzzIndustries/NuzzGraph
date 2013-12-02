@@ -105,15 +105,5 @@ namespace NuzzGraph.Viewer.UserControls
 
             return drawingVisual;
         }
-
-        internal void Go()
-        {
-            //AddVisualChild(new TestUIElement().Path);
-
-            //_children.Add(GetDraggable());
-
-
-            //_children.Add(CreateDrawingVisualRectangle());
-        }
     }
 }

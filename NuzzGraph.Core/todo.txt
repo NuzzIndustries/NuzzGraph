@@ -1,15 +1,20 @@
 ﻿*Determine whether to merge Properties and Relationships into one (no, but improve the API)
+*Graph -> Show label
+*Add "All Properties" property which gives all properties of inheritance chain
+*Add "GetValue" function which returns value of property
+Entity references should return the raw type instead of the interface
 
-Graph -> Show node property data
+Graph -> Show node property data on hover
 
 Add RDF URI metadata to NodeTypes
 
+Set permissions on "System" properties, make them read-only
+
 Display Graph
  *Add zoom in/out
-
-
+ Add right click context menu with sticky node details option
  Draw Edges / Connections
- Label Nodes
  Add color legend
  Add filters
+
  

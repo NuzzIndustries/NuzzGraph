@@ -8,7 +8,16 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Thumb.Template>
         <ControlTemplate TargetType="Thumb">
-            <Ellipse Fill="{Binding RelativeSource = {RelativeSource TemplatedParent }, Path=Background}"  StrokeThickness="2"  Stroke="Red"/>
+            <Grid>
+                <Rectangle Fill="BlanchedAlmond"  Stroke="{Binding RelativeSource = {RelativeSource TemplatedParent }, Path=Background}" StrokeThickness="15"/>
+                <TextBlock Text="{Binding RelativeSource = {RelativeSource TemplatedParent }, Path=Tag}" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           FontSize="32"
+                           Width="{Binding RelativeSource = {RelativeSource TemplatedParent }, Path=Width, Mode=OneWayToSource}"
+                           Margin="40,0,40,0">  </TextBlock>
+            </Grid>
         </ControlTemplate>
     </Thumb.Template>
 </Thumb>
+ 

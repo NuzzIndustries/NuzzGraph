@@ -67,20 +67,8 @@
         </Menu>
         <TreeView Grid.Column="0" Grid.Row="1" Name="treeView" Background="DarkGray" Width="Auto" />
         <GridSplitter Grid.Column="0"  Grid.Row="1" Width="5" Background="Black" IsEnabled="False"/>
-        <wpfext:ZoomControl Grid.Row="1" Grid.Column="1" x:Name="zoom" Background="Gray">
-            <Grid Name="grid">
-                <Canvas Name="canvas">
-                    <local:MyVisualHost x:Name="host" />
-                </Canvas>
-            </Grid>
-        </wpfext:ZoomControl>
-
+        <local:GraphPane Grid.Column="1" Grid.Row="1"/>
     </Grid>
-    <!-- <TabControl Margin="{Binding RelativeSource={RelativeSource Self}, Path=(params:General.BoldPadding), Mode=OneWay}">
-        <TabItem Header="text and menus">
-            
-        </TabItem>
-    </TabControl>-->
 </metro:Window>
 
 <!--Grid Height="{Binding Path=Parent.ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type wpfext:ZoomControl}}}"

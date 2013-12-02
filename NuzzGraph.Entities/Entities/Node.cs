@@ -5,6 +5,7 @@ using System.Text;
 using BrightstarDB.EntityFramework;
 using BrightstarDB.Client;
 using NuzzGraph.Entities.Attributes;
+using NuzzGraph.Core;
 
 namespace NuzzGraph.Entities
 {
@@ -29,8 +30,23 @@ namespace NuzzGraph.Entities
             return this;
         }
 
+        public string GetIdentity_Wrapper()
+        {
+            return GetIdentity();
+        }
+
+        public IDataObject GetRawObject()
+        {
+            var core = ContextFactory.GetCore();
+            var data = core.GetDataObject(this.GetIdentity_Wrapper());
+            return data;
+        }
+
         protected override void OnCreated(BrightstarEntityContext context)
         {
+            if (context == null)
+                context = ContextFactory.New();
+
             if (EntityUtility.NodeTypesInitialized)
                 TypeHandle = ((GraphContext)context).NodeTypes.Where(x => x.Label == this.GetType().Name).Single();
             if (EntityUtility.IsSeedMode)
