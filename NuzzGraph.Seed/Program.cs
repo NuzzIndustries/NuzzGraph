@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NuzzGraph.Entities;
-using BrightstarDB.Client;
-using System.Reflection;
-using BrightstarDB.EntityFramework;
 using System.Configuration;
-using System.ServiceProcess;
-using System.Management;
 using System.IO;
+using System.Linq;
+using System.Management;
+using System.Reflection;
 using System.ServiceModel;
+using System.ServiceProcess;
+using BrightstarDB.Client;
+using BrightstarDB.EntityFramework;
+using NuzzGraph.Core;
+using NuzzGraph.Entities;
+using NuzzGraph.Entities.Attributes;
 using VDS.RDF;
 using VDS.RDF.Writing;
-using NuzzGraph.Core;
-using NuzzGraph.Entities.Attributes;
 
 namespace NuzzGraph.Seed
 {
@@ -22,19 +21,19 @@ namespace NuzzGraph.Seed
     {
         //Config
         static string StoreName { get { return "nuzzgraph"; } }
-        
+
 
         static IBrightstarService Client { get; set; }
         static GraphContext Context { get; set; }
 
         static Dictionary<System.Type, INodeType> CLRTypeMap { get; set; }
-        
-        
+
+
         static Dictionary<System.Type, IScalarType> ScalarTypeMap { get; set; }
 
         static Program()
         {
-           
+
         }
 
         static void Main(string[] args)
@@ -44,13 +43,13 @@ namespace NuzzGraph.Seed
                 ResetDB();
                 var job = Client.StartExport(StoreName, "test.n3", null);
                 System.Threading.Thread.Sleep(1000);
-               
+
                 var rdftext = File.ReadAllText("test/import/test.n3");
                 IGraph g = new Graph();
                 VDS.RDF.Parsing.FileLoader.Load(g, "test/import/test.n3");
                 var writer = new RdfXmlWriter();
                 writer.Save(g, Path.GetFullPath("./test/import/test.rdf"));
-               
+
             }
             finally
             {
@@ -71,12 +70,12 @@ namespace NuzzGraph.Seed
                 if (e.Message != string.Format("Error creating store {0}. Store already exists", StoreName))
                     throw;
 
-                 //Load service name
+                //Load service name
                 string svcname = ConfigurationManager.AppSettings["SVCName"];
 
                 //Load DB service
                 var svc = new ServiceController(svcname, ".");
-                
+
                 //Get path to service exe in order to delete / cleanup folder for store
                 string svcPath = null;
                 ManagementClass mc = new ManagementClass("Win32_Service");
@@ -85,7 +84,7 @@ namespace NuzzGraph.Seed
                     if (mo.GetPropertyValue("Name").ToString() == svcname)
                         svcPath = mo.GetPropertyValue("PathName").ToString().Trim('"');
                 }
-                
+
                 //Load path to folder
                 var root = Directory.GetParent(svcPath).Parent;
                 var ngfolder = root.GetDirectories()
@@ -97,7 +96,7 @@ namespace NuzzGraph.Seed
                 var file = ngfolder.GetFiles().Where(x => x.Name == "data.bs").FirstOrDefault();
                 if (file == null)
                     throw new InvalidOperationException("Unable to delete the folder " + ngfolder.FullName);
-                   
+
 
                 //Stop DB Service
                 svc.Stop();
@@ -118,7 +117,7 @@ namespace NuzzGraph.Seed
                 svc.Start();
                 svc.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(20));
                 System.Threading.Thread.Sleep(200);
-                
+
                 //Reload context
                 Client = ContextFactory.GetClient();
                 Context = ContextFactory.New();
@@ -151,6 +150,7 @@ namespace NuzzGraph.Seed
         private static void LoadCLRTypeMap()
         {
             CLRTypeMap = new Dictionary<System.Type, INodeType>();
+            var assembly = Assembly.GetAssembly(typeof(INodeType));
 
             INodeType nodeTypeNode = null;
 
@@ -164,14 +164,28 @@ namespace NuzzGraph.Seed
                 if (clrType.Name == "INodeType")
                     nodeTypeNode = t;
             }
+            //Map non-interface types to nodes
+            foreach (var clrType in EntityUtility.AllCLRTypes)
+            {
+                //Create type node
+                var t = CLRTypeMap[clrType];
+
+                //Get non-interface type
+                var nonInterfaceType = assembly.GetType(clrType.Namespace + "." + t.Label);
+
+                if (nonInterfaceType == null)
+                    throw new InvalidOperationException();
+
+                CLRTypeMap[nonInterfaceType] = t;
+            }
 
             Context.SaveChanges();
 
-            //Build inheritence structure
+            //Build inheritance structure
             foreach (var clrType in EntityUtility.AllCLRTypes)
             {
                 var tNode = CLRTypeMap[clrType];
-                tNode.TypeHandle = nodeTypeNode;
+                tNode.TypeHandle = (NuzzGraph.Entities.NodeType)nodeTypeNode;
                 var inheritsAttribute = clrType.GetCustomAttributes(typeof(InheritsAttribute), false).FirstOrDefault() as InheritsAttribute;
                 if (inheritsAttribute == null)
                     continue;
@@ -282,7 +296,7 @@ namespace NuzzGraph.Seed
                     else //Not a collection
                     {
                         //Determine if it is a relationship or a property
-                        if (EntityUtility.AllSimpleTypes.Contains(prop.PropertyType) || prop.PropertyType == typeof(object))
+                        if (EntityUtility.IsScalar(prop.PropertyType))
                         {
                             //Property
                             var propnode = Context.NodePropertyDefinitions.Create();
@@ -314,10 +328,13 @@ namespace NuzzGraph.Seed
                     continue;
 
                 var map = ((NodePropertyDefinition)pDef).Context.Mappings;
-                
+
                 var tInfo = EntityUtility.AllCLRTypes.Where(x => x.Name == "I" + pDef.DeclaringType.Label).Single();
                 var pInfo = tInfo.GetProperty(pDef.Label);
                 var hint = map.GetPropertyHint(pInfo);
+
+                PropertyMappingType mapType = hint.MappingType;
+
                 if (hint.MappingType == PropertyMappingType.Property)
                     pDef.InternalUri = hint.SchemaTypeUri;
             }
@@ -341,7 +358,7 @@ namespace NuzzGraph.Seed
                     var funcNode = Context.Functions.Create();
                     funcNode.DeclaringType = CLRTypeMap[clrType];
                     funcNode.Label = method.Name;
-                    funcNode.FunctionBody = ""; 
+                    funcNode.FunctionBody = "";
                 }
             }
         }

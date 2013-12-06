@@ -19,6 +19,7 @@ var contextClassName = System.IO.Path.GetFileNameWithoutExtension(this.Host.Temp
 WriteHeader(helper.GetExtraUsings().ToArray());
 BeginNamespace(code, namespaceName);
 WriteContextClass(code, helper, contextClassName);
+
 EndNamespace(namespaceName);
 foreach(var i in helper.GetDecoratedInterfaces()) {
 	WriteEntityClass(code, helper, i);
@@ -95,7 +96,7 @@ public partial class <#=code.Escape(contextClassName) #> : BrightstarEntityConte
 		
 	}
 #>
-		EntityUtility.SpecifyURIMappings(TypeMappings);
+		EntityUtility.ProcessMappings(TypeMappings);
 	}
 	
 	/// <summary>
@@ -168,6 +169,7 @@ public partial class <#=code.Escape(contextClassName) #> : BrightstarEntityConte
 <#+
 	}
 #>
+
 	}
 	
 <#+
@@ -292,8 +294,8 @@ private void WriteInterfaceImplementation(CodeGenerationTools code, Helper helpe
 					} 
 					else 
 					{
-						if (p.Getter != null) WriteSingleGetter(code, p);
-						if (p.Setter != null) WriteSingleSetter(code, p);
+						if (p.Getter != null) WriteSingleGetter(helper, code, p);
+						if (p.Setter != null) WriteSingleSetter(helper, code, p);
 					}
 					PopIndent();
 #>
@@ -451,16 +453,48 @@ set { SetRelatedObjects(<#= code.CreateLiteral(property.Name) #>, value ); }
 	}
 }
 
-private void WriteSingleGetter(CodeGenerationTools code, CodeProperty property) 
+private void WriteGetterOrSetter(Helper helper, CodeGenerationTools code, CodeProperty property, bool isSetter)
 {
-	var itemType = property.Type.AsFullName;
+	string returnType = property.Type.AsFullName;
+	string itemType = returnType;
+	
+	bool usesInterfaceSyntax = helper.InterfacesByFullName.ContainsKey(returnType);
+	if (!usesInterfaceSyntax)
+		itemType = code.VsNamespaceSuggestion() + ".I" + property.Type.CodeType.Name;
 #>
-get { return GetRelatedObject<<#= itemType #>>(<#=code.CreateLiteral(property.Name)#>); }
+get { return <#+ 
+	if (!usesInterfaceSyntax && !isSetter) 
+	{ 
+		#><#="(" + returnType + ")"#><#+ 
+	} 
+	if (isSetter)
+	{
+		#><#="Set"#><#+
+	}
+	else
+	{
+		#><#="Get"#><#+
+	}#>RelatedObject<<#= itemType #>>(<#=code.CreateLiteral(property.Name)#><#+
+	if (isSetter)
+	{
+		#><#=", value"#><#+
+	}#>); }
 <#+
 }
 
-private void WriteSingleSetter(CodeGenerationTools code, CodeProperty property) {
+private void WriteSingleGetter(Helper helper, CodeGenerationTools code, CodeProperty property) 
+{
+	WriteGetterOrSetter(helper, code, property, false);
+}
+
+private void WriteSingleSetter(Helper helper, CodeGenerationTools code, CodeProperty property) 
+{
 	var itemType = property.Type.AsFullName;
+	string returnType = itemType;
+	
+	bool usesInterfaceSyntax = helper.InterfacesByFullName.ContainsKey(returnType);
+	if (!usesInterfaceSyntax)
+		itemType = code.VsNamespaceSuggestion() + ".I" + property.Type.CodeType.Name;
 #>
 set { SetRelatedObject<<#= itemType #>>(<#=code.CreateLiteral(property.Name)#>, value); }
 <#+
@@ -487,6 +521,15 @@ private void ValidateIdentityProperty(CodeProperty property) {
 	}
 }
 
+private bool ValidatePropertyInternal1(ResourceInterface i, string propertyTypeName)
+{
+	if (i.InterfaceFullName.Equals(propertyTypeName))
+		return true;
+	if (propertyTypeName == i.InterfaceNamespaceName + "." + i.ClassName)
+		return true;
+	return false;
+}
+
 private bool ValidateProperty(CodeProperty property, Helper helper, out bool isCollection) 
 {
 	var propertyTypeName = property.Type.AsFullName;
@@ -494,7 +537,7 @@ private bool ValidateProperty(CodeProperty property, Helper helper, out bool isC
 	bool isValid = false;
 	
 	if (IsValidLiteralType(helper, property.Type) ||
-		helper.GetDecoratedInterfaces().Any(i=>i.InterfaceFullName.Equals(propertyTypeName)))
+		helper.GetDecoratedInterfaces().Any(i=>ValidatePropertyInternal1(i, propertyTypeName)))
 	{
 		isValid = true;
 	} 
@@ -547,7 +590,7 @@ static class Constants {
 	public const string IdentityAttributeShortName = "Identifier";
 	public const string EntityAttributeName =   "BrightstarDB.EntityFramework.EntityAttribute";
 	public const string InversePropertyAttributeName = "BrightstarDB.EntityFramework.InversePropertyAttribute";
-
+	
 	/// <summary>
 	/// The property types that are supported entity property types
 	/// </summary>
@@ -605,11 +648,21 @@ class Helper {
 	public static TextTransformation _transformation;
 	private ProjectItem _templateProjectItem;
 	private Project _project;
+	private List<ResourceInterface> DecoratedInterfaces { get; set; }
+	private List<CodeElement> Interfaces { get; set; }
+	private List<string> ExtraUsings { get; set; }
+	private List<CodeEnum> Enums { get; set; }
+	private List<ProjectItem> ProjectItems { get; set; }
 
-	public Helper(TextTransformation transformation) {
+	public Dictionary<string, ResourceInterface> InterfacesByFullName { get; set; }
+
+	public Helper(TextTransformation transformation) 
+	{
 		_transformation = transformation;
 		_templateProjectItem = DTE.Solution.FindProjectItem(Host.TemplateFile);
 		_project = _templateProjectItem.ContainingProject;
+
+		InterfacesByFullName = GetDecoratedInterfaces().ToDictionary(x => x.InterfaceFullName);
 	}
 	
 	public ITextTemplatingEngineHost Host {
@@ -629,40 +682,65 @@ class Helper {
 		}
 	}
 	
-	public IEnumerable<CodeElement> GetInterfaces() {
+	public IEnumerable<CodeElement> GetInterfaces() 
+	{
+		if (Interfaces == null)
+			Interfaces = GetInterfacesInternal().ToList();
+		return Interfaces;
+	}
+
+	private IEnumerable<CodeElement> GetInterfacesInternal()
+    {
 		foreach(var pi in GetCodeProjectItems()) {
 			foreach(CodeElement ce in GetInterfaces(pi.FileCodeModel.CodeElements)) {
 				yield return ce;
 			}
 		}
-	}
+    }
 
-	public IEnumerable<ResourceInterface> GetDecoratedInterfaces() {
-		return GetCodeProjectItems().SelectMany(pi=>GetDecoratedInterfaces(pi.FileCodeModel.CodeElements)).Select(x=>new ResourceInterface(x));
+	public IEnumerable<ResourceInterface> GetDecoratedInterfaces() 
+	{
+		if (DecoratedInterfaces == null)
+			DecoratedInterfaces = GetCodeProjectItems().SelectMany(pi=>GetDecoratedInterfaces(pi.FileCodeModel.CodeElements)).Select(x=>new ResourceInterface(x)).ToList();
+		return DecoratedInterfaces;
 	}
 
 	/// <summary>
 	/// Returns an enumeration of all distinct using statements contained
 	/// in the files that define BrightstarDB Entity Framework entity interfaces
 	/// <summary>
-	public IEnumerable<string> GetExtraUsings() {
-		return GetCodeProjectItems()
-			.Where(pi=>GetDecoratedInterfaces(pi.FileCodeModel.CodeElements).Any())
-			.SelectMany(pi=>pi.FileCodeModel.CodeElements.OfType<CodeImport>().Select(ce=>ce.Namespace))
-		.Distinct().Except(Constants.CoreImports);
+	public IEnumerable<string> GetExtraUsings() 
+	{
+		if (ExtraUsings == null)
+        {
+			ExtraUsings = GetCodeProjectItems()
+				.Where(pi=>GetDecoratedInterfaces(pi.FileCodeModel.CodeElements).Any())
+				.SelectMany(pi=>pi.FileCodeModel.CodeElements.OfType<CodeImport>().Select(ce=>ce.Namespace))
+			.Distinct().Except(Constants.CoreImports).ToList();
+        }
+		return ExtraUsings;
 	}
 
 	/// <summary>
 	/// Returns an enumeration over all the enums types defined in the project
 	/// </summary>
 	/// <returns></returns>
-	public IEnumerable<CodeEnum> GetEnums() {
+	public IEnumerable<CodeEnum> GetEnums() 
+	{
+		if (Enums == null)
+			Enums = GetEnumsInternal().ToList();
+		return Enums;
+
+	}
+
+	public IEnumerable<CodeEnum> GetEnumsInternal()
+    {
 		foreach(var pi in GetCodeProjectItems()) {
 			foreach(CodeElement ce in GetEnums(pi.FileCodeModel.CodeElements)) {
 				yield return (CodeEnum)ce;
 			}
-		}
-	}
+        }
+    }
 	
 	/// <summary>
 	/// Pass-through write operation to allow this class to contain template output
@@ -734,11 +812,19 @@ class Helper {
 		return null;
 	}
 	
-	public IEnumerable<ProjectItem> GetCodeProjectItems() {
+	public IEnumerable<ProjectItem> GetCodeProjectItems() 
+	{
+		if (ProjectItems == null)
+			ProjectItems = GetCodeProjectItemsInternal().ToList();
+		return ProjectItems;
+	}
+
+	private IEnumerable<ProjectItem> GetCodeProjectItemsInternal()
+    {
 		foreach(var pi in GetCodeProjectItems(_project.ProjectItems)) {
 			yield return pi;
 		}
-	}
+    }
 	
 	public string Unquote(string quotedString)
 	{

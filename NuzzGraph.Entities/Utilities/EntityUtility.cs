@@ -44,7 +44,26 @@ namespace NuzzGraph.Entities
                 .ToList();
         }
 
-        public static void SpecifyURIMappings(EntityMappingStore mappings)
+        public static void ProcessMappings(EntityMappingStore mappings)
+        {
+            CorrectMappings(mappings);
+            SpecifyURIMappings(mappings);
+        }
+
+        /// <summary>
+        /// Fixes the BrightstarDB 'issue' caused by non-interface type aliases being interpreted as Properties instad of Arcs
+        /// </summary>
+        /// <param name="mappings"></param>
+        private static void CorrectMappings(EntityMappingStore mappings)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Fixes the BrightstarDB issue caused by ambiguous URI references being specified for properties
+        /// </summary>
+        /// <param name="mappings"></param>
+        private static void SpecifyURIMappings(EntityMappingStore mappings)
         {
             var f = mappings.GetType().GetField("_propertyHints", BindingFlags.NonPublic | BindingFlags.Instance);
             var pHints = f.GetValue(mappings) as Dictionary<PropertyInfo, PropertyHint>;
@@ -134,6 +153,11 @@ namespace NuzzGraph.Entities
             string nameOfSet = PluralizeName(node.GetType().Name);
             dynamic set = acc[context, nameOfSet];
             set.Add((dynamic)node);
+        }
+
+        internal static bool IsScalar(System.Type propertyType)
+        {
+            return AllSimpleTypes.Contains(propertyType) || propertyType == typeof(object);
         }
 
         private static string PluralizeName(string name)

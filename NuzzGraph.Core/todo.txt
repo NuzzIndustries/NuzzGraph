@@ -4,7 +4,7 @@
 *Add "GetValue" function which returns value of property
 
 Need a better way to edit the tt file
-
+ Run external assembly to generate .tt
 
 Entity references should return the raw type instead of the interface
 

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using BrightstarDB.EntityFramework;
+﻿using System.Linq;
 using BrightstarDB.Client;
-using NuzzGraph.Entities.Attributes;
+using BrightstarDB.EntityFramework;
 using NuzzGraph.Core;
 
 namespace NuzzGraph.Entities
@@ -23,7 +19,7 @@ namespace NuzzGraph.Entities
         Node Get();
     }
 
-    public partial class Node : BrightstarEntityObject, INode 
+    public partial class Node : BrightstarEntityObject, INode
     {
         public Node Get()
         {
@@ -47,8 +43,12 @@ namespace NuzzGraph.Entities
             if (context == null)
                 context = ContextFactory.New();
 
-            if (EntityUtility.NodeTypesInitialized)
-                TypeHandle = ((GraphContext)context).NodeTypes.Where(x => x.Label == this.GetType().Name).Single();
+            var set = new BrightstarEntitySet<INodeType>(context);
+            var set2 = set.Select(x => (NodeType)x);
+
+            if (EntityUtility.NodeTypesInitialized && this.GetType() == typeof(NodeType))
+                TypeHandle = set2.Where(x => x.Label == this.GetType().Name).Single();
+            //TypeHandle = ((GraphContext)context).NodeTypes.Where(x => x.Label == this.GetType().Name).Single();
             if (EntityUtility.IsSeedMode)
                 EntityUtility.AddNodeToContext((GraphContext)context, (INode)this);
         }
