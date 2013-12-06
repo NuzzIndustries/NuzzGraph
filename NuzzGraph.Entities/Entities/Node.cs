@@ -16,7 +16,7 @@ namespace NuzzGraph.Entities
         /// Get the persistent identifier for this entity
         /// </summary>
         string Id { get; }
-        INodeType TypeHandle { get; set; }
+        NodeType TypeHandle { get; set; }
 
         string Label { get; set; }
 

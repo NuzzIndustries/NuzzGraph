@@ -2,6 +2,10 @@
 *Graph -> Show label
 *Add "All Properties" property which gives all properties of inheritance chain
 *Add "GetValue" function which returns value of property
+
+Need a better way to edit the tt file
+
+
 Entity references should return the raw type instead of the interface
 
 Graph -> Show node property data on hover

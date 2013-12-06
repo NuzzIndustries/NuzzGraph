@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using BrightstarDB.EntityFramework;
 
 namespace NuzzGraph.Entities
@@ -60,7 +59,7 @@ namespace NuzzGraph.Entities
 
                     if (!type.Name.StartsWith("I"))
                         throw new InvalidOperationException("Expected interface name starting with I");
-                    
+
                     var hint = pHints[property];
                     if (hint.MappingType == PropertyMappingType.InverseArc)
                         continue; //do inverse properties in second pass
