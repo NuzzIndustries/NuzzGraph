@@ -56,7 +56,32 @@ namespace NuzzGraph.Entities
         /// <param name="mappings"></param>
         private static void CorrectMappings(EntityMappingStore mappings)
         {
-            throw new NotImplementedException();
+            var allhints = mappings.GetType().GetField("_propertyHints", BindingFlags.NonPublic | BindingFlags.Instance)
+                .GetValue(mappings) as Dictionary<PropertyInfo, PropertyHint>;
+
+            foreach (var pInfo in allhints.Keys.ToList())
+            {
+                //Load existing info
+                var hint = allhints[pInfo];
+                var maptype = hint.MappingType;
+                if (hint.MappingType != PropertyMappingType.Property)
+                    continue;
+
+                //Set new property hint
+                maptype = GetMappingType(pInfo);
+                hint = new PropertyHint(maptype, hint.SchemaTypeUri);
+                allhints[pInfo] = hint;
+            }
+        }
+
+        private static PropertyMappingType GetMappingType(PropertyInfo pInfo)
+        {
+            if (EntityUtility.IsScalar(pInfo.PropertyType))
+                return PropertyMappingType.Property;
+            else if (pInfo.GetCustomAttributes(typeof(InversePropertyAttribute), false).Count() > 0)
+                return PropertyMappingType.InverseArc;
+            else
+                return PropertyMappingType.Arc;
         }
 
         /// <summary>

@@ -43,12 +43,16 @@ namespace NuzzGraph.Entities
             if (context == null)
                 context = ContextFactory.New();
 
-            var set = new BrightstarEntitySet<INodeType>(context);
-            var set2 = set.Select(x => (NodeType)x);
+            var set1 = new DirectEntitySet<NodeType>(context);
+            var q1 = set1.Where(x => x.Label == this.GetType().Name).ToList();
 
-            if (EntityUtility.NodeTypesInitialized && this.GetType() == typeof(NodeType))
-                TypeHandle = set2.Where(x => x.Label == this.GetType().Name).Single();
-            //TypeHandle = ((GraphContext)context).NodeTypes.Where(x => x.Label == this.GetType().Name).Single();
+            if (EntityUtility.NodeTypesInitialized)
+            {
+                var typenodes = ((GraphContext)context)._NodeTypes.Where(x => x.Label == this.GetType().Name).ToList();
+                var set2 = ((GraphContext)context).NodeTypes.Cast<NodeType>();
+                var typeNodes3 = set2.Where(x => x.Label == this.GetType().Name).ToList();
+                var typenodesFromInterface = ((GraphContext)context).NodeTypes.Where(x => x.Label == this.GetType().Name).ToList(); ;
+            }
             if (EntityUtility.IsSeedMode)
                 EntityUtility.AddNodeToContext((GraphContext)context, (INode)this);
         }

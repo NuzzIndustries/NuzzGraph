@@ -176,6 +176,56 @@ namespace NuzzGraph.Entities
     		get; private set;
     	}
     	
+    	public IQueryable<NuzzGraph.Entities.Function> _Functions
+    	{
+    		 get { return Functions.Cast<NuzzGraph.Entities.Function>(); }
+    	}
+    	
+    	public IQueryable<NuzzGraph.Entities.FunctionParameter> _FunctionParameters
+    	{
+    		 get { return FunctionParameters.Cast<NuzzGraph.Entities.FunctionParameter>(); }
+    	}
+    	
+    	public IQueryable<NuzzGraph.Entities.Node> _Nodes
+    	{
+    		 get { return Nodes.Cast<NuzzGraph.Entities.Node>(); }
+    	}
+    	
+    	public IQueryable<NuzzGraph.Entities.NodePropertyDefinition> _NodePropertyDefinitions
+    	{
+    		 get { return NodePropertyDefinitions.Cast<NuzzGraph.Entities.NodePropertyDefinition>(); }
+    	}
+    	
+    	public IQueryable<NuzzGraph.Entities.NodeType> _NodeTypes
+    	{
+    		 get { return NodeTypes.Cast<NuzzGraph.Entities.NodeType>(); }
+    	}
+    	
+    	public IQueryable<NuzzGraph.Entities.PropertyDefinition> _PropertyDefinitions
+    	{
+    		 get { return PropertyDefinitions.Cast<NuzzGraph.Entities.PropertyDefinition>(); }
+    	}
+    	
+    	public IQueryable<NuzzGraph.Entities.RelationshipType> _RelationshipTypes
+    	{
+    		 get { return RelationshipTypes.Cast<NuzzGraph.Entities.RelationshipType>(); }
+    	}
+    	
+    	public IQueryable<NuzzGraph.Entities.ScalarType> _ScalarTypes
+    	{
+    		 get { return ScalarTypes.Cast<NuzzGraph.Entities.ScalarType>(); }
+    	}
+    	
+    	public IQueryable<NuzzGraph.Entities.SystemNode> _SystemNodes
+    	{
+    		 get { return SystemNodes.Cast<NuzzGraph.Entities.SystemNode>(); }
+    	}
+    	
+    	public IQueryable<NuzzGraph.Entities.Type> _Types
+    	{
+    		 get { return Types.Cast<NuzzGraph.Entities.Type>(); }
+    	}
+    	
     }
 }
 namespace NuzzGraph.Entities 
