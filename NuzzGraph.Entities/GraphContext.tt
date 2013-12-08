@@ -185,20 +185,6 @@ public partial class <#=code.Escape(contextClassName) #> : BrightstarEntityConte
 	}
 #>
 
-<#+
-
-	foreach(var i in helper.GetDecoratedInterfaces())
-	{
-		var cType = i.InterfaceNamespaceName + "." + i.ClassName;
-#>
-	<#=i.EntitySetAccessLevel#> IQueryable<<#=cType#>> _<#=code.Escape(i.PluralizedName)#>
-	{
-		 get { return <#=code.Escape(i.PluralizedName)#>.Cast<<#=cType#>>(); }
-	}
-	
-<#+
-	}
-#>
 }
 <#+
 }
