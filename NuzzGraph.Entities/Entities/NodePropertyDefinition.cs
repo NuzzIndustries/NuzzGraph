@@ -12,10 +12,10 @@ namespace NuzzGraph.Entities
     [Inherits("PropertyDefinition")]
     public interface INodePropertyDefinition : IPropertyDefinition
     {
-        INodeType DeclaringType { get; set;  }
+        NodeType DeclaringType { get; set; }
         string InternalUri { get; set; }
         object GetValue(INode node);
-       
+
     }
 
     public partial class NodePropertyDefinition : INodePropertyDefinition

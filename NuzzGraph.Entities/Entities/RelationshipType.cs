@@ -12,12 +12,12 @@ namespace NuzzGraph.Entities
     public interface IRelationshipType : ISystemNode
     {
         bool SupportsMany { get; set; }
-        
+
         [InverseProperty("AllowedOutgoingRelationships")]
-        INodeType OutgoingFrom { get; set; }
+        NodeType OutgoingFrom { get; set; }
 
         [InverseProperty("AllowedIncomingRelationships")]
-        INodeType IncomingTo { get; set; }
+        NodeType IncomingTo { get; set; }
 
         /// <summary>
         /// Gets the Internal RDF URI for this relationship
@@ -27,7 +27,7 @@ namespace NuzzGraph.Entities
 
     public partial class RelationshipType : IRelationshipType
     {
-  
+
         protected override void OnPropertyChanged(string propertyName)
         {
             base.OnPropertyChanged(propertyName);

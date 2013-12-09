@@ -12,7 +12,6 @@ using BrightstarDB.EntityFramework;
 using NuzzGraph.Core;
 using NuzzGraph.Entities;
 using NuzzGraph.Entities.Attributes;
-using VDS.RDF;
 using VDS.RDF.Writing;
 
 namespace NuzzGraph.Seed
@@ -26,10 +25,10 @@ namespace NuzzGraph.Seed
         static IBrightstarService Client { get; set; }
         static GraphContext Context { get; set; }
 
-        static Dictionary<System.Type, INodeType> CLRTypeMap { get; set; }
+        static Dictionary<System.Type, NuzzGraph.Entities.NodeType> CLRTypeMap { get; set; }
 
 
-        static Dictionary<System.Type, IScalarType> ScalarTypeMap { get; set; }
+        static Dictionary<System.Type, ScalarType> ScalarTypeMap { get; set; }
 
         static Program()
         {
@@ -45,7 +44,7 @@ namespace NuzzGraph.Seed
                 System.Threading.Thread.Sleep(1000);
 
                 var rdftext = File.ReadAllText("test/import/test.n3");
-                IGraph g = new Graph();
+                VDS.RDF.IGraph g = new VDS.RDF.Graph();
                 VDS.RDF.Parsing.FileLoader.Load(g, "test/import/test.n3");
                 var writer = new RdfXmlWriter();
                 writer.Save(g, Path.GetFullPath("./test/import/test.rdf"));
@@ -149,7 +148,7 @@ namespace NuzzGraph.Seed
 
         private static void LoadCLRTypeMap()
         {
-            CLRTypeMap = new Dictionary<System.Type, INodeType>();
+            CLRTypeMap = new Dictionary<System.Type, NodeType>();
             var assembly = Assembly.GetAssembly(typeof(INodeType));
 
             INodeType nodeTypeNode = null;
@@ -158,7 +157,7 @@ namespace NuzzGraph.Seed
             foreach (var clrType in EntityUtility.AllCLRTypes)
             {
                 //Create type node
-                var t = Context.NodeTypes.Create();
+                var t = (NodeType)Context.NodeTypes.Create();
                 t.Label = clrType.Name.Substring(1);
                 CLRTypeMap[clrType] = t;
                 if (clrType.Name == "INodeType")
@@ -201,32 +200,32 @@ namespace NuzzGraph.Seed
 
         private static void LoadScalarTypes()
         {
-            ScalarTypeMap = new Dictionary<System.Type, IScalarType>();
+            ScalarTypeMap = new Dictionary<System.Type, ScalarType>();
 
             //Types:
             //Text
             //Integer
             //Decimal
             //Bool
-            IScalarType txt, integer, dec, boolean, anyScalar;
+            ScalarType txt, integer, dec, boolean, anyScalar;
 
-            var n = Context.ScalarTypes.Create();
+            var n = (ScalarType)Context.ScalarTypes.Create();
             n.Label = "Text";
             txt = n;
 
-            n = Context.ScalarTypes.Create();
+            n = (ScalarType)Context.ScalarTypes.Create();
             n.Label = "Integer";
             integer = n;
 
-            n = Context.ScalarTypes.Create();
+            n = (ScalarType)Context.ScalarTypes.Create();
             n.Label = "Decimal";
             dec = n;
 
-            n = Context.ScalarTypes.Create();
+            n = (ScalarType)Context.ScalarTypes.Create();
             n.Label = "Boolean";
             boolean = n;
 
-            n = Context.ScalarTypes.Create();
+            n = (ScalarType)Context.ScalarTypes.Create();
             n.Label = "AnyScalar";
             anyScalar = n;
 
@@ -259,7 +258,7 @@ namespace NuzzGraph.Seed
             var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
             foreach (var clrType in EntityUtility.AllCLRTypes)
             {
-                var nodeTypeNode = Context.NodeTypes.Where(x => x.Label == clrType.Name.Substring(1)).Single();
+                var nodeTypeNode = (NodeType)Context.NodeTypes.Where(x => x.Label == clrType.Name.Substring(1)).Single();
 
                 //Get properties of type
                 foreach (var prop in clrType.GetProperties(flags))

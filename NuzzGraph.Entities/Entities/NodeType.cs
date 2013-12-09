@@ -13,22 +13,22 @@ namespace NuzzGraph.Entities
     {
         bool IsAbstract { get; }
 
-        ICollection<INodeType> SuperTypes { get; set; } //Change to multiple inheritance
-        ICollection<IRelationshipType> AllowedOutgoingRelationships { get; }
-        ICollection<IRelationshipType> AllowedIncomingRelationships { get; }
+        ICollection<NodeType> SuperTypes { get; set; } //Change to multiple inheritance
+        ICollection<RelationshipType> AllowedOutgoingRelationships { get; }
+        ICollection<RelationshipType> AllowedIncomingRelationships { get; }
 
         [InverseProperty("DeclaringType")]
-        ICollection<INodePropertyDefinition> Properties { get; }
+        ICollection<NodePropertyDefinition> Properties { get; }
 
         [InverseProperty("DeclaringType")]
-        ICollection<IFunction> Functions { get; }
+        ICollection<Function> Functions { get; }
 
         [InverseProperty("SuperTypes")]
-        ICollection<INodeType> SubTypes { get; }
+        ICollection<NodeType> SubTypes { get; }
 
         [InverseProperty("TypeHandle")]
-        ICollection<INode> AllNodes { get; }
-        
+        ICollection<Node> AllNodes { get; }
+
         void AddProperty(ScalarType type, string name);
         void RemoveProperty(string name);
         void Inherit(NodeType type);

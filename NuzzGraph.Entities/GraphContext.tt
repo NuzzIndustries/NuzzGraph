@@ -20,6 +20,7 @@ WriteHeader(helper.GetExtraUsings().ToArray());
 BeginNamespace(code, namespaceName);
 WriteContextClass(code, helper, contextClassName);
 
+
 EndNamespace(namespaceName);
 foreach(var i in helper.GetDecoratedInterfaces()) {
 	WriteEntityClass(code, helper, i);
@@ -196,6 +197,7 @@ private void WriteEntityClass(CodeGenerationTools code, Helper helper, ResourceI
     WriteClassAttributes(code, helper, iface);
 #>
 
+<#="[Entity]"#>
 <#= code.SpaceAfter(iface.EntitySetAccessLevel)#>partial class <#= iface.ClassName #> : <#=GetInheritedClass(iface.ClassName)#>, <#= iface.InterfaceName #> 
 {
 	public <#= iface.ClassName#>(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
@@ -247,7 +249,7 @@ private void WriteInterfaceImplementation(CodeGenerationTools code, Helper helpe
 	public <#= generic#><<#=t#>> <#= p.Name #>
 	{
 <#+ 
-						if (helper.GetDecoratedInterfaces().Any(x=>x.InterfaceFullName.Equals(t))) 
+						if (helper.GetDecoratedInterfaces().Any(x=>x.InterfaceFullName.Equals(t) || x.InterfaceNamespaceName + "." + x.ClassName == t)) 
 						{
 							#>
 		get { return GetRelatedObjects<<#=t#>>(<#= code.CreateLiteral(p.Name) #>); }
@@ -400,22 +402,29 @@ private void WritePropertyAttributes(CodeGenerationTools code, Helper helper, Co
 
 private bool IsValidLiteralType(Helper helper, CodeTypeRef t) 
 {
-	if (t.AsFullName == "System.Object")
+	return IsValidLiteralType(helper, t.AsFullName);
+}
+
+private bool IsValidLiteralType(Helper helper, string typeName) 
+{
+	if (typeName == "System.Object")
 		return true;
 
-	if (Constants.BasicTypes.Contains(t.AsFullName) ||
+	var t = helper.CodeTypeMap[typeName];
+
+	if (Constants.BasicTypes.Contains(typeName) ||
 			IsByteArray(t) ||
 			t.CodeType.IsDerivedFrom["System.Enum"]) {
 		return true;
 	}
 	
-	string genericName, typeName;
-	if (Helper.TryParseGenericTypeName(t.AsFullName, out genericName, out typeName)
+	string genericName, typeName2;
+	if (Helper.TryParseGenericTypeName(typeName, out genericName, out typeName2)
 		&& genericName.Equals("System.Nullable")
-		&& helper.GetEnums().Any(e=>e.FullName.Equals(typeName))) {
+		&& helper.GetEnums().Any(e=>e.FullName.Equals(typeName2))) {
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -548,7 +557,9 @@ private bool ValidateProperty(CodeProperty property, Helper helper, out bool isC
 		if (Helper.TryParseGenericTypeName(propertyTypeName, out generic, out t)) 
 		{
 			if (Constants.CollectionTypes.Contains(generic) && 
-				(Constants.BasicTypes.Contains(t) || helper.GetDecoratedInterfaces().Any(i=>i.InterfaceFullName.Equals(t)))) 
+				(IsValidLiteralType(helper, t) || 
+				helper.GetDecoratedInterfaces().Any(i=>ValidatePropertyInternal1(i, t))
+				)) 
 			{
 				isCollection = true;
 				isValid = true;
@@ -569,7 +580,7 @@ private bool ValidateProperty(CodeProperty property, Helper helper, out bool isC
 	{
 		var arg = inversePropertyAttr.Children.OfType<EnvDTE80.CodeAttributeArgument>().FirstOrDefault();
 		var inversePropertyName = arg.Value.Trim('\"');
-		var targetInterface = helper.GetDecoratedInterfaces().FirstOrDefault(i=>i.InterfaceFullName.Equals(propertyTypeName));
+		var targetInterface = helper.GetDecoratedInterfaces().FirstOrDefault(i=>ValidatePropertyInternal1(i, propertyTypeName));
 		if (targetInterface == null) 
 		{
 			this.Error("Invalid InverseProperty attribute on property " + property.Name + ". The property type " + propertyTypeName + " must be marked as an Entity.");
@@ -654,8 +665,9 @@ class Helper {
 	private List<string> ExtraUsings { get; set; }
 	private List<CodeEnum> Enums { get; set; }
 	private List<ProjectItem> ProjectItems { get; set; }
-
+	
 	public Dictionary<string, ResourceInterface> InterfacesByFullName { get; set; }
+	public Dictionary<string, CodeTypeRef> CodeTypeMap { get; private set; }
 
 	public Helper(TextTransformation transformation) 
 	{
@@ -664,8 +676,43 @@ class Helper {
 		_project = _templateProjectItem.ContainingProject;
 
 		InterfacesByFullName = GetDecoratedInterfaces().ToDictionary(x => x.InterfaceFullName);
+		var i = GetInterfaces().Where(x => x.IsCodeType).First();
+
+		CodeTypeMap = BuildCodeTypeMap();
+		//CodeTypeMap = GetInterfaces().Where(x => x.IsCodeType).Select(x => (EnvDTE.CodeType)x.Interface).ToDictionary(x => x.AsFullName);
 	}
 	
+	private Dictionary<string, CodeTypeRef> BuildCodeTypeMap()
+    {
+		var types = GetDecoratedInterfaces().SelectMany(x => x.Properties).Distinct().Select(x => x.Type).Distinct().ToList();
+		var dict = DistinctBy(types, x => x.AsFullName).ToDictionary(x => x.AsFullName);
+		var generics = types.Where(t => Constants.CollectionTypes.Where(ct => t.AsFullName.Contains(ct)).FirstOrDefault() != null);
+
+		//Add generics to type map
+		foreach(var item in generics)
+        {
+			var key = GetInnerGenericTypeName(item);
+			dict[key] = item;
+        }
+
+		return dict;
+    }
+
+	private static string GetInnerGenericTypeName(CodeTypeRef outerType)
+    {
+		string generic, t;
+
+		if (!Helper.TryParseGenericTypeName(outerType.AsFullName, out generic, out t))
+			throw new InvalidOperationException("Unable to parse type " + outerType.AsFullName);
+
+		return t;
+    }
+
+	public static IEnumerable<T> DistinctBy<T, TKey>(IEnumerable<T> items, Func<T, TKey> property)
+	{
+		return items.GroupBy(property).Select(x => x.First());
+	}
+
 	public ITextTemplatingEngineHost Host {
 		get {
 			return _transformation.GetType().GetProperty("Host").GetValue(_transformation, null) as ITextTemplatingEngineHost;

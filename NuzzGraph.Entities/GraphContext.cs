@@ -182,6 +182,7 @@ namespace NuzzGraph.Entities
 namespace NuzzGraph.Entities 
 {
     
+    [Entity]
     public partial class Function : SystemNode, IFunction 
     {
     	public Function(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
@@ -195,25 +196,25 @@ namespace NuzzGraph.Entities
             		set { SetRelatedProperty("FunctionBody", value); }
     	}
     
-    	public NuzzGraph.Entities.INodeType DeclaringType
+    	public NuzzGraph.Entities.NodeType DeclaringType
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType"); }
+            get { return (NuzzGraph.Entities.NodeType)GetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType"); }
             set { SetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType", value); }
     	}
-    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IFunctionParameter> Parameters
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.FunctionParameter> Parameters
     	{
-    		get { return GetRelatedObjects<NuzzGraph.Entities.IFunctionParameter>("Parameters"); }
+    		get { return GetRelatedObjects<NuzzGraph.Entities.FunctionParameter>("Parameters"); }
     		set { SetRelatedObjects("Parameters", value); }
     								}
     
-    	public NuzzGraph.Entities.IFunction Overrides
+    	public NuzzGraph.Entities.Function Overrides
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.IFunction>("Overrides"); }
+            get { return (NuzzGraph.Entities.Function)GetRelatedObject<NuzzGraph.Entities.IFunction>("Overrides"); }
             set { SetRelatedObject<NuzzGraph.Entities.IFunction>("Overrides", value); }
     	}
-    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IFunction> OverridenBy
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.Function> OverridenBy
     	{
-    		get { return GetRelatedObjects<NuzzGraph.Entities.IFunction>("OverridenBy"); }
+    		get { return GetRelatedObjects<NuzzGraph.Entities.Function>("OverridenBy"); }
     		set { SetRelatedObjects("OverridenBy", value); }
     								}
     	#endregion
@@ -238,6 +239,7 @@ namespace NuzzGraph.Entities
 namespace NuzzGraph.Entities 
 {
     
+    [Entity]
     public partial class FunctionParameter : PropertyDefinition, IFunctionParameter 
     {
     	public FunctionParameter(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
@@ -245,21 +247,21 @@ namespace NuzzGraph.Entities
     	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.IFunctionParameter
     
-    	public NuzzGraph.Entities.IFunction DeclaringFunction
+    	public NuzzGraph.Entities.Function DeclaringFunction
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.IFunction>("DeclaringFunction"); }
+            get { return (NuzzGraph.Entities.Function)GetRelatedObject<NuzzGraph.Entities.IFunction>("DeclaringFunction"); }
     	}
     
-    	public NuzzGraph.Entities.IType ParameterType
+    	public NuzzGraph.Entities.Type ParameterType
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.IType>("ParameterType"); }
+            get { return (NuzzGraph.Entities.Type)GetRelatedObject<NuzzGraph.Entities.IType>("ParameterType"); }
     	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
     
-    	public NuzzGraph.Entities.IScalarType PropertyType
+    	public NuzzGraph.Entities.ScalarType PropertyType
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType"); }
+            get { return (NuzzGraph.Entities.ScalarType)GetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType"); }
             set { SetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType", value); }
     	}
     
@@ -300,6 +302,7 @@ namespace NuzzGraph.Entities
 namespace NuzzGraph.Entities 
 {
     
+    [Entity]
     public partial class Node : BrightstarEntityObject, INode 
     {
     	public Node(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
@@ -324,6 +327,7 @@ namespace NuzzGraph.Entities
 namespace NuzzGraph.Entities 
 {
     
+    [Entity]
     public partial class NodePropertyDefinition : PropertyDefinition, INodePropertyDefinition 
     {
     	public NodePropertyDefinition(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
@@ -331,9 +335,9 @@ namespace NuzzGraph.Entities
     	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.INodePropertyDefinition
     
-    	public NuzzGraph.Entities.INodeType DeclaringType
+    	public NuzzGraph.Entities.NodeType DeclaringType
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType"); }
+            get { return (NuzzGraph.Entities.NodeType)GetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType"); }
             set { SetRelatedObject<NuzzGraph.Entities.INodeType>("DeclaringType", value); }
     	}
     
@@ -345,9 +349,9 @@ namespace NuzzGraph.Entities
     	#endregion
     	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
     
-    	public NuzzGraph.Entities.IScalarType PropertyType
+    	public NuzzGraph.Entities.ScalarType PropertyType
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType"); }
+            get { return (NuzzGraph.Entities.ScalarType)GetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType"); }
             set { SetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType", value); }
     	}
     
@@ -388,6 +392,7 @@ namespace NuzzGraph.Entities
 namespace NuzzGraph.Entities 
 {
     
+    [Entity]
     public partial class NodeType : Type, INodeType 
     {
     	public NodeType(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
@@ -400,39 +405,39 @@ namespace NuzzGraph.Entities
             		get { return GetRelatedProperty<System.Boolean>("IsAbstract"); }
             		set { SetRelatedProperty("IsAbstract", value); }
     	}
-    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INodeType> SuperTypes
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.NodeType> SuperTypes
     	{
-    		get { return GetRelatedObjects<NuzzGraph.Entities.INodeType>("SuperTypes"); }
+    		get { return GetRelatedObjects<NuzzGraph.Entities.NodeType>("SuperTypes"); }
     		set { SetRelatedObjects("SuperTypes", value); }
     								}
-    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IRelationshipType> AllowedOutgoingRelationships
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.RelationshipType> AllowedOutgoingRelationships
     	{
-    		get { return GetRelatedObjects<NuzzGraph.Entities.IRelationshipType>("AllowedOutgoingRelationships"); }
+    		get { return GetRelatedObjects<NuzzGraph.Entities.RelationshipType>("AllowedOutgoingRelationships"); }
     		set { SetRelatedObjects("AllowedOutgoingRelationships", value); }
     								}
-    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IRelationshipType> AllowedIncomingRelationships
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.RelationshipType> AllowedIncomingRelationships
     	{
-    		get { return GetRelatedObjects<NuzzGraph.Entities.IRelationshipType>("AllowedIncomingRelationships"); }
+    		get { return GetRelatedObjects<NuzzGraph.Entities.RelationshipType>("AllowedIncomingRelationships"); }
     		set { SetRelatedObjects("AllowedIncomingRelationships", value); }
     								}
-    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INodePropertyDefinition> Properties
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.NodePropertyDefinition> Properties
     	{
-    		get { return GetRelatedObjects<NuzzGraph.Entities.INodePropertyDefinition>("Properties"); }
+    		get { return GetRelatedObjects<NuzzGraph.Entities.NodePropertyDefinition>("Properties"); }
     		set { SetRelatedObjects("Properties", value); }
     								}
-    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IFunction> Functions
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.Function> Functions
     	{
-    		get { return GetRelatedObjects<NuzzGraph.Entities.IFunction>("Functions"); }
+    		get { return GetRelatedObjects<NuzzGraph.Entities.Function>("Functions"); }
     		set { SetRelatedObjects("Functions", value); }
     								}
-    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INodeType> SubTypes
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.NodeType> SubTypes
     	{
-    		get { return GetRelatedObjects<NuzzGraph.Entities.INodeType>("SubTypes"); }
+    		get { return GetRelatedObjects<NuzzGraph.Entities.NodeType>("SubTypes"); }
     		set { SetRelatedObjects("SubTypes", value); }
     								}
-    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.INode> AllNodes
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.Node> AllNodes
     	{
-    		get { return GetRelatedObjects<NuzzGraph.Entities.INode>("AllNodes"); }
+    		get { return GetRelatedObjects<NuzzGraph.Entities.Node>("AllNodes"); }
     		set { SetRelatedObjects("AllNodes", value); }
     								}
     	#endregion
@@ -459,6 +464,7 @@ namespace NuzzGraph.Entities
 namespace NuzzGraph.Entities 
 {
     
+    [Entity]
     public partial class PropertyDefinition : SystemNode, IPropertyDefinition 
     {
     	public PropertyDefinition(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
@@ -466,9 +472,9 @@ namespace NuzzGraph.Entities
     	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
     
-    	public NuzzGraph.Entities.IScalarType PropertyType
+    	public NuzzGraph.Entities.ScalarType PropertyType
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType"); }
+            get { return (NuzzGraph.Entities.ScalarType)GetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType"); }
             set { SetRelatedObject<NuzzGraph.Entities.IScalarType>("PropertyType", value); }
     	}
     
@@ -509,6 +515,7 @@ namespace NuzzGraph.Entities
 namespace NuzzGraph.Entities 
 {
     
+    [Entity]
     public partial class RelationshipType : SystemNode, IRelationshipType 
     {
     	public RelationshipType(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
@@ -522,15 +529,15 @@ namespace NuzzGraph.Entities
             		set { SetRelatedProperty("SupportsMany", value); }
     	}
     
-    	public NuzzGraph.Entities.INodeType OutgoingFrom
+    	public NuzzGraph.Entities.NodeType OutgoingFrom
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("OutgoingFrom"); }
+            get { return (NuzzGraph.Entities.NodeType)GetRelatedObject<NuzzGraph.Entities.INodeType>("OutgoingFrom"); }
             set { SetRelatedObject<NuzzGraph.Entities.INodeType>("OutgoingFrom", value); }
     	}
     
-    	public NuzzGraph.Entities.INodeType IncomingTo
+    	public NuzzGraph.Entities.NodeType IncomingTo
     	{
-            get { return GetRelatedObject<NuzzGraph.Entities.INodeType>("IncomingTo"); }
+            get { return (NuzzGraph.Entities.NodeType)GetRelatedObject<NuzzGraph.Entities.INodeType>("IncomingTo"); }
             set { SetRelatedObject<NuzzGraph.Entities.INodeType>("IncomingTo", value); }
     	}
     
@@ -561,15 +568,16 @@ namespace NuzzGraph.Entities
 namespace NuzzGraph.Entities 
 {
     
+    [Entity]
     public partial class ScalarType : Type, IScalarType 
     {
     	public ScalarType(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
     	public ScalarType() : base() { }
     	public System.String Id { get {return GetIdentity(); } set { SetIdentity(value); } }
     	#region Implementation of NuzzGraph.Entities.IScalarType
-    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.IPropertyDefinition> PropertiesContainingType
+    	public System.Collections.Generic.ICollection<NuzzGraph.Entities.PropertyDefinition> PropertiesContainingType
     	{
-    		get { return GetRelatedObjects<NuzzGraph.Entities.IPropertyDefinition>("PropertiesContainingType"); }
+    		get { return GetRelatedObjects<NuzzGraph.Entities.PropertyDefinition>("PropertiesContainingType"); }
     		set { SetRelatedObjects("PropertiesContainingType", value); }
     								}
     	#endregion
@@ -596,6 +604,7 @@ namespace NuzzGraph.Entities
 namespace NuzzGraph.Entities 
 {
     
+    [Entity]
     public partial class SystemNode : Node, ISystemNode 
     {
     	public SystemNode(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }
@@ -622,6 +631,7 @@ namespace NuzzGraph.Entities
 namespace NuzzGraph.Entities 
 {
     
+    [Entity]
     public partial class Type : SystemNode, IType 
     {
     	public Type(BrightstarEntityContext context, IDataObject dataObject) : base(context, dataObject) { }

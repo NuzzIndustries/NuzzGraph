@@ -12,9 +12,9 @@ namespace NuzzGraph.Entities
     public interface IFunctionParameter : IPropertyDefinition
     {
         [InverseProperty("Parameters")]
-        IFunction DeclaringFunction { get; }
+        Function DeclaringFunction { get; }
 
-        IType ParameterType { get; }
+        Type ParameterType { get; }
     }
 
     public partial class FunctionParameter : IFunctionParameter
