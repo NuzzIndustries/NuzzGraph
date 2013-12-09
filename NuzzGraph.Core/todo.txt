@@ -5,20 +5,19 @@
 *Need a better way to edit the tt file
 (cancelled)Add _NodeTypes, _Nodes, etc entity sets to graph context
 *Entity references should return the raw type instead of the interface
-
-Check which processes are running the DB, close xdesproc if it is running it
-Add RDF URI metadata to NodeTypes
-Graph -> Show node property data on hover
-
+*Check which processes are running the DB, close xdesproc if it is running it
+*Add RDF URI metadata to NodeTypes
+*Graph -> Show node property data on hover
 
 
-Set permissions on "System" properties, make them read-only
 
 Display Graph
  *Add zoom in/out
- Add right click context menu with sticky node details option
  Draw Edges / Connections
+ Add right click context menu with sticky node details option
  Add color legend
  Add filters
 
  
+
+ Set permissions on "System" properties, make them read-only
