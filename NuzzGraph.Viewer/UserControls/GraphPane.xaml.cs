@@ -24,6 +24,13 @@ namespace NuzzGraph.Viewer.UserControls
     /// </summary>
     public partial class GraphPane : UserControl
     {
+        public INode CurrentMouseoverNode 
+        {
+            get { return nodehover.CurrentNode; }
+            set { nodehover.CurrentNode = value; }
+        }
+
+
         public GraphPane()
         {
             InitializeComponent();
@@ -32,8 +39,13 @@ namespace NuzzGraph.Viewer.UserControls
 
         void GraphPane_Loaded(object sender, RoutedEventArgs e)
         {
-            var f1 = ContextFactory.New().Functions.Where(x => x.Label == "Get").Single();
-            nodehover.CurrentNode = f1;
+            //var f1 = ContextFactory.New().Functions.Where(x => x.Label == "Get").Single();
+            //nodehover.CurrentNode = f1;
+        }
+
+        private void GraphPane_Initialized(object sender, EventArgs e)
+        {
+            viewport.GraphPane = this;
         }
     }
 }

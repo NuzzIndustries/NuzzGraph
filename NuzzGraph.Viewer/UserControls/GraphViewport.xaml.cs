@@ -24,9 +24,15 @@ namespace NuzzGraph.Viewer.UserControls
     /// </summary>
     public partial class GraphViewport : UserControl
     {
-         static List<Brush> SimpleBrushes;
+        public INode CurrentMouseoverNode 
+        {
+            get { return GraphPane.CurrentMouseoverNode; }
+            set { GraphPane.CurrentMouseoverNode = value; } 
+        }
 
-         static GraphViewport()
+        static List<Brush> SimpleBrushes;
+
+        static GraphViewport()
         {
             SimpleBrushes = new List<Brush>();
             SimpleBrushes.Add(Brushes.Aqua);
@@ -52,6 +58,8 @@ namespace NuzzGraph.Viewer.UserControls
             this.Loaded += GraphViewport_Loaded;
         }
 
+        public GraphPane GraphPane { get; set; }
+
         void GraphViewport_Loaded(object sender, RoutedEventArgs e)
         {
             RefreshVisualGraph();
@@ -74,7 +82,11 @@ namespace NuzzGraph.Viewer.UserControls
 
             Dictionary<INode, Thumb> NodeThumbs = new Dictionary<INode, Thumb>();
 
-            var nodes = ContextFactory.New().Nodes.ToList();
+            List<INode> nodes;
+            using (var con = ContextFactory.New())
+            {
+                nodes = con.Nodes.ToList();
+            }
             foreach (var node in nodes)
             {
                 
@@ -104,7 +116,8 @@ namespace NuzzGraph.Viewer.UserControls
             {
                 Background = color,
                 Width = 200,
-                Height = 200
+                Height = 200,
+                RepresentedNode = node
             };
             thumb.Tag = node.Label;
 
@@ -114,22 +127,11 @@ namespace NuzzGraph.Viewer.UserControls
             thumb.DragStarted += new DragStartedEventHandler(thumb_DragStarted);
             thumb.DragCompleted += new DragCompletedEventHandler(thumb_DragCompleted);
             thumb.DragDelta += new DragDeltaEventHandler(thumb_DragDelta);
-
-            var res = ResourceUtility.GetResourcesUnder("Themes");
-
-            //Add text
-            Dictionary<string, string> props = new Dictionary<string, string>();
-            props["TestKey1"] = "TestValue1";
-            props["TestKey2"] = "TestValue2";
-            props["TestKey3"] = "TestValue3";
-            props["TestKey4"] = "TestValue4";
-
-            foreach (var pair in props)
-            {
-            }
+            thumb.MouseEnter += thumb_MouseEnter;
 
             return thumb;
         }
+
 
         void zoom_MouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -142,6 +144,10 @@ namespace NuzzGraph.Viewer.UserControls
         }
 
 
+        void thumb_MouseEnter(object sender, MouseEventArgs e)
+        {
+            this.CurrentMouseoverNode = ((GraphNode)sender).RepresentedNode;
+        }
 
         void thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {

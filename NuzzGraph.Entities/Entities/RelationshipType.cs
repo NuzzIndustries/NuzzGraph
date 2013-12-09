@@ -18,11 +18,6 @@ namespace NuzzGraph.Entities
 
         [InverseProperty("AllowedIncomingRelationships")]
         NodeType IncomingTo { get; set; }
-
-        /// <summary>
-        /// Gets the Internal RDF URI for this relationship
-        /// </summary>
-        string InternalUri { get; set; }
     }
 
     public partial class RelationshipType : IRelationshipType

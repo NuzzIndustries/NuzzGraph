@@ -6,9 +6,11 @@
 (cancelled)Add _NodeTypes, _Nodes, etc entity sets to graph context
 *Entity references should return the raw type instead of the interface
 
+Check which processes are running the DB, close xdesproc if it is running it
+Add RDF URI metadata to NodeTypes
 Graph -> Show node property data on hover
 
-Add RDF URI metadata to NodeTypes
+
 
 Set permissions on "System" properties, make them read-only
 

@@ -108,7 +108,7 @@ namespace NuzzGraph.Entities
                     if (hint.MappingType == PropertyMappingType.InverseArc)
                         continue; //do inverse properties in second pass
 
-                    var uri = string.Format("http://www.nuzzgraph.com/Entities/{0}/Properties/{1}", type.Name.Substring(1), property.Name);
+                    var uri = string.Format("http://www.nuzzgraph.com/Entities/{0}/Properties/{1}", type.IsInterface ? type.Name.Substring(1) : type.Name, property.Name);
                     pHints[property] = new PropertyHint(hint.MappingType, uri);
                 }
             }
@@ -140,7 +140,7 @@ namespace NuzzGraph.Entities
 
                     var inverseProperty = inverseType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.Name == pName).Single();
 
-                    var uri = string.Format("http://www.nuzzgraph.com/Entities/{0}/Properties/{1}", inverseType.Name.Substring(1), inverseProperty.Name);
+                    var uri = string.Format("http://www.nuzzgraph.com/Entities/{0}/Properties/{1}", inverseType.IsInterface ? inverseType.Name.Substring(1) : inverseType.Name, inverseProperty.Name);
                     pHints[property] = new PropertyHint(hint.MappingType, uri);
                 }
             }

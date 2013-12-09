@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NuzzGraph.Core;
+using NuzzGraph.Core.Utilities;
 using NuzzGraph.Entities;
 
 namespace NuzzGraph.Viewer.UserControls
@@ -24,29 +26,47 @@ namespace NuzzGraph.Viewer.UserControls
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public IEnumerable GridNodeData  { get; private set; }
-        
+        public IEnumerable GridNodeData { get; private set; }
+
         private INode _CurrentNode;
-        public INode CurrentNode 
-        { 
+        public INode CurrentNode
+        {
             get { return _CurrentNode; }
-            set 
-            { 
+            set
+            {
                 _CurrentNode = value;
                 GridNodeData = BuildNodeData(value);
                 if (PropertyChanged != null)
-                    PropertyChanged(this, new PropertyChangedEventArgs("GridNodeData")); 
-            } 
+                    PropertyChanged(this, new PropertyChangedEventArgs("GridNodeData"));
+
+                if (this.grid.Columns.Count > 0)
+                {
+                    var style = Resources["nodePropertyNameColumn"] as Style;
+                    this.grid.Columns[0].CellStyle = style;
+                }
+            }
+        }
+
+        private class NodeDisplayRow
+        {
+            public string Property { get; set; }
+            public string Value { get; set; }
         }
 
         private IEnumerable BuildNodeData(INode node)
         {
-            foreach (var prop in node.TypeHandle.Properties)
+            //throw new NotImplementedException();
+            var data = new List<NodeDisplayRow>();
+            foreach (var prop in node.TypeHandle.AllProperties)
             {
+                var d = new NodeDisplayRow();
+                d.Property = prop.Label;
                 var val = prop.GetValue(node);
-
+                d.Value = val == null ? "NULL" : val.ToString();
+                data.Add(d);
             }
-            return new List<INode>() { node };
+
+            return data;
         }
 
 
@@ -54,8 +74,15 @@ namespace NuzzGraph.Viewer.UserControls
         {
             InitializeComponent();
             grid.DataContext = this;
-        }
 
-        
+            using (var con = ContextFactory.New())
+            {
+                CurrentNode = con.Types.Where(x => x.Label == "Node").Single();
+            }
+            //if (RuntimeUtility.RunningFromVisualStudioDesigner)
+            //{
+            //CurrentNode = ContextFactory.New().Types.Where(x => x.Label == "Node").Single();
+            //}
+        }
     }
 }

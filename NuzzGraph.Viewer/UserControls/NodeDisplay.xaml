@@ -6,11 +6,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500">
     <UserControl.Resources>
-        
+        <Style x:Key="nodePropertyNameColumn" TargetType="DataGridCell">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
     </UserControl.Resources>
     <Grid>
         <DataGrid x:Name="grid" Background="#222222" MinWidth="500" MinHeight="300" AutoGenerateColumns="True" 
-                ItemsSource="{Binding GridNodeData}"/>
+                ItemsSource="{Binding GridNodeData}" IsReadOnly="true"/>
         <Border BorderBrush="Blue" BorderThickness="2" />
     </Grid>
 </UserControl>

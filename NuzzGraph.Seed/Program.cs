@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceProcess;
+using System.Text.RegularExpressions;
 using BrightstarDB.Client;
 using BrightstarDB.EntityFramework;
 using NuzzGraph.Core;
@@ -64,7 +67,7 @@ namespace NuzzGraph.Seed
             {
                 Context = ContextFactory.New();
             }
-            catch (FaultException e)
+            catch (Exception e)
             {
                 if (e.Message != string.Format("Error creating store {0}. Store already exists", StoreName))
                     throw;
@@ -75,39 +78,44 @@ namespace NuzzGraph.Seed
                 //Load DB service
                 var svc = new ServiceController(svcname, ".");
 
-                //Get path to service exe in order to delete / cleanup folder for store
-                string svcPath = null;
-                ManagementClass mc = new ManagementClass("Win32_Service");
-                foreach (ManagementObject mo in mc.GetInstances())
-                {
-                    if (mo.GetPropertyValue("Name").ToString() == svcname)
-                        svcPath = mo.GetPropertyValue("PathName").ToString().Trim('"');
-                }
-
-                //Load path to folder
-                var root = Directory.GetParent(svcPath).Parent;
-                var ngfolder = root.GetDirectories()
-                    .Where(x => x.Name.ToLower() == "data")
-                    .Single()
-                    .GetDirectories()
-                    .Where(x => x.Name.ToLower() == "nuzzgraph")
-                    .FirstOrDefault();
+                var ngfolder = new DirectoryInfo(ContextFactory.PathToData + ContextFactory.StoreName);
                 var file = ngfolder.GetFiles().Where(x => x.Name == "data.bs").FirstOrDefault();
                 if (file == null)
-                    throw new InvalidOperationException("Unable to delete the folder " + ngfolder.FullName);
-
+                    throw new InvalidOperationException("Unable to delete the folder " + ngfolder);
 
                 //Stop DB Service
-                svc.Stop();
-                svc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(20));
+                if (svc.Status != ServiceControllerStatus.Stopped)
+                    svc.Stop();
+                svc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(10));
                 System.Threading.Thread.Sleep(200);
 
                 //Delete store folder
                 try
                 {
-                    ngfolder.Delete();
+                    foreach (var f in ngfolder.GetFiles().ToList())
+                    {
+                        try
+                        {
+                            f.Delete();
+                        }
+                        catch (Exception ex1)
+                        {
+                            if (ex1.Message.Contains("because it is being used by another process"))
+                            {
+                                //Check which processes are using the file to be deleted.  If it is the visual studio designer, end it
+                                var pr = Win32Processes.GetProcessesLockingFile(f.FullName).ToDictionary(x => x.ProcessName);
+                                if (pr.ContainsKey("XDesProc"))
+                                {
+                                    pr["XDesProc"].Kill();
+                                    System.Threading.Thread.Sleep(100);
+                                }
+                            }
+                        }
+                    }
+
+                    ngfolder.Delete(true);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     throw new InvalidOperationException("Unable to remove store " + StoreName + ".");
                 }
@@ -261,7 +269,7 @@ namespace NuzzGraph.Seed
                 var nodeTypeNode = (NodeType)Context.NodeTypes.Where(x => x.Label == clrType.Name.Substring(1)).Single();
 
                 //Get properties of type
-                foreach (var prop in clrType.GetProperties(flags))
+                foreach (var prop in clrType.GetProperties(flags).Where(x => clrType != typeof(INode) || x.Name != "Id"))
                 {
                     //Skip if inverse property
                     if (prop.GetCustomAttributes(typeof(InversePropertyAttribute), false).Count() == 1)
@@ -337,6 +345,8 @@ namespace NuzzGraph.Seed
                 if (hint.MappingType == PropertyMappingType.Property)
                     pDef.InternalUri = hint.SchemaTypeUri;
             }
+
+            Context.SaveChanges();
 
             foreach (var rDef in Context.RelationshipTypes)
             {

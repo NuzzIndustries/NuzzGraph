@@ -20,7 +20,7 @@ namespace NuzzGraph.Entities
         Function Overrides { get; set; }
 
         [InverseProperty("Overrides")]
-        ICollection<Function> OverridenBy { get; }
+        ICollection<Function> OverridenBy { get; set; }
     }
 
     public partial class Function : IFunction

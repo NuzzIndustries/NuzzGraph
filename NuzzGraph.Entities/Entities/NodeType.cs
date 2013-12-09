@@ -11,23 +11,23 @@ namespace NuzzGraph.Entities
     [Inherits("Type")]
     public interface INodeType : IType
     {
-        bool IsAbstract { get; }
+        bool IsAbstract { get; set; }
 
         ICollection<NodeType> SuperTypes { get; set; } //Change to multiple inheritance
-        ICollection<RelationshipType> AllowedOutgoingRelationships { get; }
-        ICollection<RelationshipType> AllowedIncomingRelationships { get; }
+        ICollection<RelationshipType> AllowedOutgoingRelationships { get; set; }
+        ICollection<RelationshipType> AllowedIncomingRelationships { get; set; }
 
         [InverseProperty("DeclaringType")]
-        ICollection<NodePropertyDefinition> Properties { get; }
+        ICollection<NodePropertyDefinition> Properties { get; set; }
 
         [InverseProperty("DeclaringType")]
-        ICollection<Function> Functions { get; }
+        ICollection<Function> Functions { get; set; }
 
         [InverseProperty("SuperTypes")]
-        ICollection<NodeType> SubTypes { get; }
+        ICollection<NodeType> SubTypes { get; set; }
 
         [InverseProperty("TypeHandle")]
-        ICollection<Node> AllNodes { get; }
+        ICollection<Node> AllNodes { get; set; }
 
         void AddProperty(ScalarType type, string name);
         void RemoveProperty(string name);
@@ -47,11 +47,12 @@ namespace NuzzGraph.Entities
         {
             get
             {
-                List<INodeType> list = null;
+                List<INodeType> list = new List<INodeType>();
                 foreach (var type in SuperTypes)
                 {
                     var _type = (NodeType)type;
                     list.AddRange(_type.InheritanceChain);
+                    list.Add(type);
                 }
                 list = list.Distinct().ToList();
                 return list;
@@ -68,6 +69,7 @@ namespace NuzzGraph.Entities
                     var _type = (NodeType)type;
                     list.AddRange(_type.Properties.ToList());
                 }
+                list.AddRange(this.Properties.ToList());
                 return list;
             }
         }

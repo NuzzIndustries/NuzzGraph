@@ -30,11 +30,11 @@ namespace NuzzGraph.Viewer
     /// </summary>
     public partial class Viewer : Elysium.Controls.Window
     {
-        DataTemplate nodeHeaderTemplate;
+        DataTemplate nodeHeaderTemplate, inversePropertyTemplate;
 
         static Viewer()
         {
-            
+
         }
 
         public Viewer()
@@ -55,12 +55,24 @@ namespace NuzzGraph.Viewer
             label.SetValue(TextBlock.FontWeightProperty, FontWeights.Bold);
             nodeHeaderTemplate.VisualTree = label;
 
+            //Set inverse property template
+            inversePropertyTemplate = new DataTemplate();
+            label = new FrameworkElementFactory(typeof(TextBlock));
+            label.SetBinding(TextBlock.TextProperty, new Binding());
+            label.SetValue(TextBlock.BackgroundProperty, Brushes.LightBlue);
+            label.SetValue(TextBlock.ForegroundProperty, Brushes.Black);
+            inversePropertyTemplate.VisualTree = label;
+
             LoadNodeTree();
         }
 
         private void LoadNodeTree()
         {
-            INodeType rootNodeType = ContextFactory.New().NodeTypes.Where(x => x.Label == "Node").Single();
+            INodeType rootNodeType;
+            using (var con = ContextFactory.New())
+            {
+                rootNodeType = con.NodeTypes.Where(x => x.Label == "Node").Single();
+            }
             var root = LoadTreeviewItemForType(rootNodeType);
             treeView.Items.Add(root);
         }
@@ -107,6 +119,13 @@ namespace NuzzGraph.Viewer
             {
                 var relItem = new TreeViewItem() { Header = rel.Label };
                 cat_relationships.Items.Add(relItem);
+            }
+
+            foreach (var rel in type.AllowedIncomingRelationships)
+            {
+                var relItem = new TreeViewItem() { Header = rel.Label };
+                cat_relationships.Items.Add(relItem);
+                relItem.HeaderTemplate = inversePropertyTemplate;
             }
 
             foreach (var func in type.Functions)

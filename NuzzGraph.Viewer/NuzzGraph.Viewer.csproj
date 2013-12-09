@@ -60,9 +60,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WPFExtensions">
-      <HintPath>..\packages\WPFExtensions.1.0.0\lib\WPFExtensions.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -163,6 +160,10 @@
     <ProjectReference Include="..\NuzzGraph.Entities\NuzzGraph.Entities.csproj">
       <Project>{4A87DFA5-C8CA-4A73-8808-E079E286E824}</Project>
       <Name>NuzzGraph.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WPFExtensions\WPFExtensions.csproj">
+      <Project>{a7915102-8326-4862-96f0-4eb80ed087b4}</Project>
+      <Name>WPFExtensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -250,11 +250,13 @@ namespace NuzzGraph.Entities
     	public NuzzGraph.Entities.Function DeclaringFunction
     	{
             get { return (NuzzGraph.Entities.Function)GetRelatedObject<NuzzGraph.Entities.IFunction>("DeclaringFunction"); }
+            set { SetRelatedObject<NuzzGraph.Entities.IFunction>("DeclaringFunction", value); }
     	}
     
     	public NuzzGraph.Entities.Type ParameterType
     	{
             get { return (NuzzGraph.Entities.Type)GetRelatedObject<NuzzGraph.Entities.IType>("ParameterType"); }
+            set { SetRelatedObject<NuzzGraph.Entities.IType>("ParameterType", value); }
     	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.IPropertyDefinition
@@ -539,12 +541,6 @@ namespace NuzzGraph.Entities
     	{
             get { return (NuzzGraph.Entities.NodeType)GetRelatedObject<NuzzGraph.Entities.INodeType>("IncomingTo"); }
             set { SetRelatedObject<NuzzGraph.Entities.INodeType>("IncomingTo", value); }
-    	}
-    
-    	public System.String InternalUri
-    	{
-            		get { return GetRelatedProperty<System.String>("InternalUri"); }
-            		set { SetRelatedProperty("InternalUri", value); }
     	}
     	#endregion
     	#region Implementation of NuzzGraph.Entities.ISystemNode
