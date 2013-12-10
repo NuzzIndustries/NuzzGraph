@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:NuzzGraph.Viewer.UserControls"
              xmlns:wpfext="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="500" d:DesignWidth="800" Loaded="GraphViewport_Loaded" Initialized="UserControl_Initialized">
     <Grid>
-        <wpfext:ZoomControl x:Name="zoom" Background="Gray">
+        <wpfext:ZoomControl x:Name="zoom" Background="Gray" MouseWheel="zoom_MouseWheel">
             <Grid Name="grid">
                 <Canvas Name="canvas">
                     <local:MyVisualHost x:Name="host" />

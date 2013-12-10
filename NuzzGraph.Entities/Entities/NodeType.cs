@@ -108,5 +108,14 @@ namespace NuzzGraph.Entities
         {
             throw new NotImplementedException();
         }
+
+        internal System.Type _UnderlyingType
+        {
+            get
+            {
+                return EntityUtility.CLRTypeMap[this];
+            }
+
+        }
     }
 }

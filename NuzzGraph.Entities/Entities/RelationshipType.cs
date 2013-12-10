@@ -27,5 +27,16 @@ namespace NuzzGraph.Entities
         {
             base.OnPropertyChanged(propertyName);
         }
+
+        internal IEnumerable<INode> GetRelatedNodes(INode n)
+        {
+            if (!n.TypeHandle.AllowedOutgoingRelationships.Contains(this))
+            {
+                throw new TypeAccessException("Type " + n.TypeHandle.Label + " does not contain relationship " + this.Label);
+            }
+
+            var __n = (Node)n;
+            return __n.GetRelatedObjects<INode>(this.Label);
+        }
     }
 }

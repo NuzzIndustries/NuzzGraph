@@ -103,12 +103,14 @@ namespace NuzzGraph.Seed
                             if (ex1.Message.Contains("because it is being used by another process"))
                             {
                                 //Check which processes are using the file to be deleted.  If it is the visual studio designer, end it
-                                var pr = Win32Processes.GetProcessesLockingFile(f.FullName).ToDictionary(x => x.ProcessName);
-                                if (pr.ContainsKey("XDesProc"))
+                                
+                                //var pr = Win32Processes.GetProcessesLockingFile(f.FullName).ToLookup(x => x.ProcessName);
+                                //foreach(var _p in pr.Where(x => x.Key == "XDesProc"))
+                                foreach(var p in Process.GetProcessesByName("XDesProc"))
                                 {
-                                    pr["XDesProc"].Kill();
-                                    System.Threading.Thread.Sleep(100);
+                                    p.Kill();
                                 }
+                                System.Threading.Thread.Sleep(100);
                             }
                         }
                     }

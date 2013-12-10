@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using BrightstarDB.EntityFramework;
+using NuzzGraph.Core;
 
 namespace NuzzGraph.Entities
 {
@@ -11,6 +12,28 @@ namespace NuzzGraph.Entities
         internal static List<System.Type> AllSimpleTypes { get; set; }
         public static readonly string AssemblyName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
         internal static List<System.Type> AllCLRTypes { get; private set; }
+
+        private static bool MappingsLoaded { get; set; }
+
+        private static Dictionary<INodeType, System.Type> _CLRTypeMap;
+        internal static Dictionary<INodeType, System.Type> CLRTypeMap 
+        { 
+            get
+            {
+                if (!MappingsLoaded)
+                    throw new InvalidOperationException("Cannot use CLRTypeMap until Mappings are loaded.");
+
+                if (_CLRTypeMap == null)
+                {
+                    lock (typeof(EntityUtility))
+                    {
+                        if (_CLRTypeMap == null)
+                            _CLRTypeMap = BuildCLRTypeMap();
+                        d
+                    }
+                }
+            }
+        }
 
         static EntityUtility()
         {
@@ -42,12 +65,28 @@ namespace NuzzGraph.Entities
                 .Where(x => x.Namespace == typeof(INodeType).Namespace)
                 .Where(x => x.GetCustomAttributes(typeof(BrightstarDB.EntityFramework.EntityAttribute), false).Count() == 1)
                 .ToList();
+
+            if (!IsSeedMode)
+                BuildCLRTypeMap();
+        }
+
+        private static Dictionary<INodeType, System.Type> BuildCLRTypeMap()
+        {
+            Dictionary<string, INodeType> _nodeTypes = null;
+
+            using (var con = ContextFactory.New())
+            {
+                _nodeTypes = con.NodeTypes.ToDictionary(x => x.Label);
+            }
+
+            return AllCLRTypes.ToDictionary(x => _nodeTypes[x.Name.Substring(1)]);
         }
 
         public static void ProcessMappings(EntityMappingStore mappings)
         {
             CorrectMappings(mappings);
             SpecifyURIMappings(mappings);
+            MappingsLoaded = true;
         }
 
         /// <summary>
@@ -164,6 +203,7 @@ namespace NuzzGraph.Entities
             set
             {
                 _NodeTypesInitialized = value;
+                BuildCLRTypeMap();
             }
         }
 

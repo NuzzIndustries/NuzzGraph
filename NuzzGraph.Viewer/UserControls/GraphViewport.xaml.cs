@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -26,12 +27,23 @@ namespace NuzzGraph.Viewer.UserControls
     {
         public INode CurrentMouseoverNode 
         {
-            get { return GraphPane.CurrentMouseoverNode; }
-            set { GraphPane.CurrentMouseoverNode = value; } 
+            get 
+            {
+                if (DesignerProperties.GetIsInDesignMode(this))
+                    return null;
+                return GraphPane.CurrentMouseoverNode; 
+            }
+            private set 
+            {
+                if (!DesignerProperties.GetIsInDesignMode(this))
+                    GraphPane.CurrentMouseoverNode = value; 
+            } 
         }
 
-        static List<Brush> SimpleBrushes;
+        static List<GraphEdge> GraphEdges { get; set; }
 
+        static List<Brush> SimpleBrushes;
+        
         static GraphViewport()
         {
             SimpleBrushes = new List<Brush>();
@@ -53,19 +65,63 @@ namespace NuzzGraph.Viewer.UserControls
         public GraphViewport()
         {
             InitializeComponent();
-
-            zoom.MouseWheel += zoom_MouseWheel;
-            this.Loaded += GraphViewport_Loaded;
         }
 
         public GraphPane GraphPane { get; set; }
 
+
+        private void UserControl_Initialized(object sender, EventArgs e)
+        {
+            
+        }
+
         void GraphViewport_Loaded(object sender, RoutedEventArgs e)
         {
             RefreshVisualGraph();
-
-            zoom.Zoom = 0.2;
+            GraphEdges = LoadEdges();
+            RedrawEdges();
             this.InvalidateVisual();
+        }
+
+        private class GraphEdge
+        {
+            public IRelationshipType @Type { get; set; }
+            public INode @From { get; set; }
+            public INode @To { get; set; }
+        }
+
+        private List<GraphEdge> LoadEdges()
+        {
+            var _edges = new List<GraphEdge>();
+
+            using (var con = ContextFactory.New())
+            {
+                var nodes = con.Nodes.ToList();
+                foreach(var @n in nodes)
+                {
+                    var rels = @n.TypeHandle.AllowedOutgoingRelationships.ToList();
+                    foreach(var @relType in rels)
+                    {
+                        var _related = @relType.GetRelatedNodes(@n);
+                        foreach (var @related in _related)
+                        {
+                            GraphEdge edge = new GraphEdge
+                            {
+                                @Type = @relType,
+                                @From = @n,
+                                @To = @related
+                            };
+                            _edges.Add(edge);
+                        }
+                    }
+                }
+            }
+            return _edges;
+        }
+
+        private void RedrawEdges()
+        {
+            throw new NotImplementedException();
         }
 
         private void RefreshVisualGraph()
@@ -168,5 +224,6 @@ namespace NuzzGraph.Viewer.UserControls
         void thumb_DragStarted(object sender, DragStartedEventArgs e)
         {
         }
+
     }
 }

@@ -9,6 +9,8 @@
 *Add RDF URI metadata to NodeTypes
 *Graph -> Show node property data on hover
 
+Go back to the interface style of models.  It's better that way because non-interface variables should be reserved 
+for sections that interact with the underlying DB.
 
 
 Display Graph
