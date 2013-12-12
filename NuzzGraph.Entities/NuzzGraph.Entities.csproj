@@ -69,6 +69,7 @@
     <Compile Include="GraphContextCustom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ContextFactory.cs" />
+    <Compile Include="Utilities\DataUtility.cs" />
     <Compile Include="Utilities\EntityUtility.cs" />
     <Compile Include="Utilities\PathUtility.cs" />
     <Compile Include="Utilities\RuntimeUtility.cs" />

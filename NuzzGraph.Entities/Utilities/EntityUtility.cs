@@ -9,6 +9,8 @@ namespace NuzzGraph.Entities
 {
     internal static class EntityUtility
     {
+        
+
         internal static List<System.Type> AllSimpleTypes { get; set; }
         public static readonly string AssemblyName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
         internal static List<System.Type> AllCLRTypes { get; private set; }
@@ -29,9 +31,10 @@ namespace NuzzGraph.Entities
                     {
                         if (_CLRTypeMap == null)
                             _CLRTypeMap = BuildCLRTypeMap();
-                        d
                     }
                 }
+
+                return _CLRTypeMap;
             }
         }
 
@@ -65,9 +68,6 @@ namespace NuzzGraph.Entities
                 .Where(x => x.Namespace == typeof(INodeType).Namespace)
                 .Where(x => x.GetCustomAttributes(typeof(BrightstarDB.EntityFramework.EntityAttribute), false).Count() == 1)
                 .ToList();
-
-            if (!IsSeedMode)
-                BuildCLRTypeMap();
         }
 
         private static Dictionary<INodeType, System.Type> BuildCLRTypeMap()
@@ -147,7 +147,7 @@ namespace NuzzGraph.Entities
                     if (hint.MappingType == PropertyMappingType.InverseArc)
                         continue; //do inverse properties in second pass
 
-                    var uri = string.Format("http://www.nuzzgraph.com/Entities/{0}/Properties/{1}", type.IsInterface ? type.Name.Substring(1) : type.Name, property.Name);
+                    var uri = DataUtility.GetUri(type.IsInterface ? type.Name.Substring(1) : type.Name, property.Name);
                     pHints[property] = new PropertyHint(hint.MappingType, uri);
                 }
             }

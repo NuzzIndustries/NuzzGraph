@@ -136,6 +136,9 @@ namespace NuzzGraph.Seed
             if (Client.DoesStoreExist(StoreName))
                 Client.DeleteStore(StoreName);
 
+            //Pause to allow for store to be fully deleted.
+            System.Threading.Thread.Sleep(200);
+
             //Create store
             Client.CreateStore(StoreName);
 

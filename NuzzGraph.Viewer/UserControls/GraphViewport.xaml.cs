@@ -25,6 +25,8 @@ namespace NuzzGraph.Viewer.UserControls
     /// </summary>
     public partial class GraphViewport : UserControl
     {
+        static List<Brush> SimpleBrushes;
+
         public INode CurrentMouseoverNode 
         {
             get 
@@ -40,10 +42,9 @@ namespace NuzzGraph.Viewer.UserControls
             } 
         }
 
-        static List<GraphEdge> GraphEdges { get; set; }
+        private List<GraphEdge> GraphEdges { get; set; }
+        private Dictionary<INode, Thumb> NodeThumbs { get; set; }
 
-        static List<Brush> SimpleBrushes;
-        
         static GraphViewport()
         {
             SimpleBrushes = new List<Brush>();
@@ -102,7 +103,7 @@ namespace NuzzGraph.Viewer.UserControls
                     var rels = @n.TypeHandle.AllowedOutgoingRelationships.ToList();
                     foreach(var @relType in rels)
                     {
-                        var _related = @relType.GetRelatedNodes(@n);
+                        var _related = @relType._GetRelatedNodes(@n);
                         foreach (var @related in _related)
                         {
                             GraphEdge edge = new GraphEdge
@@ -121,7 +122,37 @@ namespace NuzzGraph.Viewer.UserControls
 
         private void RedrawEdges()
         {
-            throw new NotImplementedException();
+            foreach (var c in canvas.Children)
+            {
+            }
+
+            foreach (var edge in GraphEdges)
+            {
+                var fromThumb = NodeThumbs[edge.From];
+                var toThumb = NodeThumbs[edge.To];
+
+                Line line = new Line();
+                
+                var fromx = Canvas.GetLeft(fromThumb) ;
+                var fromy = Canvas.GetTop(fromThumb);
+                var tox = Canvas.GetLeft(toThumb);
+                var toy = Canvas.GetTop(toThumb);
+
+                line.X1 = fromx;
+                line.Y1 = fromy;
+                line.X2 = tox;
+                line.X2 = toy;
+
+                Canvas.SetLeft(line, fromx);
+                Canvas.SetRight(line, tox);
+                Canvas.SetTop(line, fromy);
+                Canvas.SetBottom(line, toy);
+
+                line.StrokeThickness = 5.0;
+                line.Fill = Brushes.Black;
+
+                canvas.Children.Add(line);
+            }
         }
 
         private void RefreshVisualGraph()
@@ -136,7 +167,7 @@ namespace NuzzGraph.Viewer.UserControls
                 .Select(x => (Brush)x.GetValue(null, null))
                 .ToList();
 
-            Dictionary<INode, Thumb> NodeThumbs = new Dictionary<INode, Thumb>();
+            NodeThumbs = new Dictionary<INode, Thumb>();
 
             List<INode> nodes;
             using (var con = ContextFactory.New())
@@ -224,6 +255,5 @@ namespace NuzzGraph.Viewer.UserControls
         void thumb_DragStarted(object sender, DragStartedEventArgs e)
         {
         }
-
     }
 }
