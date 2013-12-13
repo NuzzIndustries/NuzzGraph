@@ -11,7 +11,7 @@
         <wpfext:ZoomControl x:Name="zoom" Background="Gray" MouseWheel="zoom_MouseWheel">
             <Grid Name="grid">
                 <Canvas Name="canvas">
-                    <local:MyVisualHost x:Name="host" />
+                    <local:GraphVisualHost x:Name="host" />
                 </Canvas>
             </Grid>
         </wpfext:ZoomControl>

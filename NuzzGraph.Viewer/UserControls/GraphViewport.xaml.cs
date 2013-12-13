@@ -42,8 +42,8 @@ namespace NuzzGraph.Viewer.UserControls
             } 
         }
 
-        private List<GraphEdge> GraphEdges { get; set; }
-        private Dictionary<INode, Thumb> NodeThumbs { get; set; }
+
+        internal Dictionary<INode, GraphNode> NodeThumbs { get; set; }
 
         static GraphViewport()
         {
@@ -73,27 +73,19 @@ namespace NuzzGraph.Viewer.UserControls
 
         private void UserControl_Initialized(object sender, EventArgs e)
         {
-            
+            host.Viewport = this;
         }
 
         void GraphViewport_Loaded(object sender, RoutedEventArgs e)
         {
             RefreshVisualGraph();
-            GraphEdges = LoadEdges();
-            RedrawEdges();
-            this.InvalidateVisual();
+            host.GraphEdges = LoadEdges();
+            host.InvalidateVisual();
         }
 
-        private class GraphEdge
+        private List<GraphVisualHost.GraphEdge> LoadEdges()
         {
-            public IRelationshipType @Type { get; set; }
-            public INode @From { get; set; }
-            public INode @To { get; set; }
-        }
-
-        private List<GraphEdge> LoadEdges()
-        {
-            var _edges = new List<GraphEdge>();
+            var _edges = new List<GraphVisualHost.GraphEdge>();
 
             using (var con = ContextFactory.New())
             {
@@ -106,7 +98,7 @@ namespace NuzzGraph.Viewer.UserControls
                         var _related = @relType._GetRelatedNodes(@n);
                         foreach (var @related in _related)
                         {
-                            GraphEdge edge = new GraphEdge
+                            GraphVisualHost.GraphEdge edge = new GraphVisualHost.GraphEdge
                             {
                                 @Type = @relType,
                                 @From = @n,
@@ -118,41 +110,6 @@ namespace NuzzGraph.Viewer.UserControls
                 }
             }
             return _edges;
-        }
-
-        private void RedrawEdges()
-        {
-            foreach (var c in canvas.Children)
-            {
-            }
-
-            foreach (var edge in GraphEdges)
-            {
-                var fromThumb = NodeThumbs[edge.From];
-                var toThumb = NodeThumbs[edge.To];
-
-                Line line = new Line();
-                
-                var fromx = Canvas.GetLeft(fromThumb) ;
-                var fromy = Canvas.GetTop(fromThumb);
-                var tox = Canvas.GetLeft(toThumb);
-                var toy = Canvas.GetTop(toThumb);
-
-                line.X1 = fromx;
-                line.Y1 = fromy;
-                line.X2 = tox;
-                line.X2 = toy;
-
-                Canvas.SetLeft(line, fromx);
-                Canvas.SetRight(line, tox);
-                Canvas.SetTop(line, fromy);
-                Canvas.SetBottom(line, toy);
-
-                line.StrokeThickness = 5.0;
-                line.Fill = Brushes.Black;
-
-                canvas.Children.Add(line);
-            }
         }
 
         private void RefreshVisualGraph()
@@ -167,7 +124,7 @@ namespace NuzzGraph.Viewer.UserControls
                 .Select(x => (Brush)x.GetValue(null, null))
                 .ToList();
 
-            NodeThumbs = new Dictionary<INode, Thumb>();
+            NodeThumbs = new Dictionary<INode, GraphNode>();
 
             List<INode> nodes;
             using (var con = ContextFactory.New())
@@ -196,7 +153,7 @@ namespace NuzzGraph.Viewer.UserControls
             }
         }
 
-        private Thumb CreateAndAddVisualNode(int x, int y, Brush color, INode node)
+        private GraphNode CreateAndAddVisualNode(int x, int y, Brush color, INode node)
         {
             //Add thumb
             var thumb = new GraphNode()
@@ -242,10 +199,7 @@ namespace NuzzGraph.Viewer.UserControls
             var th = (Thumb)sender;
             Canvas.SetLeft(th, Canvas.GetLeft(th) + e.HorizontalChange);
             Canvas.SetTop(th, Canvas.GetTop(th) + e.VerticalChange);
-            /*Canvas.SetLeft(th, Math.Max(0, Canvas.GetLeft(th) + e.HorizontalChange));
-            Canvas.SetTop(th, Math.Max(0, Canvas.GetTop(th) + e.VerticalChange));
-            Canvas.SetLeft(th, Math.Min(canvas.ActualWidth - th.Width, Canvas.GetLeft(th)));
-            Canvas.SetTop(th, Math.Min(canvas.ActualHeight - th.Width, Canvas.GetTop(th)));*/
+            host.InvalidateVisual();
         }
 
         void thumb_DragCompleted(object sender, DragCompletedEventArgs e)

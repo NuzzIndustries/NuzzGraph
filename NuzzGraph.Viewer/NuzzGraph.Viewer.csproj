@@ -48,6 +48,7 @@
     <Reference Include="Microsoft.Windows.Shell, Version=3.5.41019.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -105,7 +106,7 @@
     <Compile Include="UserControls\GraphNode.xaml.cs">
       <DependentUpon>GraphNode.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UIElements\MyVisualHost.cs" />
+    <Compile Include="UIElements\GraphVisualHost.cs" />
     <Compile Include="UIElements\TestUIElement.cs" />
     <Compile Include="UserControls\GraphPane.xaml.cs">
       <DependentUpon>GraphPane.xaml</DependentUpon>

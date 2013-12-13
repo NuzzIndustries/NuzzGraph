@@ -3,24 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using NuzzGraph.Entities;
 using NuzzGraph.Viewer.UIElements;
 
 namespace NuzzGraph.Viewer.UserControls
 {
- //For DrawingVisual objects *only*
-    public class MyVisualHost : FrameworkElement
+    //For DrawingVisual objects *only*
+    public class GraphVisualHost : FrameworkElement
     {
         // Create a collection of child visual objects.
         private VisualCollection _children;
 
-        public MyVisualHost()
+        internal List<GraphEdge> GraphEdges { get; set; }
+        
+        internal GraphViewport Viewport { get; set; }
+
+        public GraphVisualHost()
         {
             _children = new VisualCollection(this);
 
             // Add the event handler for MouseLeftButtonUp.
             this.MouseLeftButtonUp += new MouseButtonEventHandler(MyVisualHost_MouseLeftButtonUp);
+        }
+
+        protected override void OnRender(DrawingContext dc)
+        {
+            base.OnRender(dc);
+
+            RedrawEdges(dc);
         }
 
         protected override int VisualChildrenCount
@@ -105,5 +118,32 @@ namespace NuzzGraph.Viewer.UserControls
 
             return drawingVisual;
         }
+
+        private void RedrawEdges(DrawingContext dc)
+        {
+            if (GraphEdges == null)
+                return;
+
+            Pen p = new Pen(Brushes.Black, 5.0);
+            
+            foreach (var edge in GraphEdges)
+            {
+                var fromThumb = Viewport.NodeThumbs[edge.From];
+                var toThumb = Viewport.NodeThumbs[edge.To];
+
+                var bounds = fromThumb.GetLineBoundaries(toThumb);
+
+                dc.DrawLine(p, new Point(bounds.X, bounds.Y), new Point(bounds.X + bounds.Width, bounds.Y + bounds.Height));
+            }
+        }
+
+        internal class GraphEdge
+        {
+            public IRelationshipType @Type { get; set; }
+            public INode @From { get; set; }
+            public INode @To { get; set; }
+        }
+
+
     }
 }
