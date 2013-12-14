@@ -99,7 +99,8 @@ namespace NuzzGraph.Viewer.UserControls
                     var rels = @n.TypeHandle.AllowedOutgoingRelationships.ToList();
                     foreach(var @relType in rels)
                     {
-                        var _related = @relType._GetRelatedNodes(@n);
+                        var nRelType = (RelationshipType)@relType;
+                        var _related = nRelType._GetRelatedNodes(@n);
                         foreach (var @related in _related)
                         {
                             GraphVisualHost.GraphEdge edge = new GraphVisualHost.GraphEdge

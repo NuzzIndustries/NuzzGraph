@@ -11,7 +11,7 @@ namespace NuzzGraph.Entities
     [Inherits("Type")]
     public interface IScalarType : IType
     {
-        ICollection<PropertyDefinition> PropertiesContainingType { get; set; }
+        ICollection<IPropertyDefinition> PropertiesContainingType { get; set; }
     }
 
     public partial class ScalarType : IScalarType

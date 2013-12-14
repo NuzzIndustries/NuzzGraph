@@ -13,14 +13,14 @@ namespace NuzzGraph.Entities
     {
         string FunctionBody { get; set; }
 
-        NodeType DeclaringType { get; set; }
+        INodeType DeclaringType { get; set; }
 
-        ICollection<FunctionParameter> Parameters { get; set; }
+        ICollection<IFunctionParameter> Parameters { get; set; }
 
-        Function Overrides { get; set; }
+        IFunction Overrides { get; set; }
 
         [InverseProperty("Overrides")]
-        ICollection<Function> OverridenBy { get; set; }
+        ICollection<IFunction> OverridenBy { get; set; }
     }
 
     public partial class Function : IFunction

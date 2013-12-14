@@ -13,16 +13,16 @@ namespace NuzzGraph.Entities
         /// </summary>
         string Id { get; }
 
-        NodeType TypeHandle { get; set; }
+        INodeType TypeHandle { get; set; }
 
         string Label { get; set; }
 
-        Node Get();
+        INode Get();
     }
 
     public partial class Node : BrightstarEntityObject, INode
     {
-        public Node Get()
+        public INode Get()
         {
             return this;
         }

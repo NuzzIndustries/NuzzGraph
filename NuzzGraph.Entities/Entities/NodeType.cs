@@ -13,30 +13,30 @@ namespace NuzzGraph.Entities
     {
         bool IsAbstract { get; set; }
 
-        ICollection<NodeType> SuperTypes { get; set; } //Change to multiple inheritance
-        ICollection<RelationshipType> AllowedOutgoingRelationships { get; set; }
-        ICollection<RelationshipType> AllowedIncomingRelationships { get; set; }
+        ICollection<INodeType> SuperTypes { get; set; } //Change to multiple inheritance
+        ICollection<IRelationshipType> AllowedOutgoingRelationships { get; set; }
+        ICollection<IRelationshipType> AllowedIncomingRelationships { get; set; }
 
         [InverseProperty("DeclaringType")]
-        ICollection<NodePropertyDefinition> Properties { get; set; }
+        ICollection<INodePropertyDefinition> Properties { get; set; }
 
         [InverseProperty("DeclaringType")]
-        ICollection<Function> Functions { get; set; }
+        ICollection<IFunction> Functions { get; set; }
 
         [InverseProperty("SuperTypes")]
-        ICollection<NodeType> SubTypes { get; set; }
+        ICollection<INodeType> SubTypes { get; set; }
 
         [InverseProperty("TypeHandle")]
-        ICollection<Node> AllNodes { get; set; }
+        ICollection<INode> AllNodes { get; set; }
 
-        void AddProperty(ScalarType type, string name);
+        void AddProperty(IScalarType type, string name);
         void RemoveProperty(string name);
-        void Inherit(NodeType type);
-        void Disinherit(NodeType type);
-        void AllowOutgoingRelationship(RelationshipType relationshipType, NodeType otherType);
-        void DisallowOutgoingRelationship(RelationshipType relationshipType, NodeType otherType);
+        void Inherit(INodeType type);
+        void Disinherit(INodeType type);
+        void AllowOutgoingRelationship(IRelationshipType relationshipType, INodeType otherType);
+        void DisallowOutgoingRelationship(IRelationshipType relationshipType, INodeType otherType);
 
-        Node CreateInstance(IEnumerable<string> parameters);
+        INode CreateInstance(IEnumerable<string> parameters);
     }
 
     public partial class NodeType : INodeType
@@ -74,7 +74,7 @@ namespace NuzzGraph.Entities
             }
         }
 
-        public void AddProperty(ScalarType type, string name)
+        public void AddProperty(IScalarType type, string name)
         {
             throw new NotImplementedException();
         }
@@ -84,27 +84,27 @@ namespace NuzzGraph.Entities
             throw new NotImplementedException();
         }
 
-        public void Inherit(NodeType type)
+        public void Inherit(INodeType type)
         {
             throw new NotImplementedException();
         }
 
-        public void Disinherit(NodeType type)
+        public void Disinherit(INodeType type)
         {
             throw new NotImplementedException();
         }
 
-        public void AllowOutgoingRelationship(RelationshipType relationshipType, NodeType otherType)
+        public void AllowOutgoingRelationship(IRelationshipType relationshipType, INodeType otherType)
         {
             throw new NotImplementedException();
         }
 
-        public void DisallowOutgoingRelationship(RelationshipType relationshipType, NodeType otherType)
+        public void DisallowOutgoingRelationship(IRelationshipType relationshipType, INodeType otherType)
         {
             throw new NotImplementedException();
         }
 
-        public Node CreateInstance(IEnumerable<string> parameters)
+        public INode CreateInstance(IEnumerable<string> parameters)
         {
             throw new NotImplementedException();
         }

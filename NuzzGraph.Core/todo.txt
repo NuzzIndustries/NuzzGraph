@@ -9,17 +9,16 @@
 *Add RDF URI metadata to NodeTypes
 *Graph -> Show node property data on hover
 
-Go back to the interface style of models.  It's better that way because non-interface variables should be reserved 
-for sections that interact with the underlying DB.
+*Go back to the interface style of models.  It's better that way because non-interface variables should be reserved 
+*for sections that interact with the underlying DB.
 
 
 Display Graph
  *Add zoom in/out
- Draw Edges / Connections
- Add right click context menu with sticky node details option
- Add color legend
+ *Draw Edges / Connections
+ Move edge endpoints based on whether they are outgoing or incoming
  Add filters
-
- 
+ Add color legend
+ Add right click context menu with sticky node details option
 
  Set permissions on "System" properties, make them read-only

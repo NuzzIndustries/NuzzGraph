@@ -53,15 +53,16 @@ namespace NuzzGraph.Viewer.UserControls
             public string Value { get; set; }
         }
 
-        private IEnumerable BuildNodeData(INode node)
+        private IEnumerable BuildNodeData(INode @node)
         {
             //throw new NotImplementedException();
             var data = new List<NodeDisplayRow>();
-            foreach (var prop in node.TypeHandle.AllProperties)
+            var nType = (NodeType)@node.TypeHandle;
+            foreach (var prop in nType.AllProperties)
             {
                 var d = new NodeDisplayRow();
                 d.Property = prop.Label;
-                var val = prop.GetValue(node);
+                var val = prop.GetValue(@node);
                 d.Value = val == null ? "NULL" : val.ToString();
                 data.Add(d);
             }

@@ -84,7 +84,7 @@ namespace NuzzGraph.Entities
 
         public static void ProcessMappings(EntityMappingStore mappings)
         {
-            CorrectMappings(mappings);
+            //CorrectMappings(mappings);
             SpecifyURIMappings(mappings);
             MappingsLoaded = true;
         }

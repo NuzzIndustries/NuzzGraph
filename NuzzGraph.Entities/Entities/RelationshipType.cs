@@ -16,10 +16,10 @@ namespace NuzzGraph.Entities
         bool SupportsMany { get; set; }
 
         [InverseProperty("AllowedOutgoingRelationships")]
-        NodeType OutgoingFrom { get; set; }
+        INodeType OutgoingFrom { get; set; }
 
         [InverseProperty("AllowedIncomingRelationships")]
-        NodeType IncomingTo { get; set; }
+        INodeType IncomingTo { get; set; }
     }
 
     public partial class RelationshipType : IRelationshipType

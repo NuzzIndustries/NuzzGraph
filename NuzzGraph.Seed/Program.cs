@@ -46,12 +46,13 @@ namespace NuzzGraph.Seed
                 var job = Client.StartExport(StoreName, "test.n3", null);
                 System.Threading.Thread.Sleep(1000);
 
+                /*
                 var rdftext = File.ReadAllText("test/import/test.n3");
                 VDS.RDF.IGraph g = new VDS.RDF.Graph();
                 VDS.RDF.Parsing.FileLoader.Load(g, "test/import/test.n3");
                 var writer = new RdfXmlWriter();
                 writer.Save(g, Path.GetFullPath("./test/import/test.rdf"));
-
+                */
             }
             finally
             {

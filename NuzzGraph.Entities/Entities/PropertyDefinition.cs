@@ -11,7 +11,7 @@ namespace NuzzGraph.Entities
     [Inherits("SystemNode")]
     public interface IPropertyDefinition : ISystemNode
     {
-        ScalarType PropertyType { get; set; }
+        IScalarType PropertyType { get; set; }
         bool IsNullable { get; set; }
         object DefaultValue { get; set; }
     }
