@@ -102,12 +102,12 @@
     <Compile Include="Themes\Sandbox.xaml.cs">
       <DependentUpon>Sandbox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UIElements\BindingProxy.cs" />
+    <Compile Include="Other\BindingProxy.cs" />
+    <Compile Include="UIElements\GraphEdge.cs" />
     <Compile Include="UserControls\GraphNode.xaml.cs">
       <DependentUpon>GraphNode.xaml</DependentUpon>
     </Compile>
     <Compile Include="UIElements\GraphVisualHost.cs" />
-    <Compile Include="UIElements\TestUIElement.cs" />
     <Compile Include="UserControls\GraphPane.xaml.cs">
       <DependentUpon>GraphPane.xaml</DependentUpon>
     </Compile>

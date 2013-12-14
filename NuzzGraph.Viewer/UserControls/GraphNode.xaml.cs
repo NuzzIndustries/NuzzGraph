@@ -64,7 +64,7 @@ namespace NuzzGraph.Viewer.UserControls
         {
             get
             {
-                return (PositionLeft + PositionRight / 2.0);
+                return (PositionLeft + PositionRight) / 2.0;
             }
         }
 
@@ -72,7 +72,7 @@ namespace NuzzGraph.Viewer.UserControls
         {
             get
             {
-                return (PositionTop + PositionBottom / 2.0);
+                return (PositionTop + PositionBottom) / 2.0;
             }
         }
 

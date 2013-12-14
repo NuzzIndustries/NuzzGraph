@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NuzzGraph.Core;
 using NuzzGraph.Entities;
+using NuzzGraph.Viewer.UIElements;
 using NuzzGraph.Viewer.Utilities;
 
 namespace NuzzGraph.Viewer.UserControls
@@ -87,9 +88,9 @@ namespace NuzzGraph.Viewer.UserControls
             host.InvalidateVisual();
         }
 
-        private List<GraphVisualHost.GraphEdge> LoadEdges()
+        private List<GraphEdge> LoadEdges()
         {
-            var _edges = new List<GraphVisualHost.GraphEdge>();
+            var _edges = new List<GraphEdge>();
 
             using (var con = ContextFactory.New())
             {
@@ -103,7 +104,7 @@ namespace NuzzGraph.Viewer.UserControls
                         var _related = nRelType._GetRelatedNodes(@n);
                         foreach (var @related in _related)
                         {
-                            GraphVisualHost.GraphEdge edge = new GraphVisualHost.GraphEdge
+                            GraphEdge edge = new GraphEdge
                             {
                                 @Type = @relType,
                                 @From = @n,

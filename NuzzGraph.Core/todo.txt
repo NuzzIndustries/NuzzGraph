@@ -16,7 +16,9 @@
 Display Graph
  *Add zoom in/out
  *Draw Edges / Connections
- Move edge endpoints based on whether they are outgoing or incoming
+ *Move edge endpoints based on whether they are outgoing or incoming
+ Edge endpoints are too heavily biased to appear on vertical sides of the node
+ Recalculate only the edges that moved
  Add filters
  Add color legend
  Add right click context menu with sticky node details option
