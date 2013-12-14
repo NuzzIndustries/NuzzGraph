@@ -40,7 +40,7 @@ namespace NuzzGraph.Viewer.UserControls
         {
             get
             {
-                return PositionLeft + this.Width;
+                return PositionLeft + this.ActualWidth;
             }
         }
 
@@ -56,7 +56,7 @@ namespace NuzzGraph.Viewer.UserControls
         {
             get
             {
-                return Canvas.GetBottom(this);
+                return PositionTop + this.ActualHeight;
             }
         }
 
@@ -86,76 +86,76 @@ namespace NuzzGraph.Viewer.UserControls
 
         internal System.Drawing.Rectangle GetLineBoundaries(GraphNode otherNode)
         {
-            var rSource = this.Boundary;
-            var rDest = otherNode.Boundary;
+            var boundarySrc = this.Boundary;
+            var boundaryDest = otherNode.Boundary;
             
-            if (rSource.IntersectsWith(rDest))
+            if (boundarySrc.IntersectsWith(boundaryDest))
             {
                 return System.Drawing.Rectangle.Empty;
             }
 
-            bool xIntersect = (rSource.X <= rDest.X && rSource.X + rSource.Width >= rDest.X)
-                || (rDest.X <= rSource.X && rDest.X + rDest.Width >= rSource.X);
-            bool yIntersect = rSource.Y <= rDest.Y && rSource.Y + rSource.Height >= rDest.Y
-                || (rDest.Y <= rSource.Y && rDest.Y + rDest.Height >= rSource.Y);
+            bool xIntersects = (boundarySrc.X <= boundaryDest.X && boundarySrc.X + boundarySrc.Width >= boundaryDest.X)
+                || (boundaryDest.X <= boundarySrc.X && boundaryDest.X + boundaryDest.Width >= boundarySrc.X);
+            bool yIntersects = boundarySrc.Y <= boundaryDest.Y && boundarySrc.Y + boundarySrc.Height >= boundaryDest.Y
+                || (boundaryDest.Y <= boundarySrc.Y && boundaryDest.Y + boundaryDest.Height >= boundarySrc.Y);
 
             int x1, x2, y1, y2;
 
-            if (xIntersect)
+            if (xIntersects)
             {
-                x1 = rSource.X + rSource.Width / 2;
-                x2 = rDest.X + rDest.Width / 2;
-                if (rSource.Y + rSource.Height <= rDest.Y)
+                x1 = boundarySrc.X + boundarySrc.Width / 2;
+                x2 = boundaryDest.X + boundaryDest.Width / 2;
+                if (boundarySrc.Y + boundarySrc.Height <= boundaryDest.Y)
                 {
-                    y1 = rSource.Y + rSource.Height;
-                    y2 = rDest.Y;
+                    y1 = boundarySrc.Y + boundarySrc.Height;
+                    y2 = boundaryDest.Y;
                 }
                 else
                 {
-                    y1 = rSource.Y;
-                    y2 = rDest.Y + rDest.Height;
+                    y1 = boundarySrc.Y;
+                    y2 = boundaryDest.Y + boundaryDest.Height;
                 }
             }
-            else if (yIntersect)
+            else if (yIntersects)
             {
-                y1 = rSource.Y + rSource.Height / 2;
-                y2 = rDest.Y + rDest.Height / 2;
-                if (rSource.X + rSource.Width <= rDest.X)
+                y1 = boundarySrc.Y + boundarySrc.Height / 2;
+                y2 = boundaryDest.Y + boundaryDest.Height / 2;
+                if (boundarySrc.X + boundarySrc.Width <= boundaryDest.X)
                 {
-                    x1 = rSource.X + rSource.Width;
-                    x2 = rDest.X;
+                    x1 = boundarySrc.X + boundarySrc.Width;
+                    x2 = boundaryDest.X;
                 }
                 else
                 {
-                    x1 = rSource.X;
-                    x2 = rDest.X + rDest.Width;
+                    x1 = boundarySrc.X;
+                    x2 = boundaryDest.X + boundaryDest.Width;
                 }
             }
             else
             {
-                if (rSource.Y + rSource.Height <= rDest.Y)
+                if (boundarySrc.Y + boundarySrc.Height <= boundaryDest.Y)
                 {
-                    y1 = rSource.Y + rSource.Height / 2;
-                    y2 = rDest.Y;
-                    if (rSource.X + rSource.Width <= rDest.X)
+                    y1 = boundarySrc.Y + boundarySrc.Height / 2;
+                    y2 = boundaryDest.Y;
+                    if (boundarySrc.X + boundarySrc.Width <= boundaryDest.X)
                     {
-                        x1 = rSource.X + rSource.Width;
+                        x1 = boundarySrc.X + boundarySrc.Width;
                     }
                     else
                     {
-                        x1 = rSource.X;
+                        x1 = boundarySrc.X;
                     }
-                    x2 = rDest.X + rDest.Width / 2;
+                    x2 = boundaryDest.X + boundaryDest.Width / 2;
                 }
                 else
                 {
-                    y1 = rSource.Y + rSource.Height / 2;
-                    y2 = rDest.Y + rDest.Height;
-                    if (rSource.X + rSource.Width <= rDest.X)
-                        x1 = rSource.X + rSource.Width;
+                    y1 = boundarySrc.Y + boundarySrc.Height / 2;
+                    y2 = boundaryDest.Y + boundaryDest.Height;
+                    if (boundarySrc.X + boundarySrc.Width <= boundaryDest.X)
+                        x1 = boundarySrc.X + boundarySrc.Width;
                     else
-                        x1 = rSource.X;
-                    x2 = rDest.X + rDest.Width / 2;
+                        x1 = boundarySrc.X;
+                    x2 = boundaryDest.X + boundaryDest.Width / 2;
                 }
             }
 

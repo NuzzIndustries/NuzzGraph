@@ -25,6 +25,8 @@ namespace NuzzGraph.Viewer.UserControls
     /// </summary>
     public partial class GraphViewport : UserControl
     {
+        public static GraphViewport Current { get; private set; }
+
         static List<Brush> SimpleBrushes;
 
         public INode CurrentMouseoverNode 
@@ -74,12 +76,14 @@ namespace NuzzGraph.Viewer.UserControls
         private void UserControl_Initialized(object sender, EventArgs e)
         {
             host.Viewport = this;
+            Current = this;
+
+            RefreshVisualGraph();
+            host.GraphEdges = LoadEdges();
         }
 
         void GraphViewport_Loaded(object sender, RoutedEventArgs e)
         {
-            RefreshVisualGraph();
-            host.GraphEdges = LoadEdges();
             host.InvalidateVisual();
         }
 
@@ -168,8 +172,6 @@ namespace NuzzGraph.Viewer.UserControls
             Canvas.SetLeft(thumb, x);
             Canvas.SetTop(thumb, y);
             canvas.Children.Add(thumb);
-            thumb.DragStarted += new DragStartedEventHandler(thumb_DragStarted);
-            thumb.DragCompleted += new DragCompletedEventHandler(thumb_DragCompleted);
             thumb.DragDelta += new DragDeltaEventHandler(thumb_DragDelta);
             thumb.MouseEnter += thumb_MouseEnter;
 
@@ -200,14 +202,6 @@ namespace NuzzGraph.Viewer.UserControls
             Canvas.SetLeft(th, Canvas.GetLeft(th) + e.HorizontalChange);
             Canvas.SetTop(th, Canvas.GetTop(th) + e.VerticalChange);
             host.InvalidateVisual();
-        }
-
-        void thumb_DragCompleted(object sender, DragCompletedEventArgs e)
-        {
-        }
-
-        void thumb_DragStarted(object sender, DragStartedEventArgs e)
-        {
         }
     }
 }
