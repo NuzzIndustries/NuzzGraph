@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BrightstarDB.Client;
 using BrightstarDB.EntityFramework;
 using NuzzGraph.Core;
@@ -22,6 +23,17 @@ namespace NuzzGraph.Entities
 
     public partial class Node : BrightstarEntityObject, INode
     {
+        internal List<INode> _GetRelatedNodes()
+        {
+            var _nodes = new List<INode>();
+            foreach (var @rel in this.TypeHandle.AllowedOutgoingRelationships)
+            {
+                var r = (RelationshipType)@rel;
+                _nodes.AddRange(r._GetRelatedNodes(this));
+            }
+            return _nodes;
+        }
+
         public INode Get()
         {
             return this;

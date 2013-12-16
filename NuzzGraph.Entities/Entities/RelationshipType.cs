@@ -35,6 +35,35 @@ namespace NuzzGraph.Entities
             }
         }
 
+        internal IEnumerable<INode> _GetRelatedNodesInverse(INode n)
+        {
+            if (n.TypeHandle.Id != IncomingTo.Id)
+            {
+                throw new TypeAccessException("Type " + n.TypeHandle.Label + " does not contain inverse relationship " + this.Label);
+            }
+
+            List<string> _objectIds;
+
+            using (var core = NuzzGraph.Core.ContextFactory.GetCore())
+            {
+                
+                //Get underlying data object for this node
+                var nodeDataObject = core.GetDataObject(n.Id);
+
+                //Get related object IDs
+                _objectIds = nodeDataObject.GetPropertyValues(_URI).Select(x => ((IDataObject)x).Identity).ToList();
+            }
+
+            if (_objectIds.Count == 0)
+                return new List<INode>();
+
+            using (var con = ContextFactory.New())
+            {
+                var nodes = _objectIds.Select(id => con.Nodes.Where(@node => @node.Id == id).SingleOrDefault()).Where(x => x != null);
+                return nodes;
+            }
+        }
+
         internal IEnumerable<INode> _GetRelatedNodes(INode n)
         {
             if (n.TypeHandle.Id != OutgoingFrom.Id)
@@ -46,6 +75,7 @@ namespace NuzzGraph.Entities
 
             using (var core = NuzzGraph.Core.ContextFactory.GetCore())
             {
+                //Get underlying data object for this node
                 var nodeDataObject = core.GetDataObject(n.Id);
                 _objectIds = nodeDataObject.GetPropertyValues(_URI).Select(x => ((IDataObject)x).Identity).ToList();
             }

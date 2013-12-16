@@ -56,7 +56,5 @@ namespace NuzzGraph.Viewer.UserControls
             foreach (var edge in GraphEdges)
                 edge.Render(dc);
         }
-
-        
     }
 }

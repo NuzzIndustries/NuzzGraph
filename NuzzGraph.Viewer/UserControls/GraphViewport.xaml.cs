@@ -45,7 +45,6 @@ namespace NuzzGraph.Viewer.UserControls
             } 
         }
 
-
         internal Dictionary<INode, GraphNode> NodeThumbs { get; set; }
 
         static GraphViewport()
@@ -73,7 +72,6 @@ namespace NuzzGraph.Viewer.UserControls
 
         public GraphPane GraphPane { get; set; }
 
-
         private void UserControl_Initialized(object sender, EventArgs e)
         {
             host.Viewport = this;
@@ -94,14 +92,16 @@ namespace NuzzGraph.Viewer.UserControls
 
             using (var con = ContextFactory.New())
             {
-                var nodes = con.Nodes.ToList();
-                foreach(var @n in nodes)
+                var _nodes = NodeThumbs.Keys.ToList();
+                var _nodeIds = _nodes.Select(x => x.Id).ToList();
+                
+                foreach(var @n in _nodes)
                 {
-                    var rels = @n.TypeHandle.AllowedOutgoingRelationships.ToList();
+                    var rels = @n.TypeHandle.AllowedIncomingRelationships.ToList();
                     foreach(var @relType in rels)
                     {
                         var nRelType = (RelationshipType)@relType;
-                        var _related = nRelType._GetRelatedNodes(@n);
+                        var _related = nRelType._GetRelatedNodes(@n).Where(x => _nodeIds.Contains(x.Id));
                         foreach (var @related in _related)
                         {
                             GraphEdge edge = new GraphEdge
@@ -132,14 +132,10 @@ namespace NuzzGraph.Viewer.UserControls
 
             NodeThumbs = new Dictionary<INode, GraphNode>();
 
-            List<INode> nodes;
-            using (var con = ContextFactory.New())
-            {
-                nodes = con.Nodes.ToList();
-            }
+            var nodes = LoadNodesForGraph();
+
             foreach (var node in nodes)
             {
-                
                 var interfaceName = "I" + node.TypeHandle.Label;
                 var interfaceType = EntityUtility.AllCLRTypes.Where(x => x.Name == interfaceName).Single();
                 int interfaceIndex = EntityUtility.AllCLRTypes.IndexOf(interfaceType);
@@ -156,6 +152,24 @@ namespace NuzzGraph.Viewer.UserControls
             foreach (var node in nodes)
             {
                 var thumb = NodeThumbs[node];
+            }
+        }
+
+        private static List<INode> LoadNodesForGraph()
+        {
+            using (var con = ContextFactory.New())
+            {
+                var nodes10 = con.Nodes.Take(10).ToList();
+                var nodeids = nodes10.Select(x => x.Id).ToList();
+
+                var node = (Node)nodes10.First(x => 
+                    ((Node)x)._GetRelatedNodes()
+                        .Where(n => nodeids.Contains(n.Id))
+                        .Where(n => n.TypeHandle.Label != "NodeType")
+                        .Count() > 0);
+                var _nodes = new List<Node>() { node };
+                var _nodesExtended = _nodes.SelectMany(n => n._GetRelatedNodes()).ToList();
+                return _nodesExtended;
             }
         }
 
@@ -180,7 +194,6 @@ namespace NuzzGraph.Viewer.UserControls
             return thumb;
         }
 
-
         void zoom_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             decimal delta = (decimal)e.Delta / 120m / 20m;
@@ -190,7 +203,6 @@ namespace NuzzGraph.Viewer.UserControls
             if (zoom.Zoom < 0.1)
                 zoom.Zoom = 0.1;
         }
-
 
         void thumb_MouseEnter(object sender, MouseEventArgs e)
         {

@@ -38,9 +38,10 @@ namespace NuzzGraph.Viewer.UIElements
             get { return GraphViewport.Current.NodeThumbs[@To]; }
         }
 
+        //Gets the base path for the edge line
         public System.Drawing.Rectangle CurrentDrawingBoundary
         {
-            get { return FromNode.GetLineBoundaries(ToNode); }
+            get { return GetLineBoundaries(FromNode, ToNode); }
         }
 
         public void Render(DrawingContext dc)
@@ -110,6 +111,100 @@ namespace NuzzGraph.Viewer.UIElements
                 x2 -= (int)Math.Round(toNode.ActualWidth / 3.0, 0);
 
             return new Point(x2, y2);
+        }
+
+        internal System.Drawing.Rectangle GetLineBoundaries(GraphNode node1, GraphNode node2)
+        {
+            var boundarySrc = node1.Boundary;
+            var boundaryDest = node2.Boundary;
+
+            if (boundarySrc.IntersectsWith(boundaryDest))
+            {
+                return System.Drawing.Rectangle.Empty;
+            }
+
+            bool xIntersects = 
+                (
+                    boundarySrc.X <= boundaryDest.X && 
+                    boundarySrc.X + boundarySrc.Width >= boundaryDest.X
+                )
+                || 
+                (
+                    boundaryDest.X <= boundarySrc.X && 
+                    boundaryDest.X + boundaryDest.Width >= boundarySrc.X
+                );
+            bool yIntersects = 
+                (
+                    boundarySrc.Y <= boundaryDest.Y && 
+                    boundarySrc.Y + boundarySrc.Height >= boundaryDest.Y
+                )
+                || 
+                (
+                    boundaryDest.Y <= boundarySrc.Y && 
+                    boundaryDest.Y + boundaryDest.Height >= boundarySrc.Y
+                );
+
+            int x1, x2, y1, y2;
+
+            if (xIntersects)
+            {
+                x1 = boundarySrc.X + boundarySrc.Width / 2;
+                x2 = boundaryDest.X + boundaryDest.Width / 2;
+                if (boundarySrc.Y + boundarySrc.Height <= boundaryDest.Y)
+                {
+                    y1 = boundarySrc.Y + boundarySrc.Height;
+                    y2 = boundaryDest.Y;
+                }
+                else
+                {
+                    y1 = boundarySrc.Y;
+                    y2 = boundaryDest.Y + boundaryDest.Height;
+                }
+            }
+            else if (yIntersects)
+            {
+                y1 = boundarySrc.Y + boundarySrc.Height / 2;
+                y2 = boundaryDest.Y + boundaryDest.Height / 2;
+                if (boundarySrc.X + boundarySrc.Width <= boundaryDest.X)
+                {
+                    x1 = boundarySrc.X + boundarySrc.Width;
+                    x2 = boundaryDest.X;
+                }
+                else
+                {
+                    x1 = boundarySrc.X;
+                    x2 = boundaryDest.X + boundaryDest.Width;
+                }
+            }
+            else
+            {
+                if (boundarySrc.Y + boundarySrc.Height <= boundaryDest.Y)
+                {
+                    y1 = boundarySrc.Y + boundarySrc.Height / 2;
+                    y2 = boundaryDest.Y;
+                    if (boundarySrc.X + boundarySrc.Width <= boundaryDest.X)
+                    {
+                        x1 = boundarySrc.X + boundarySrc.Width;
+                    }
+                    else
+                    {
+                        x1 = boundarySrc.X;
+                    }
+                    x2 = boundaryDest.X + boundaryDest.Width / 2;
+                }
+                else
+                {
+                    y1 = boundarySrc.Y + boundarySrc.Height / 2;
+                    y2 = boundaryDest.Y + boundaryDest.Height;
+                    if (boundarySrc.X + boundarySrc.Width <= boundaryDest.X)
+                        x1 = boundarySrc.X + boundarySrc.Width;
+                    else
+                        x1 = boundarySrc.X;
+                    x2 = boundaryDest.X + boundaryDest.Width / 2;
+                }
+            }
+
+            return new System.Drawing.Rectangle(x1, y1, x2 - x1, y2 - y1);
         }
     }
 }
