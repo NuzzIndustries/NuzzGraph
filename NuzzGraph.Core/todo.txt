@@ -13,6 +13,13 @@
 *for sections that interact with the underlying DB.
 
 
+1. Add a non-embedded seed mirror
+2. Connect to non-embedded version over tcp
+3. Build sparql queries
+4. Use sparql queries for base api to get related values
+5. Use api to load a few nodes / edges
+6. Debug the edge drawing to not be biased to vertical sides
+
 Display Graph
  *Add zoom in/out
  *Draw Edges / Connections
