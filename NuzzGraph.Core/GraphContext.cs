@@ -17,8 +17,9 @@ using BrightstarDB.EntityFramework;
 using System.Text;
 using NuzzGraph.Entities.Attributes;
 using NuzzGraph.Core;
+using NuzzGraph.Entities;
 
-namespace NuzzGraph.Entities 
+namespace NuzzGraph.Core 
 {
     public partial class GraphContext : BrightstarEntityContext {
     	private static readonly EntityMappingStore TypeMappings;

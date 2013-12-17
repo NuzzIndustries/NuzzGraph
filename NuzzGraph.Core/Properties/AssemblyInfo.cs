@@ -1,18 +1,20 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using BrightstarDB.EntityFramework;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NuzzGraph.Core")]
+[assembly: AssemblyTitle("NuzzGraph.Entities")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NuzzGraph.Core")]
+[assembly: AssemblyProduct("NuzzGraph.Entities")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: TypeIdentifierPrefix("http://www.nuzzgraph.com/Entities/")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -20,7 +22,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("a3549c07-0ed5-480b-9c3c-ebd7b31fbd48")]
+[assembly: Guid("5b383a8b-a873-4a6c-a4b3-7c6355b05fb5")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -34,3 +36,10 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+
+[assembly: InternalsVisibleTo("NuzzGraph.Seed")]
+[assembly: InternalsVisibleTo("NuzzGraph.Viewer")]
+[assembly: InternalsVisibleTo("NuzzGraph.Core")]
+[assembly: InternalsVisibleTo("NuzzGraph.Api")]
+[assembly: InternalsVisibleTo("NuzzGraph.Api.Test")]

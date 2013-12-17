@@ -50,9 +50,9 @@
       <Project>{121A81F3-EB1C-4228-81FB-0D7505A438FB}</Project>
       <Name>BrightstarDB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NuzzGraph.Entities\NuzzGraph.Entities.csproj">
+    <ProjectReference Include="..\NuzzGraph.Core\NuzzGraph.Core.csproj">
       <Project>{4A87DFA5-C8CA-4A73-8808-E079E286E824}</Project>
-      <Name>NuzzGraph.Entities</Name>
+      <Name>NuzzGraph.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

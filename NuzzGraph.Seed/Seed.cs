@@ -19,7 +19,7 @@ using VDS.RDF.Writing;
 
 namespace NuzzGraph.Seed
 {
-    class Program
+    class Seed
     {
         //Config
         static string StoreName { get { return "nuzzgraph"; } }
@@ -33,7 +33,7 @@ namespace NuzzGraph.Seed
 
         static Dictionary<System.Type, ScalarType> ScalarTypeMap { get; set; }
 
-        static Program()
+        static Seed()
         {
 
         }
@@ -43,6 +43,8 @@ namespace NuzzGraph.Seed
             try
             {
                 ResetDB();
+
+                //Export data, so we can import it into another store
                 var job = Client.StartExport(StoreName, "test.n3", null);
                 System.Threading.Thread.Sleep(1000);
 

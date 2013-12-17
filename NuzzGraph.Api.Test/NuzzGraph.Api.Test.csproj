@@ -56,9 +56,9 @@
       <Project>{7C9C70CA-A2E7-42AB-95D8-1F03E68042DE}</Project>
       <Name>NuzzGraph.Api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NuzzGraph.Entities\NuzzGraph.Entities.csproj">
+    <ProjectReference Include="..\NuzzGraph.Core\NuzzGraph.Core.csproj">
       <Project>{4A87DFA5-C8CA-4A73-8808-E079E286E824}</Project>
-      <Name>NuzzGraph.Entities</Name>
+      <Name>NuzzGraph.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -61,12 +61,8 @@
       <Name>Elysium.Test.NETFX4</Name>
     </ProjectReference>
     <ProjectReference Include="..\NuzzGraph.Core\NuzzGraph.Core.csproj">
-      <Project>{5cfb8efc-af9e-4d13-b5d8-c6e31cbc2769}</Project>
-      <Name>NuzzGraph.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NuzzGraph.Entities\NuzzGraph.Entities.csproj">
       <Project>{4a87dfa5-c8ca-4a73-8808-e079e286e824}</Project>
-      <Name>NuzzGraph.Entities</Name>
+      <Name>NuzzGraph.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\NuzzGraph.Viewer\NuzzGraph.Viewer.csproj">
       <Project>{01a8988c-84ca-47d4-b483-4f13aff15526}</Project>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NuzzGraph.Core;
 using NuzzGraph.Entities;
 
 namespace NuzzGraph.Api.Test

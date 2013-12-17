@@ -155,12 +155,8 @@
       <Name>BrightstarDB</Name>
     </ProjectReference>
     <ProjectReference Include="..\NuzzGraph.Core\NuzzGraph.Core.csproj">
-      <Project>{5CFB8EFC-AF9E-4D13-B5D8-C6E31CBC2769}</Project>
-      <Name>NuzzGraph.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NuzzGraph.Entities\NuzzGraph.Entities.csproj">
       <Project>{4A87DFA5-C8CA-4A73-8808-E079E286E824}</Project>
-      <Name>NuzzGraph.Entities</Name>
+      <Name>NuzzGraph.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\WPFExtensions\WPFExtensions.csproj">
       <Project>{a7915102-8326-4862-96f0-4eb80ed087b4}</Project>
