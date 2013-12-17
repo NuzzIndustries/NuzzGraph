@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NuzzGraph.Core;
-using NuzzGraph.Entities;
+using NuzzGraph.Core.Entities;
 
 namespace NuzzGraph.Api.Test
 {

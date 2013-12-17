@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Runtime.CompilerServices;
 
-namespace NuzzGraph.Entities
+namespace NuzzGraph.Core.Utilities
 {
     public class Win32Processes
     {

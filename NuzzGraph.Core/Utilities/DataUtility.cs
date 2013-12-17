@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NuzzGraph.Core.Entities;
 
-namespace NuzzGraph.Entities
+namespace NuzzGraph.Core.Utilities
 {
     internal static class DataUtility
     {

@@ -13,7 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NuzzGraph.Viewer.UIElements;
 using System.Windows.Controls.Primitives;
-using NuzzGraph.Entities;
+using NuzzGraph.Core.Entities;
 using NuzzGraph.Core;
 using System.IO;
 using Elysium;

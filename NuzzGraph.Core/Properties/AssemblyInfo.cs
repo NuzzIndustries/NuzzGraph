@@ -6,15 +6,14 @@ using BrightstarDB.EntityFramework;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NuzzGraph.Entities")]
+[assembly: AssemblyTitle("NuzzGraph.Core")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NuzzGraph.Entities")]
+[assembly: AssemblyProduct("NuzzGraph.Core")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: TypeIdentifierPrefix("http://www.nuzzgraph.com/Entities/")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -43,3 +42,5 @@ using BrightstarDB.EntityFramework;
 [assembly: InternalsVisibleTo("NuzzGraph.Core")]
 [assembly: InternalsVisibleTo("NuzzGraph.Api")]
 [assembly: InternalsVisibleTo("NuzzGraph.Api.Test")]
+
+[assembly: TypeIdentifierPrefix("http://www.nuzzgraph.com/Entities/")]

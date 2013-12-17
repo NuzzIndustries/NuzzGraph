@@ -368,7 +368,7 @@ private void WriteClassAttributes(CodeGenerationTools code, Helper helper, Resou
 		{
 			//Hack to specify name of inherited class
 			var a = x as CodeAttribute;
-			if (a.FullName == "NuzzGraph.Entities.Attributes.InheritsAttribute")
+			if (a.FullName == "NuzzGraph.Core.Attributes.InheritsAttribute")
 			{
 				var e = a.Children.GetEnumerator();
 				if (e.MoveNext())

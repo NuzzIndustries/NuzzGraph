@@ -3,8 +3,9 @@ using System.Linq;
 using BrightstarDB.Client;
 using BrightstarDB.EntityFramework;
 using NuzzGraph.Core;
+using NuzzGraph.Core.Utilities;
 
-namespace NuzzGraph.Entities
+namespace NuzzGraph.Core.Entities
 {
     [Entity]
     public interface INode

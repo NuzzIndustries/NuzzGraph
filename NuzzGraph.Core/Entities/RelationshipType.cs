@@ -5,9 +5,10 @@ using System.Text;
 using BrightstarDB.Client;
 using BrightstarDB.EntityFramework;
 using NuzzGraph.Core;
-using NuzzGraph.Entities.Attributes;
+using NuzzGraph.Core.Attributes;
+using NuzzGraph.Core.Utilities;
 
-namespace NuzzGraph.Entities
+namespace NuzzGraph.Core.Entities
 {
     [Entity]
     [Inherits("SystemNode")]

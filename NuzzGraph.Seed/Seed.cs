@@ -12,10 +12,11 @@ using System.ServiceProcess;
 using System.Text.RegularExpressions;
 using BrightstarDB.Client;
 using BrightstarDB.EntityFramework;
-using NuzzGraph.Core;
-using NuzzGraph.Entities;
-using NuzzGraph.Entities.Attributes;
 using VDS.RDF.Writing;
+using NuzzGraph.Core;
+using NuzzGraph.Core.Entities;
+using NuzzGraph.Core.Utilities;
+using NuzzGraph.Core.Attributes;
 
 namespace NuzzGraph.Seed
 {
@@ -28,7 +29,7 @@ namespace NuzzGraph.Seed
         static IBrightstarService Client { get; set; }
         static GraphContext Context { get; set; }
 
-        static Dictionary<System.Type, NuzzGraph.Entities.NodeType> CLRTypeMap { get; set; }
+        static Dictionary<System.Type, NuzzGraph.Core.Entities.NodeType> CLRTypeMap { get; set; }
 
 
         static Dictionary<System.Type, ScalarType> ScalarTypeMap { get; set; }
@@ -200,7 +201,7 @@ namespace NuzzGraph.Seed
             foreach (var clrType in EntityUtility.AllCLRTypes)
             {
                 var tNode = CLRTypeMap[clrType];
-                tNode.TypeHandle = (NuzzGraph.Entities.NodeType)nodeTypeNode;
+                tNode.TypeHandle = (NuzzGraph.Core.Entities.NodeType)nodeTypeNode;
                 var inheritsAttribute = clrType.GetCustomAttributes(typeof(InheritsAttribute), false).FirstOrDefault() as InheritsAttribute;
                 if (inheritsAttribute == null)
                     continue;

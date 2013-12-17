@@ -4,8 +4,9 @@ using System.Linq;
 using System.Reflection;
 using BrightstarDB.EntityFramework;
 using NuzzGraph.Core;
+using NuzzGraph.Core.Entities;
 
-namespace NuzzGraph.Entities
+namespace NuzzGraph.Core.Utilities
 {
     internal static class EntityUtility
     {
@@ -62,7 +63,7 @@ namespace NuzzGraph.Entities
             AllSimpleTypes.Add(typeof(bool?));
             //var props = typeof(GraphContext).GetProperties().Where(x => x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == typeof(IEntitySet<>));
 
-            AllCLRTypes = typeof(NuzzGraph.Entities.IType).Assembly
+            AllCLRTypes = typeof(NuzzGraph.Core.Entities.IType).Assembly
                 .GetTypes()
                 .Where(x => x.IsInterface)
                 .Where(x => x.Namespace == typeof(INodeType).Namespace)

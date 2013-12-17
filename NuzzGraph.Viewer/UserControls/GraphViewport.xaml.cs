@@ -15,7 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NuzzGraph.Core;
-using NuzzGraph.Entities;
+using NuzzGraph.Core.Entities;
+using NuzzGraph.Core.Utilities;
 using NuzzGraph.Viewer.UIElements;
 using NuzzGraph.Viewer.Utilities;
 

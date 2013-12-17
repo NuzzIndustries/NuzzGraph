@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BrightstarDB.EntityFramework;
-using NuzzGraph.Entities.Attributes;
+using NuzzGraph.Core.Utilities;
+using NuzzGraph.Core.Attributes;
 
-namespace NuzzGraph.Entities
+namespace NuzzGraph.Core.Entities
 {
     [Entity]
     [Inherits("Type")]

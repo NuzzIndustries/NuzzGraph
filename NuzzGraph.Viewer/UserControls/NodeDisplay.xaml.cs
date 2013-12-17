@@ -14,8 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NuzzGraph.Core;
+using NuzzGraph.Core.Entities;
 using NuzzGraph.Core.Utilities;
-using NuzzGraph.Entities;
 
 namespace NuzzGraph.Viewer.UserControls
 {

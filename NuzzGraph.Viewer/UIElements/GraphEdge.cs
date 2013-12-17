@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using NuzzGraph.Entities;
+using NuzzGraph.Core.Entities;
 using NuzzGraph.Viewer.UIElements;
 using NuzzGraph.Viewer.UserControls;
 
