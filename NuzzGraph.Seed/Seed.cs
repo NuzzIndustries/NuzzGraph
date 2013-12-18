@@ -23,7 +23,7 @@ namespace NuzzGraph.Seed
     class Seed
     {
         //Config
-        static string StoreName { get { return "nuzzgraph"; } }
+        static string StoreName { get { return ContextFactory.DefaultConfig.StoreName; } }
 
 
         static IBrightstarService Client { get; set; }
@@ -46,7 +46,29 @@ namespace NuzzGraph.Seed
                 ResetDB();
 
                 //Export data, so we can import it into another store
-                var job = Client.StartExport(StoreName, "test.n3", null);
+                string exportFileName = "test.n3";
+                var job = Client.StartExport(StoreName, exportFileName, null);
+                System.Threading.Thread.Sleep(1000);
+
+                //Create config for external DB
+                var configExternal = new NuzzGraph.Core.Configuration()
+                {
+                    ConnectType = Core.Configuration.ConnectionType.REST,
+                };
+
+                //Import the data
+                var clientExt = ContextFactory.GetClient(configExternal);
+                if (clientExt.DoesStoreExist(configExternal.StoreName))
+                {
+                    clientExt.DeleteStore(configExternal.StoreName);
+                    System.Threading.Thread.Sleep(100);
+                }
+                clientExt.CreateStore(configExternal.StoreName);
+                System.Threading.Thread.Sleep(100);
+
+                var dbExt = ContextFactory.New(configExternal);
+                
+                clientExt.StartImport(StoreName, exportFileName, null);
                 System.Threading.Thread.Sleep(1000);
 
                 /*
@@ -82,7 +104,7 @@ namespace NuzzGraph.Seed
                 //Load DB service
                 var svc = new ServiceController(svcname, ".");
 
-                var ngfolder = new DirectoryInfo(ContextFactory.PathToData + ContextFactory.StoreName);
+                var ngfolder = new DirectoryInfo(ContextFactory.DefaultConfig.PathToData + ContextFactory.DefaultConfig.StoreName);
                 var file = ngfolder.GetFiles().Where(x => x.Name == "data.bs").FirstOrDefault();
                 if (file == null)
                     throw new InvalidOperationException("Unable to delete the folder " + ngfolder);
