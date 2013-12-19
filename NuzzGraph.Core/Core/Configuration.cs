@@ -25,7 +25,7 @@ namespace NuzzGraph.Core
                 switch (ConnectType)
                 {
                     case ConnectionType.Embedded:
-                        return string.Format("type=embedded;StoreName={1};StoresDirectory={2}", ConnectType, StoreName, PathToData);
+                        return string.Format("type=embedded;StoreName={1};StoresDirectory={2}", ConnectType, StoreName, WorkingDirectory);
                     case ConnectionType.REST:
                         return string.Format("type=rest;endpoint={0};storename={1}", RestEndpointUrl, StoreName);
                     default:
@@ -40,10 +40,9 @@ namespace NuzzGraph.Core
         public string SvcName 
         {
             get { return _SvcName; }
-            set { _SvcName = value; PathToData = GetEmbeddedPath(); }
+            private set { _SvcName = value; }
         }
 
-        public string PathToData { get; private set; }
         public ConnectionType ConnectType { get; set; }
         public string RestEndpointUrl { get; set; }
         public string WorkingDirectory { get; set; }
@@ -62,7 +61,7 @@ namespace NuzzGraph.Core
         static Configuration()
         {
             defaultWorkingDirectory = GetWorkingDirectory();
-            defaultSvcName = LoadServiceName();
+            //defaultSvcName = LoadServiceName();
             defaultStoreName = GetStoreName();
             defaultConnectType = ConnectionType.Embedded;
             defaultRestEndpointUrl = "http://localhost:8090/brightstar";
@@ -72,7 +71,7 @@ namespace NuzzGraph.Core
         {
             WorkingDirectory = defaultWorkingDirectory;
             StoreName = defaultStoreName;
-            SvcName = defaultSvcName;
+            //SvcName = defaultSvcName;
             ConnectType = defaultConnectType;
             RestEndpointUrl = defaultRestEndpointUrl;
         }
@@ -99,31 +98,27 @@ namespace NuzzGraph.Core
 
         private static string GetStoreName()
         {
-            string sn = "nuzzgraph";
-
-            try
-            {
-                if (!RuntimeUtility.RunningFromVisualStudioDesigner)
-                    sn = ConfigurationManager.AppSettings["DefaultStoreName"];
-            }
-            catch (Exception) { }
-            return sn;
+            return Constants.DefaultStoreName;
         }
 
-        //Gets the path to add to the connection string for StoresDirectory
-        private string GetEmbeddedPath()
+        //Gets the default working directory
+        private static string GetWorkingDirectory()
         {
             string path = "";
-            try
+            #if DEBUG
+            using (var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(Constants.SolutionPathResource))
             {
-                if (RuntimeUtility.RunningFromVisualStudioDesigner)
-                    path = File.ReadAllText("solutionpath.txt");
-                    //path = "C:\\dev\\nuzzgraph\\nuzzgraph\\ngdata\\";
-                else
-                    path = this.WorkingDirectory;
+                using (var sr = new StreamReader(stream))
+                {
+                    path = sr.ReadToEnd().Trim();
+                    if (!path.TrimEnd('\\').EndsWith(Constants.DataFolderName))
+                        throw new InvalidOperationException("Expected folder ending with " + Constants.DataFolderName);
+                }
             }
-            catch (Exception)
-            {
+            #else
+                throw new NotImplementedException();
+
+             path = this.WorkingDirectory;
                 //Load service name
                 string svcname = SvcName;
 
@@ -143,19 +138,8 @@ namespace NuzzGraph.Core
                 var root = Directory.GetParent(svcPath).Parent;
 
                 path = root.FullName + "\\data\\";
-            }
-
-            return path;
-        }
-
-        //Gets the default working directory
-        private static string GetWorkingDirectory()
-        {
-            #if DEBUG
-                return Path.GetFullPath("..\\..\\..\\ngdata\\");
-            #else
-                throw new NotImplementedException();
             #endif
+            return path;
         }
     }
 }

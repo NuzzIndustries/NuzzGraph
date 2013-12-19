@@ -64,6 +64,7 @@ namespace NuzzGraph.Core
     	/// <summary>
     	/// Initialize a new entity context using the specified Brightstar connection string
     	/// </summary>
+        /// <param name="mappings">The context type and property mappings</param>
         ///<param name="connectionString">The connection string that will be used to connect to an existing BrightstarDB store</param>
         ///<param name="enableOptimisticLocking">Optional parameter to override the optimistic locking configuration specified in the connection string</param>
         /// <param name="updateGraphUri">OPTIONAL: The URI identifier of the graph to be updated with any new triples created by operations on the store. If
