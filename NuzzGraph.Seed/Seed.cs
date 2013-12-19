@@ -103,7 +103,23 @@ namespace NuzzGraph.Seed
 
                 //Delete folder
                 if (Directory.Exists(ContextFactory.DefaultConfig.DataDirectory))
-                    Directory.Delete(ContextFactory.DefaultConfig.DataDirectory, true);
+                {
+                    try
+                    {
+                        Directory.Delete(ContextFactory.DefaultConfig.DataDirectory, true);
+                    }
+                    catch (Exception ex1)
+                    {
+                        if (ex1.Message.Contains("because it is being used by another process"))
+                        {
+                            //Check which processes are using the file to be deleted.  If it is the visual studio designer, end it
+                            foreach (var p in Process.GetProcessesByName("XDesProc"))
+                                p.Kill();
+                            System.Threading.Thread.Sleep(100);
+                            Directory.Delete(ContextFactory.DefaultConfig.DataDirectory, true);
+                        }
+                    }
+                }
 
                 /*
                 //Load service name
