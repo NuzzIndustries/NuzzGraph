@@ -78,7 +78,7 @@ namespace NuzzGraph.Viewer.UserControls
 
             using (var con = ContextFactory.New())
             {
-                CurrentNode = con.Types.Where(x => x.Label == "Node").Single();
+                CurrentNode = (INode)con.NodeTypes.Where(x => x.Label == "Node").Single();
             }
             //if (RuntimeUtility.RunningFromVisualStudioDesigner)
             //{

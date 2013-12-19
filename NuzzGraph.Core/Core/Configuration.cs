@@ -46,14 +46,22 @@ namespace NuzzGraph.Core
         public string PathToData { get; private set; }
         public ConnectionType ConnectType { get; set; }
         public string RestEndpointUrl { get; set; }
+        public string WorkingDirectory { get; set; }
+
+        public string DataDirectory
+        {
+            get { return WorkingDirectory + "nuzzgraph"; }
+        }
 
         private static string defaultStoreName { get; set; }
         private static string defaultSvcName { get; set; }
         private static ConnectionType defaultConnectType { get; set; }
         private static string defaultRestEndpointUrl { get; set; }
+        private static string defaultWorkingDirectory { get; set; }
 
         static Configuration()
         {
+            defaultWorkingDirectory = GetWorkingDirectory();
             defaultSvcName = LoadServiceName();
             defaultStoreName = GetStoreName();
             defaultConnectType = ConnectionType.Embedded;
@@ -62,6 +70,7 @@ namespace NuzzGraph.Core
 
         public Configuration()
         {
+            WorkingDirectory = defaultWorkingDirectory;
             StoreName = defaultStoreName;
             SvcName = defaultSvcName;
             ConnectType = defaultConnectType;
@@ -108,9 +117,10 @@ namespace NuzzGraph.Core
             try
             {
                 if (RuntimeUtility.RunningFromVisualStudioDesigner)
-                    path = "C:\\dev\\nuzzgraph\\nuzzgraph\\ngdata\\";
+                    path = File.ReadAllText("solutionpath.txt");
+                    //path = "C:\\dev\\nuzzgraph\\nuzzgraph\\ngdata\\";
                 else
-                    path = Path.GetFullPath(PathUtility.GetAppUsingDirectory()) + "\\ngdata\\";
+                    path = this.WorkingDirectory;
             }
             catch (Exception)
             {
@@ -136,6 +146,16 @@ namespace NuzzGraph.Core
             }
 
             return path;
+        }
+
+        //Gets the default working directory
+        private static string GetWorkingDirectory()
+        {
+            #if DEBUG
+                return Path.GetFullPath("..\\..\\..\\ngdata\\");
+            #else
+                throw new NotImplementedException();
+            #endif
         }
     }
 }

@@ -98,7 +98,7 @@ namespace NuzzGraph.Viewer.UserControls
                 
                 foreach(var @n in _nodes)
                 {
-                    var rels = @n.TypeHandle.AllowedIncomingRelationships.ToList();
+                    var rels = @n.TypeHandle.AllowedOutgoingRelationships.ToList();
                     foreach(var @relType in rels)
                     {
                         var nRelType = (RelationshipType)@relType;
@@ -160,7 +160,10 @@ namespace NuzzGraph.Viewer.UserControls
         {
             using (var con = ContextFactory.New())
             {
-                var nodes10 = con.Nodes.Take(10).ToList();
+                return con.Nodes.ToList();
+                /*
+                 *                 var nodes10 = con.Nodes.Take(10).ToList();
+                return nodes10;
                 var nodeids = nodes10.Select(x => x.Id).ToList();
 
                 var node = (Node)nodes10.First(x => 
@@ -170,7 +173,7 @@ namespace NuzzGraph.Viewer.UserControls
                         .Count() > 0);
                 var _nodes = new List<Node>() { node };
                 var _nodesExtended = _nodes.SelectMany(n => n._GetRelatedNodes()).ToList();
-                return _nodesExtended;
+                return _nodesExtended;*/
             }
         }
 

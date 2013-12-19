@@ -46,8 +46,9 @@ namespace NuzzGraph.Seed
                 ResetDB();
 
                 //Export data, so we can import it into another store
-                string exportFileName = "test.n3";
-                var job = Client.StartExport(StoreName, exportFileName, null);
+                string exportFileName = ContextFactory.DefaultConfig.WorkingDirectory + "import\\test.n3";
+
+                var job = Client.StartExport(StoreName, exportFileName, Constants.GraphUri);
                 System.Threading.Thread.Sleep(1000);
 
                 //Create config for external DB
@@ -67,10 +68,12 @@ namespace NuzzGraph.Seed
                 System.Threading.Thread.Sleep(100);
 
                 var dbExt = ContextFactory.New(configExternal);
-                
-                clientExt.StartImport(StoreName, exportFileName, null);
+
+                clientExt.StartImport(StoreName, exportFileName, Constants.GraphUri);
                 System.Threading.Thread.Sleep(1000);
 
+                clientExt.StartExport(StoreName, exportFileName + "2", Constants.GraphUri);
+                System.Threading.Thread.Sleep(1000);
                 /*
                 var rdftext = File.ReadAllText("test/import/test.n3");
                 VDS.RDF.IGraph g = new VDS.RDF.Graph();
@@ -98,8 +101,13 @@ namespace NuzzGraph.Seed
                 if (e.Message != string.Format("Error creating store {0}. Store already exists", StoreName))
                     throw;
 
+                //Delete folder
+                if (Directory.Exists(ContextFactory.DefaultConfig.DataDirectory))
+                    Directory.Delete(ContextFactory.DefaultConfig.DataDirectory, true);
+
+                /*
                 //Load service name
-                string svcname = ConfigurationManager.AppSettings["SVCName"];
+                string svcname = ConfigurationManager.AppSettings["DefaultSVCName"];
 
                 //Load DB service
                 var svc = new ServiceController(svcname, ".");
@@ -147,11 +155,13 @@ namespace NuzzGraph.Seed
                 {
                     throw new InvalidOperationException("Unable to remove store " + StoreName + ".");
                 }
-
+               
                 //Restart service
                 svc.Start();
                 svc.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(20));
                 System.Threading.Thread.Sleep(200);
+                */
+
 
                 //Reload context
                 Client = ContextFactory.GetClient();

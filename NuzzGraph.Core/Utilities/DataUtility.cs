@@ -8,11 +8,11 @@ namespace NuzzGraph.Core.Utilities
 {
     internal static class DataUtility
     {
-        internal static readonly string NodeUriFormatBase = "http://www.nuzzgraph.com/Entities/{0}/Properties/{1}";
+        
 
         internal static string GetUri(string type, string property)
         {
-            return string.Format(NodeUriFormatBase, type, property);
+            return string.Format(Constants.NodeUriFormatBase, type, property);
         }
 
         internal static string GetUri(NodeType type, string property)

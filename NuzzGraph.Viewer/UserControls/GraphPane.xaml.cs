@@ -47,5 +47,10 @@ namespace NuzzGraph.Viewer.UserControls
         {
             viewport.GraphPane = this;
         }
+
+        private void viewport_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

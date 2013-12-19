@@ -12,6 +12,11 @@
 *Go back to the interface style of models.  It's better that way because non-interface variables should be reserved 
 *for sections that interact with the underlying DB.
 
+Fix working directory
+Use http://stackoverflow.com/questions/3676066/injecting-resources-into-the-manifest-of-a-net-assembly-post-build to inject working directory as a resource post-build
+Load resource when using VS Designer - Configuration.GetEmbeddedPath
+
+Fix importing/exporting
 
 *1. Add a non-embedded seed mirror
 *2. Connect to non-embedded version over rest

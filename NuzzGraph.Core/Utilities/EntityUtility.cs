@@ -180,7 +180,7 @@ namespace NuzzGraph.Core.Utilities
 
                     var inverseProperty = inverseType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.Name == pName).Single();
 
-                    var uri = string.Format("http://www.nuzzgraph.com/Entities/{0}/Properties/{1}", inverseType.IsInterface ? inverseType.Name.Substring(1) : inverseType.Name, inverseProperty.Name);
+                    var uri = string.Format(Constants.NodeUriFormatBase, inverseType.IsInterface ? inverseType.Name.Substring(1) : inverseType.Name, inverseProperty.Name);
                     pHints[property] = new PropertyHint(hint.MappingType, uri);
                 }
             }

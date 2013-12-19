@@ -9,6 +9,6 @@
              d:DesignHeight="1200" d:DesignWidth="1200" Initialized="GraphPane_Initialized">
     <Grid>
         <local:NodeDisplay x:Name="nodehover" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="287" Height="150" Panel.ZIndex="110"  RenderTransformOrigin="-0.118,1.026" Margin="62,0,0,50"></local:NodeDisplay>
-        <local:GraphViewport x:Name="viewport"></local:GraphViewport>
+        <local:GraphViewport x:Name="viewport" Loaded="viewport_Loaded"></local:GraphViewport>
     </Grid>
 </UserControl>

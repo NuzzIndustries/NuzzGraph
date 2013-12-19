@@ -24,7 +24,9 @@ namespace NuzzGraph.Core
         {
             if (config == null)
                 config = DefaultConfig;
+            //return new GraphContext(config.ConnectionString, null, Constants.GraphUri, new List<string>() { Constants.GraphUri }, null);
             return new GraphContext(config.ConnectionString);
+            //return new GraphContext(config.ConnectionString, null, Constants.GraphUri, new List<string>(), null);
         }
 
         public static IDataObjectStore GetCore(Configuration config = null)
@@ -35,6 +37,7 @@ namespace NuzzGraph.Core
             //var db = new EmbeddedDataObjectContext(new BrightstarDB.ConnectionString(ConnectionString));
 
             var raw = BrightstarService.GetDataObjectContext(config.ConnectionString).OpenStore(config.StoreName);
+            //var raw = BrightstarService.GetDataObjectContext(config.ConnectionString).OpenStore(config.StoreName, null, null, Constants.GraphUri, new List<string>() { Constants.GraphUri });
             return raw;
         }
 
