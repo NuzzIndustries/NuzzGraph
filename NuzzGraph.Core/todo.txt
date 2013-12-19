@@ -13,9 +13,7 @@
 *for sections that interact with the underlying DB.
 
 *Fix working directory
-
-
-Fix importing/exporting
+*Fix importing/exporting
 
 *1. Add a non-embedded seed mirror
 *2. Connect to non-embedded version over rest
