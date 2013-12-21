@@ -20,12 +20,12 @@ namespace NuzzGraph.Core
             DefaultConfig = new Configuration();
         }
 
-        public static GraphContext New(Configuration config = null)
+        public static NuzzGraphContext New(Configuration config = null)
         {
             if (config == null)
                 config = DefaultConfig;
             //return new GraphContext(config.ConnectionString, null, Constants.GraphUri, new List<string>() { Constants.GraphUri }, null);
-            return new GraphContext(config.ConnectionString);
+            return new NuzzGraphContext(config.ConnectionString);
             //return new GraphContext(config.ConnectionString, null, Constants.GraphUri, new List<string>(), null);
         }
 

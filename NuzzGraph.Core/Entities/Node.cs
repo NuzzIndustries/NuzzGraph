@@ -26,6 +26,19 @@ namespace NuzzGraph.Core.Entities
     {
         internal List<INode> _GetRelatedNodes()
         {
+            using (var core = ContextFactory.GetCore())
+            {
+                var sparql = @"
+                    PREFIX id: <http://www.brightstardb.com/.well-known/genid/> 
+                    PREFIX prop: <http://www.nuzzgraph.com/Entities/Node/Properties/>
+
+                    SELECT DISTINCT *
+                    WHERE { id:fa3d9836-a73c-4600-9888-d10066ef48c6 prop:TypeHandle ?Value }";
+                var results = core.BindDataObjectsWithSparql(sparql).ToList();
+                
+                
+            }
+
             var _nodes = new List<INode>();
             foreach (var @rel in this.TypeHandle.AllowedOutgoingRelationships)
             {

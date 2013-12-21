@@ -95,6 +95,7 @@ namespace NuzzGraph.Seed
             try
             {
                 Context = ContextFactory.New();
+                RecreateStore();
             }
             catch (Exception e)
             {
@@ -115,8 +116,9 @@ namespace NuzzGraph.Seed
                             //Check which processes are using the file to be deleted.  If it is the visual studio designer, end it
                             foreach (var p in Process.GetProcessesByName("XDesProc"))
                                 p.Kill();
-                            System.Threading.Thread.Sleep(100);
+                            System.Threading.Thread.Sleep(10);
                             Directory.Delete(ContextFactory.DefaultConfig.DataDirectory, true);
+                            System.Threading.Thread.Sleep(5);
                         }
                     }
                 }
@@ -181,9 +183,16 @@ namespace NuzzGraph.Seed
 
                 //Reload context
                 Client = ContextFactory.GetClient();
-                Context = ContextFactory.New();
+                RecreateStore();
+                
             }
 
+            Context = ContextFactory.New();
+            SeedData();
+        }
+
+        private static void RecreateStore()
+        {
             //Delete store if it exists
             if (Client.DoesStoreExist(StoreName))
                 Client.DeleteStore(StoreName);
@@ -194,7 +203,7 @@ namespace NuzzGraph.Seed
             //Create store
             Client.CreateStore(StoreName);
 
-            SeedData();
+            System.Threading.Thread.Sleep(200);
         }
 
         private static void SeedData()

@@ -116,7 +116,6 @@ namespace NuzzGraph.Core.Entities
             {
                 return EntityUtility.CLRTypeMap[this];
             }
-
         }
     }
 }

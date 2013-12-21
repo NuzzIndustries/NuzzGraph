@@ -18,7 +18,27 @@
 *1. Add a non-embedded seed mirror
 *2. Connect to non-embedded version over rest
 3. Build sparql queries
+
+Wait for https://brightstardb.codeplex.com/discussions/476794
+
 4. Use sparql queries for base api to get related values
+
+Api Endpoints
+
+Get Related Nodes(outgoing)
+
+
+
+Get Related Nodes(outgoing, with type filter)
+
+Get Related Nodes(incoming)
+
+Get Related Nodes(incoming, with type filter)
+
+
+Get nodes of a given type
+
+
 5. Use api to load a few nodes / edges
 6. Debug the edge drawing to not be biased to vertical sides
 

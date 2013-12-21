@@ -1,0 +1,39 @@
+﻿# prefix declarations
+   PREFIX foo: <http://example.com/resources/>
+   ...
+# dataset definition
+   FROM ...
+# result clause
+   SELECT ...
+# query pattern
+   WHERE {
+       ...
+   }
+# query modifiers
+   ORDER BY ...
+
+
+
+
+Gives you all outgoing relationship node ids for that node
+SELECT DISTINCT *
+WHERE 
+{
+  <node_id_uri> <http://www.nuzzgraph.com/Entities/NodeType/Properties/AllowedOutgoingRelationships> ?relid
+}
+
+
+
+
+
+
+Get Related Nodes(outgoing)
+
+Get Related Nodes(outgoing, with type filter)
+
+Get Related Nodes(incoming)
+
+Get Related Nodes(incoming, with type filter)
+
+
+Get nodes of a given type
