@@ -44,3 +44,5 @@ using BrightstarDB.EntityFramework;
 [assembly: InternalsVisibleTo("NuzzGraph.Api.Test")]
 
 [assembly: TypeIdentifierPrefix("http://www.nuzzgraph.com/Entities/")]
+[assembly: NamespaceDeclaration("id", "http://www.brightstardb.com/.well-known/genid/")]
+[assembly: NamespaceDeclaration("prop", "http://www.nuzzgraph.com/Entities/Node/Properties/")]

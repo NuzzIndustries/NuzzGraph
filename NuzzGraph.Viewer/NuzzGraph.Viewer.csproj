@@ -18,7 +18,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -26,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -151,7 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BrightstarDB\src\core\BrightstarDB\BrightstarDB.csproj">
-      <Project>{121A81F3-EB1C-4228-81FB-0D7505A438FB}</Project>
+      <Project>{121a81f3-eb1c-4228-81fb-0d7505a438fb}</Project>
       <Name>BrightstarDB</Name>
     </ProjectReference>
     <ProjectReference Include="..\NuzzGraph.Core\NuzzGraph.Core.csproj">

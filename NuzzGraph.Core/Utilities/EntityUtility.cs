@@ -10,8 +10,6 @@ namespace NuzzGraph.Core.Utilities
 {
     internal static class EntityUtility
     {
-        
-
         internal static List<System.Type> AllSimpleTypes { get; set; }
         public static readonly string AssemblyName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
         internal static List<System.Type> AllCLRTypes { get; private set; }
@@ -36,6 +34,30 @@ namespace NuzzGraph.Core.Utilities
                 }
 
                 return _CLRTypeMap;
+            }
+        }
+
+        private static Dictionary<System.Type, INodeType> _CLRTypeMapInverse;
+        internal static Dictionary<System.Type, INodeType> CLRTypeMapInverse
+        {
+            get
+            {
+                if (_CLRTypeMapInverse == null)
+                {
+                    lock(typeof(EntityUtility))
+                    {
+                        if (_CLRTypeMapInverse == null)
+                        {
+                            _CLRTypeMapInverse = new Dictionary<System.Type,INodeType>();
+                            foreach(var typeNode in CLRTypeMap.Keys)
+                            {
+                                var clrType = CLRTypeMap[typeNode];
+                                _CLRTypeMapInverse[clrType] = typeNode;
+                            }
+                        }
+                    }
+                }
+                return _CLRTypeMapInverse;
             }
         }
 
@@ -229,6 +251,34 @@ namespace NuzzGraph.Core.Utilities
         private static string PluralizeName(string name)
         {
             return name + "s";
+        }
+
+        /// <summary>
+        /// Given a base INode, creates a new object of a derived type if the NodeType property is not of type Node
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        internal static INode RebindEntity(Node node)
+        {
+            if (node.TypeHandle == null)
+                throw new InvalidOperationException("TypeHandle information not loaded.  Ensure that TypeHandle is retrieved as part of your Sparql query.");
+
+            DateTime now = DateTime.Now;
+            
+            System.Type targetType = null;
+            if (CLRTypeMap.ContainsKey(node.TypeHandle))
+                targetType = CLRTypeMap[node.TypeHandle];
+
+            //Get generic method
+            var minfo = typeof(BrightstarEntityObject).GetMethod("Become", BindingFlags.Public | BindingFlags.Instance);
+            minfo = minfo.MakeGenericMethod(targetType);
+
+            var targetNode = (INode)minfo.Invoke(node, null);
+
+            var time = DateTime.Now - now;
+
+
+            return targetNode;
         }
     }
 }

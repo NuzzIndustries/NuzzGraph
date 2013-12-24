@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using BrightstarDB.Client;
 using BrightstarDB.EntityFramework;
+using BrightstarDB.EntityFramework.Query;
 using NuzzGraph.Core;
 using NuzzGraph.Core.Utilities;
 
@@ -24,28 +27,93 @@ namespace NuzzGraph.Core.Entities
 
     public partial class Node : BrightstarEntityObject, INode
     {
-        internal List<INode> _GetRelatedNodes()
+        internal IEnumerable<INode> _GetRelatedNodes()
         {
-            using (var core = ContextFactory.GetCore())
-            {
-                var sparql = @"
-                    PREFIX id: <http://www.brightstardb.com/.well-known/genid/> 
-                    PREFIX prop: <http://www.nuzzgraph.com/Entities/Node/Properties/>
+            var sparql = string.Format(@"
+                SELECT DISTINCT ?Property ?Value
+                WHERE 
+                {{ 
+                    <{0}> ?Property ?Value 
+                }}", this.Identity);
+            // FILTER(STRSTARTS(STR(?Value), ""http://www.brightstardb.com/.well-known/genid/""))
 
-                    SELECT DISTINCT *
-                    WHERE { id:fa3d9836-a73c-4600-9888-d10066ef48c6 prop:TypeHandle ?Value }";
-                var results = core.BindDataObjectsWithSparql(sparql).ToList();
-                
-                
-            }
+            var nodes = Context.ExecuteNodeQuery(sparql);
+            return nodes;
+        }
 
-            var _nodes = new List<INode>();
-            foreach (var @rel in this.TypeHandle.AllowedOutgoingRelationships)
-            {
-                var r = (RelationshipType)@rel;
-                _nodes.AddRange(r._GetRelatedNodes(this));
-            }
-            return _nodes;
+        internal IEnumerable<T> _GetRelatedNodes<T>()
+            where T : INode
+        {
+            if (!EntityUtility.CLRTypeMapInverse.ContainsKey(typeof(T)))
+                throw new InvalidOperationException("Cannot use generic variant of _GetRelatedNodes on this type.");
+
+            var typeNode = EntityUtility.CLRTypeMapInverse[typeof(T)];
+
+            return _GetRelatedNodes(typeNode).Select(x => (T)x);
+        }
+
+        internal IEnumerable<INode> _GetRelatedNodes(INodeType typeNode)
+        {
+            var sparql = string.Format(@"
+                SELECT DISTINCT ?Property ?Value
+                WHERE 
+                {{ 
+                    <{0}> ?Property ?Value .
+                    {{
+                        SELECT ?Value
+                        WHERE
+                        {{
+                            ?Value <http://www.nuzzgraph.com/Entities/Node/Properties/TypeHandle> <{1}>
+                        }}
+                    }}
+                }}", this.Identity, typeNode.Id);
+
+            var nodes = Context.ExecuteNodeQuery(sparql);
+            return nodes;
+        }
+
+        internal IEnumerable<INode> _GetRelatedNodesInverse()
+        {
+            var sparql = string.Format(@"
+                SELECT DISTINCT ?Node ?Property
+                WHERE 
+                {{ 
+                    ?Node ?Property <{0}>
+                }}", this.Identity);
+
+            var nodes = Context.ExecuteNodeQuery(sparql);
+            return nodes;
+        }
+
+        internal IEnumerable<T> _GetRelatedNodesInverse<T>()
+            where T : INode
+        {
+            if (!EntityUtility.CLRTypeMapInverse.ContainsKey(typeof(T)))
+                throw new InvalidOperationException("Cannot use generic variant of _GetRelatedNodes on this type.");
+
+            var typeNode = EntityUtility.CLRTypeMapInverse[typeof(T)];
+
+            return _GetRelatedNodesInverse(typeNode).Select(x => (T)x);
+        }
+
+        internal IEnumerable<INode> _GetRelatedNodesInverse(INodeType typeNode)
+        {
+            var sparql = string.Format(@"
+                SELECT DISTINCT ?Node ?Property
+                WHERE 
+                {{ 
+                    ?Node ?Property <{0}> .
+                    {{
+                        SELECT ?Value
+                        WHERE
+                        {{
+                            ?Node <http://www.nuzzgraph.com/Entities/Node/Properties/TypeHandle> <{1}>
+                        }}
+                    }}
+                }}", this.Identity, typeNode.Id);
+
+            var nodes = Context.ExecuteNodeQuery(sparql);
+            return nodes;
         }
 
         public INode Get()
@@ -53,15 +121,10 @@ namespace NuzzGraph.Core.Entities
             return this;
         }
 
-        public string GetIdentity_Wrapper()
-        {
-            return GetIdentity();
-        }
-
         public IDataObject GetRawObject()
         {
             var core = ContextFactory.GetCore();
-            var data = core.GetDataObject(this.GetIdentity_Wrapper());
+            var data = core.GetDataObject(this.GetIdentity());
             return data;
         }
 
@@ -82,6 +145,20 @@ namespace NuzzGraph.Core.Entities
 
             if (flag)
                 context.Dispose();
+        }
+
+
+        public new string GetIdentity()
+        {
+            return base.GetIdentity();
+        }
+
+        public new NuzzGraphContext Context
+        {
+            get
+            {
+                return (NuzzGraphContext)base.Context;
+            }
         }
 
         public override string ToString()

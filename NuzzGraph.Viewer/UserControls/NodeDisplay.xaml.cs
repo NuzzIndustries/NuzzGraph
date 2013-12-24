@@ -79,7 +79,19 @@ namespace NuzzGraph.Viewer.UserControls
             using (var con = ContextFactory.New())
             {
                 CurrentNode = (INode)con.NodeTypes.Where(x => x.Label == "Node").Single();
-                var rel = ((Node)CurrentNode)._GetRelatedNodes();
+                var rel = ((Node)CurrentNode)._GetRelatedNodes().ToList();
+
+                var ntnode = (Node)con.NodeTypes.Where(x => x.Label == "NodeType").Single();
+                var rel2 = ntnode._GetRelatedNodes().ToList();
+
+                var rel3 = ntnode._GetRelatedNodes<INodeType>().ToList();
+
+                var rel4 = ntnode._GetRelatedNodesInverse().ToList();
+
+                foreach (var node in con.Nodes.Select(x => (Node)x))
+                {
+                   // var rel2 = node._GetRelatedNodes();
+                }
             }
             //if (RuntimeUtility.RunningFromVisualStudioDesigner)
             //{

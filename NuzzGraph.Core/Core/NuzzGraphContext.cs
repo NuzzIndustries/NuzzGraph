@@ -30,5 +30,10 @@ namespace NuzzGraph.Core
             : base(connectionString)
         {
         }
+
+        internal INode _LoadNodeFromObject(IDataObject obj)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

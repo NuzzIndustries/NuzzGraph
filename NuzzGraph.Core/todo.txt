@@ -19,21 +19,18 @@
 *2. Connect to non-embedded version over rest
 3. Build sparql queries
 
+Execute Query, get XDocument, and bind objects to context
 Wait for https://brightstardb.codeplex.com/discussions/476794
+
 
 4. Use sparql queries for base api to get related values
 
 Api Endpoints
 
-Get Related Nodes(outgoing)
-
-
-
-Get Related Nodes(outgoing, with type filter)
-
-Get Related Nodes(incoming)
-
-Get Related Nodes(incoming, with type filter)
+(done) Get Related Nodes(outgoing)
+(done) Get Related Nodes(outgoing, with type filter)
+(done) Get Related Nodes(incoming)
+(done) Get Related Nodes(incoming, with type filter)
 
 
 Get nodes of a given type
