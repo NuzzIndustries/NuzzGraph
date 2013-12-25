@@ -33,10 +33,9 @@ namespace NuzzGraph.Core.Entities
                 SELECT DISTINCT ?Property ?Value
                 WHERE 
                 {{ 
-                    <{0}> ?Property ?Value 
-                }}", this.Identity);
+                    <{0}> ?Property ?Value .
+                }}" , this.Identity);
             // FILTER(STRSTARTS(STR(?Value), ""http://www.brightstardb.com/.well-known/genid/""))
-
             var nodes = Context.ExecuteNodeQuery(sparql);
             return nodes;
         }
@@ -114,6 +113,11 @@ namespace NuzzGraph.Core.Entities
 
             var nodes = Context.ExecuteNodeQuery(sparql);
             return nodes;
+        }
+
+        internal ILookup<IRelationshipType, INode> _GetRelatedNodesKeyed()
+        {
+            throw new NotImplementedException();
         }
 
         public INode Get()

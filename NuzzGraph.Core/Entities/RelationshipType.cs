@@ -16,6 +16,8 @@ namespace NuzzGraph.Core.Entities
     {
         bool SupportsMany { get; set; }
 
+        string InternalUri { get; set; }
+
         [InverseProperty("AllowedOutgoingRelationships")]
         INodeType OutgoingFrom { get; set; }
 

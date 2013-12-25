@@ -364,6 +364,7 @@ namespace NuzzGraph.Seed
                             relnode.SupportsMany = true;
                             relnode.OutgoingFrom = CLRTypeMap[clrType];
                             relnode.IncomingTo = CLRTypeMap[innerType];
+                            relnode.InternalUri = string.Format(Constants.NodeUriFormatBase, clrType.Name.Substring(1), prop.Name);
                         }
                     }
                     else //Not a collection
@@ -388,6 +389,7 @@ namespace NuzzGraph.Seed
                             relnode.SupportsMany = false;
                             relnode.OutgoingFrom = CLRTypeMap[clrType];
                             relnode.IncomingTo = CLRTypeMap[prop.PropertyType];
+                            relnode.InternalUri = string.Format(Constants.NodeUriFormatBase, clrType.Name.Substring(1), prop.Name);
                         }
                     }
                 }

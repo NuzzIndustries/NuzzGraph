@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="solutionpath.txt" />
+    <Content Include="LogicalRules.txt" />
     <Content Include="sparql_notes.txt" />
     <Content Include="todo.txt" />
   </ItemGroup>

@@ -37,3 +37,91 @@ Get Related Nodes(incoming, with type filter)
 
 
 Get nodes of a given type
+
+--------------------
+
+
+get outgoing related nodes of N by rel type
+
+N = current node
+T = type of N
+T2 = Outgoing inheritance chain
+T3 = Set of T + T2
+
+O = Set of outgoing relationships of T
+O3 = Set of outgoing relationships of T3
+
+
+
+Get all relationshiptypes and all related nodes at the same time
+
+------------------
+
+1. Get all nodes
+
+SELECT DISTINCT ?id ?Property ?Value 
+WHERE { ?id ?Property ?Value }
+
+2. Gives info about node N
+SELECT ?Property ?Value
+where 
+{ 
+    <http://www.brightstardb.com/.well-known/genid/49d7a9df-b370-4ae9-a5a8-7b263544ce6a> ?Property ?Value .
+    FILTER(STRSTARTS(STR(?Property), "http://www.nuzzgraph.com/Entities/")) 
+}
+
+
+
+3. Gives info about type T of node N
+
+SELECT ?NodeTypeNode ?Property ?Value ?RelNodeId
+where 
+{ 
+    <http://www.brightstardb.com/.well-known/genid/49d7a9df-b370-4ae9-a5a8-7b263544ce6a> <http://www.nuzzgraph.com/Entities/Node/Properties/TypeHandle> ?NodeTypeNode .
+    ?NodeTypeNode ?Property ?Value
+}
+
+
+4. Gives set O of type T
+
+SELECT ?RelNodeId
+where 
+{ 
+    <http://www.brightstardb.com/.well-known/genid/49d7a9df-b370-4ae9-a5a8-7b263544ce6a> <http://www.nuzzgraph.com/Entities/Node/Properties/TypeHandle> ?NodeTypeNode .
+    ?NodeTypeNode <http://www.nuzzgraph.com/Entities/NodeType/Properties/AllowedOutgoingRelationships> ?RelNodeId 
+}
+
+
+5. Gets set of types T2 where N is "NodeType:Type", T is "NodeType:NodeType"
+
+SELECT ?T2
+where 
+{ 
+    <http://www.brightstardb.com/.well-known/genid/ef4d5d83-48ad-4782-9431-4ed28e2606e2> <http://www.nuzzgraph.com/Entities/Node/Properties/TypeHandle> ?T . 
+    ?T <http://www.nuzzgraph.com/Entities/NodeType/Properties/SuperTypes>+ ?T2 . 
+}
+
+6. Gets set T3 where N is "NodeType:Type", T is "NodeType:NodeType"
+
+SELECT ?T3
+where 
+{ 
+    { <http://www.brightstardb.com/.well-known/genid/ef4d5d83-48ad-4782-9431-4ed28e2606e2> <http://www.nuzzgraph.com/Entities/Node/Properties/TypeHandle> ?T3 } UNION 
+    { <http://www.brightstardb.com/.well-known/genid/ef4d5d83-48ad-4782-9431-4ed28e2606e2> <http://www.nuzzgraph.com/Entities/Node/Properties/TypeHandle> ?T1 .
+      ?T1 <http://www.nuzzgraph.com/Entities/NodeType/Properties/SuperTypes>+ ?T3 }
+}
+
+
+7. Gets all outgoing relationship types for node N
+
+SELECT ?O3 ?RelProp ?RelValue
+where 
+{ 
+    { <http://www.brightstardb.com/.well-known/genid/ef4d583-48ad-4782-9431-4ed28e2606e2> <http://www.nuzzgraph.com/Entities/Node/Properties/TypeHandle> ?T3 } UNION 
+    { 
+	  <http://www.brightstardb.com/.well-known/genid/ef4d5d83-48ad-4782-9431-4ed28e2606e2> <http://www.nuzzgraph.com/Entities/Node/Properties/TypeHandle> ?T1 .
+      ?T1 <http://www.nuzzgraph.com/Entities/NodeType/Properties/SuperTypes>+ ?T3 
+	}
+    ?T3 <http://www.nuzzgraph.com/Entities/NodeType/Properties/AllowedOutgoingRelationships> ?O3 .
+    ?O3 ?RelProp ?RelValue
+}

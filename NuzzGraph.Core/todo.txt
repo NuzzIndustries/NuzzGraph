@@ -17,13 +17,17 @@
 
 *1. Add a non-embedded seed mirror
 *2. Connect to non-embedded version over rest
-3. Build sparql queries
+*3. Build sparql queries
+*4. Use sparql queries for base api to get related values
 
-Execute Query, get XDocument, and bind objects to context
-Wait for https://brightstardb.codeplex.com/discussions/476794
+Solve mathematical problems in LogicalRules.txt
+Determine thread-safety, cache rules/design, etc.
+
+Implement caching system, general level
+Implement caching invalidation
+Implement caching system, query level
 
 
-4. Use sparql queries for base api to get related values
 
 Api Endpoints
 
@@ -32,6 +36,9 @@ Api Endpoints
 (done) Get Related Nodes(incoming)
 (done) Get Related Nodes(incoming, with type filter)
 
+Add InternalUri to RelationshipType seed
+
+Get related nodes, keyed by relationshiptype node
 
 Get nodes of a given type
 

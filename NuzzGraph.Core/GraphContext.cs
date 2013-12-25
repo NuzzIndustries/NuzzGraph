@@ -16,6 +16,8 @@ using BrightstarDB.EntityFramework;
 
 using System.Text;
 using NuzzGraph.Core.Attributes;
+using System.Linq.Expressions;
+using BrightstarDB.EntityFramework.Query;
 using NuzzGraph.Core;
 using NuzzGraph.Core.Utilities;
 
@@ -536,6 +538,12 @@ namespace NuzzGraph.Core.Entities
     	{
             		get { return GetRelatedProperty<System.Boolean>("SupportsMany"); }
             		set { SetRelatedProperty("SupportsMany", value); }
+    	}
+    
+    	public System.String InternalUri
+    	{
+            		get { return GetRelatedProperty<System.String>("InternalUri"); }
+            		set { SetRelatedProperty("InternalUri", value); }
     	}
     
     	public NuzzGraph.Core.Entities.INodeType OutgoingFrom
