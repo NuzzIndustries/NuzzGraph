@@ -1,0 +1,20 @@
+﻿UNSOLVED
+
+
+
+SOLVED
+
+
+I.
+
+Given the following conditions: 
+1. Two execution threads C1 and C2 access data property X at the time periods T1 and T2, spanning an interval Tdelta 
+2. At some point Tchange between T1 and T2, the value of X is changed from X0 to X1 
+3. Tdelta is below a threshold TOmega, where TOmega is the minimum interval which refreshing the value of X will be computationally resourceful. 
+
+Then the following must be true:
+The value of X0 must be applied to all threads which access X before TChange, and the value of X1 must be applied to all threads which access X after TChange 
+
+Implications:
+1. Updating the value of X must fire an event which propagates the value to cached instances
+

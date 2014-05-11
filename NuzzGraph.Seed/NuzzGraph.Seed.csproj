@@ -36,20 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BrightstarDB">
-      <HintPath>..\packages\BrightstarDB.1.4.41011\lib\net40\BrightstarDB.dll</HintPath>
-    </Reference>
-    <Reference Include="dotNetRDF">
-      <HintPath>..\packages\BrightstarDB.1.4.41011\lib\net40\dotNetRDF.dll</HintPath>
-    </Reference>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>..\packages\BrightstarDB.1.4.41011\lib\net40\HtmlAgilityPack.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\BrightstarDB.1.4.41011\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Remotion.Linq">
-      <HintPath>..\packages\BrightstarDB.1.4.41011\lib\net40\Remotion.Linq.dll</HintPath>
+    <Reference Include="dotNetRDF, Version=1.0.2.2880, Culture=neutral, PublicKeyToken=6055ffe4c97cc780, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BrightstarDB\src\core\BrightstarDB\bin\Debug\dotNetRDF.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -62,26 +51,27 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VDS.Common">
-      <HintPath>..\packages\BrightstarDB.1.4.41011\lib\net40\VDS.Common.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Seed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SeedCache.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NuzzGraph.Entities\NuzzGraph.Entities.csproj">
+    <ProjectReference Include="..\..\BrightstarDB\src\core\BrightstarDB\BrightstarDB.csproj">
+      <Project>{121A81F3-EB1C-4228-81FB-0D7505A438FB}</Project>
+      <Name>BrightstarDB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NuzzGraph.Core\NuzzGraph.Core.csproj">
       <Project>{4A87DFA5-C8CA-4A73-8808-E079E286E824}</Project>
-      <Name>NuzzGraph.Entities</Name>
+      <Name>NuzzGraph.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
